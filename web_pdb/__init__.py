@@ -6,7 +6,7 @@ from __future__ import absolute_import
 
 import sys
 from contextlib import contextmanager as _contextmanager
-from traceback import format_exc
+from traceback import format_tb
 from pdb import Pdb, getsourcelines
 from .web_console import WebConsole
 
@@ -63,7 +63,7 @@ def post_mortem(t=None, host='', port=5555):
                          'exception is being handled')
     p = WebPdb(host, port)
     p.console.write('Web-PDB post-mortem:\n')
-    p.console.write(format_exc())
+    p.console.write(''.join(format_tb(t)))
     p.reset()
     p.interaction(None, t)
 
