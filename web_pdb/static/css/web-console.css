@@ -1,0 +1,31 @@
+html, body {
+  padding-top: 30px;
+  height: 100%;
+}
+
+.container {
+  display: table;
+  height: 100%;
+}
+
+.row {
+  display: table-row;
+}
+
+.col-md-12 {
+  float: none;
+  display: table-cell;
+  padding: 5px;
+}
+
+#output {
+  height: 100%;
+}
+
+pre {
+  height: 100%;
+}
+
+#stdout {
+  height: 100%;
+}

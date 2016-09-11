@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="static/css/web-console.css">
+  <link rel="stylesheet" type="text/css" href="static/css/prism.css">
+
+  <script src="static/js/jquery-3.1.0.min.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>
+  <script src="static/js/prism.js" data-manual></script>
+  <script src="static/js/web-console.js"></script>
+</head>
+<body>
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <p class="navbar-brand"><span id="host"></span></p>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+
+    <div class="row">
+      <div id="output" class="col-md-12">
+        <pre id="console"><code id="stdout" class="language-python"></code></pre>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12 input">
+        <div class="input-group">
+          <div class="input-group-addon">(Pdb)</div>
+          <input class="form-control" id="stdin" type="text">
+          <span class="input-group-btn">
+            <a id="send-btn" class="btn btn-default">Send</a>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
