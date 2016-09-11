@@ -36,14 +36,16 @@ def send(mode):
     bottle.response.content_type = 'text/plain'
     bottle.response.cache_control = 'no-cache'
     if mode == 'history' or app.history.is_dirty:
-        return app.history.get()
+        return app.history.contents
     else:
         raise bottle.HTTPError(403, 'Forbidden')
 
 
 @app.route('/input', method='POST')
 def receive():
-    app.in_queue.put(bottle.request.body.read().decode('utf-8'))
+    data = bottle.request.body.read().decode('utf-8')
+    print('Received: {}'.format(data))
+    app.in_queue.put(data)
     return ''
 
 

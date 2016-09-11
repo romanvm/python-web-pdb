@@ -6,6 +6,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 
 import time
+from socket import gethostname
 from threading import Thread, Event, Lock
 try:
     from queue import Queue
@@ -27,10 +28,10 @@ class ThreadSafeBuffer(object):
     """
     A buffer for data exchange between threads
     """
-    def __init__(self):
-        self._contents = None
+    def __init__(self, contents=None):
         self._lock = Lock()
-        self._is_dirty = False
+        self._contents = contents
+        self._is_dirty = False if contents is None else True
 
     @property
     def is_dirty(self):
@@ -56,13 +57,12 @@ class WebConsole(object):
     """
     A file-like class for exchanging data between PDB and the web-UI
     """
-    def __init__(self, host='', port=5555):
-        self._history = ThreadSafeBuffer()
+    def __init__(self, host, port):
+        self._history = ThreadSafeBuffer('')
         self._in_queue = Queue()
         self._stop_server = Event()
         self._server_process = Thread(target=self._run_server, args=(host, port))
         self._server_process.daemon = True
-        print('Web-PDB: starting web-server on {0}:{1}...'.format(host, port))
         self._server_process.start()
 
     @property
@@ -74,6 +74,7 @@ class WebConsole(object):
         app.history = self._history
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
+        print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
         while not self._stop_server.is_set():
             httpd.handle_request()
 
