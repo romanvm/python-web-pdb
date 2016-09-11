@@ -43,9 +43,7 @@ def send(mode):
 
 @app.route('/input', method='POST')
 def receive():
-    data = bottle.request.body.read().decode('utf-8')
-    print('Received: {}'.format(data))
-    app.in_queue.put(data)
+    app.in_queue.put(bottle.request.body.read().decode('utf-8'))
     return ''
 
 
