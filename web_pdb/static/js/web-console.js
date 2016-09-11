@@ -11,10 +11,12 @@ function write_to_console(endpoint) {
   });
 }
 
+
 function update_console() {
   write_to_console('output/update');
-  setTimeout(stdout, 100);
+  setTimeout(update_console, 333);
 }
+
 
 $(function() {
 
@@ -29,7 +31,7 @@ $(function() {
     var input = $('#stdin').val();
     history_index = -1;
     $.ajax({
-      url: 'receive',
+      url: 'input',
       data: input + '\n',
       method: 'POST'
     }).done(function() {
@@ -71,5 +73,5 @@ $(function() {
 
   write_to_console('output/history');
 
-  setTimeout(update_console, 100);
+  setTimeout(update_console, 333);
 });
