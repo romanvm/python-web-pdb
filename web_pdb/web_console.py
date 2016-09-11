@@ -77,6 +77,7 @@ class WebConsole(object):
         print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
         while not self._stop_server.is_set():
             httpd.handle_request()
+        httpd.socket.close()
 
     def readline(self):
         data = self._in_queue.get()
