@@ -14,7 +14,7 @@ function write_to_console(endpoint) {
 
 function update_console() {
   write_to_console('output/update');
-  setTimeout(update_console, 333);
+  setTimeout(update_console, 500);
 }
 
 
@@ -73,5 +73,5 @@ $(function() {
 
   write_to_console('output/history');
 
-  setTimeout(update_console, 333);
+  setTimeout(update_console, 500);
 });
