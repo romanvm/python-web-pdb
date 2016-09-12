@@ -61,7 +61,9 @@ def post_mortem(t=None, host='', port=5555):
     if t is None:
         raise ValueError('A valid traceback must be passed if no '
                          'exception is being handled')
-    p = WebPdb(host, port)
+    p = WebPdb.active_instance
+    if p is None:
+        p = WebPdb(host, port)
     p.console.write('Web-PDB post-mortem:\n')
     p.console.write(''.join(format_tb(t)))
     p.reset()
