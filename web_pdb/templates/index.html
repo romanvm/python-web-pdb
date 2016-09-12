@@ -4,13 +4,10 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title></title>
-
   <link rel="stylesheet" type="text/css" href="static/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="static/css/web-console.css">
   <link rel="stylesheet" type="text/css" href="static/css/prism.css">
-
+  <link rel="stylesheet" type="text/css" href="static/css/web-console.css">
   <script src="static/js/jquery-3.1.0.min.js"></script>
   <script src="static/js/bootstrap.min.js"></script>
   <script src="static/js/prism.js" data-manual></script>
@@ -24,17 +21,21 @@
       </div>
     </div>
   </nav>
-
   <div class="container language-python">
-
     <div class="row">
-      <div id="output" class="col-md-12">
+      <div class="col-sm-8">
+        <h5>Current frame</h5>
+        <pre id="curr_frame" class="line-numbers info"><code id="curr_frame_code">import this</code></pre>
+      </div>
+      <div class="col-sm-4">
+        <h5>Variables</h5>
+        <pre class="info"><code id="locals">foo = 'bar'</code></pre>
+      </div>
+      <div class="col-sm-12">
+        <h5>PDB Console</h5>
         <pre id="console"><code id="stdout"></code></pre>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12 input">
+      <div class="col-sm-12">
         <div class="input-group">
           <div class="input-group-addon">(Pdb)</div>
           <input class="form-control" id="stdin" type="text">

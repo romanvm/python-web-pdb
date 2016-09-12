@@ -4,7 +4,8 @@ function write_to_console(endpoint, schedule_next)
   {
     url: endpoint,
     method: 'GET'
-  }).done(function(data)
+  })
+  .done(function(data)
   {
     $('#stdout').text(data);
     Prism.highlightAll();
@@ -15,13 +16,25 @@ function write_to_console(endpoint, schedule_next)
     {
       setTimeout(function() { write_to_console(endpoint, true); }, 200);
     }
-  }).fail(function(r, s, e)
+  })
+  .fail(function(r, s, e)
   {
     if (e == 'Forbidden' && schedule_next)
     {
       setTimeout(function() { write_to_console(endpoint, true); }, 200);
     }
   });
+}
+
+
+function resize_console()
+{
+  var con_height = win_height = $(window).height() - 500;
+  if (con_height <= 240)
+  {
+    con_height = 240;
+  }
+  $('#console').height(con_height);
 }
 
 
@@ -43,7 +56,8 @@ $(function()
       url: 'input',
       data: input + '\n',
       method: 'POST'
-    }).done(function()
+    })
+    .done(function()
     {
       if (input != '' && input != command_history[0])
       {
@@ -90,7 +104,8 @@ $(function()
     }
   });
 
+  $(window).resize(resize_console);
+  resize_console();
   write_to_console('output/history', false);
-
   setTimeout(function() { write_to_console('output/update', true); }, 200);
 });
