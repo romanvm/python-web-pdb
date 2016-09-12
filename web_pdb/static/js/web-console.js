@@ -1,13 +1,13 @@
 function write_to_console(endpoint, schedule_next)
 {
-  $.ajax(
+  $.getJSON(
   {
     url: endpoint,
-    method: 'GET'
   })
   .done(function(data)
   {
-    $('#stdout').text(data);
+    $('#stdout').text(data.history);
+    $('#vars').text(data.variables);
     Prism.highlightAll();
     window.scrollTo(0, document.body.scrollHeight);
     var elem = document.getElementById('console');

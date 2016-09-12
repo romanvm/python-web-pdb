@@ -57,8 +57,10 @@ class WebConsole(object):
     """
     A file-like class for exchanging data between PDB and the web-UI
     """
-    def __init__(self, host, port):
+    def __init__(self, host, port, debugger):
+        self._debugger = debugger
         self._history = ThreadSafeBuffer('')
+        self._variables = ThreadSafeBuffer('')
         self._in_queue = Queue()
         self._stop_server = Event()
         self._server_process = Thread(target=self._run_server, args=(host, port))
@@ -72,6 +74,7 @@ class WebConsole(object):
     def _run_server(self, host, port):
         app.in_queue = self._in_queue
         app.history = self._history
+        app.variables = self._variables
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
         print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
@@ -91,6 +94,10 @@ class WebConsole(object):
 
     def writeline(self, data):
         self._history.contents += data
+        try:
+            self._variables.contents = self._debugger.get_variables()
+        except AttributeError:
+            self._variables.contents = ''
 
     write = writeline
 

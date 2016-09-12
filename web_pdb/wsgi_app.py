@@ -4,6 +4,7 @@
 
 from __future__ import absolute_import
 
+import json
 import os
 import bottle
 
@@ -21,6 +22,7 @@ class WebConsoleApp(bottle.Bottle):
         super(WebConsoleApp, self).__init__()
         self.in_queue = None
         self.history = None
+        self.variables = None
 
 
 app = WebConsoleApp()
@@ -33,10 +35,13 @@ def root():
 
 @app.route('/output/<mode>')
 def send(mode):
-    bottle.response.content_type = 'text/plain'
+    bottle.response.content_type = 'application/json'
     bottle.response.cache_control = 'no-cache'
     if mode == 'history' or app.history.is_dirty:
-        return app.history.contents
+        return json.dumps({
+            'history': app.history.contents,
+            'variables': app.variables.contents,
+        })
     else:
         raise bottle.HTTPError(403, 'Forbidden')
 

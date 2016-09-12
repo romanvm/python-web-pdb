@@ -3,10 +3,12 @@
 # E-mail: romanvm@yandex.ua
 
 from __future__ import absolute_import
+from __future__ import unicode_literals
 
+import pprint
 import sys
+import traceback
 from contextlib import contextmanager as _contextmanager
-from traceback import format_tb
 from pdb import Pdb, getsourcelines
 from .web_console import WebConsole
 
@@ -17,7 +19,7 @@ class WebPdb(Pdb):
     active_instance = None
 
     def __init__(self, host='', port=5555):
-        self.console = WebConsole(host, port)
+        self.console = WebConsole(host, port, self)
         super(WebPdb, self).__init__(stdin=self.console, stdout=self.console)
         WebPdb.active_instance = self
 
@@ -44,6 +46,17 @@ class WebPdb(Pdb):
 
     do_ll = do_longlist
 
+    def get_variables(self):
+        raw_vars = {}
+        raw_vars.update(self.curframe.f_globals)
+        raw_vars.update(self.curframe.f_locals)
+        f_vars = []
+        for var, value in raw_vars.items():
+            if var.startswith('__'):
+                continue
+            f_vars.append('{0} = {1}'.format(var, pprint.pformat(value)))
+        return '\n'.join(sorted(f_vars))
+
 
 def set_trace(host='', port=5555):
     pdb = WebPdb.active_instance
@@ -65,7 +78,7 @@ def post_mortem(t=None, host='', port=5555):
     if p is None:
         p = WebPdb(host, port)
     p.console.write('Web-PDB post-mortem:\n')
-    p.console.write(''.join(format_tb(t)))
+    p.console.write(''.join(traceback.format_tb(t)))
     p.reset()
     p.interaction(None, t)
 
