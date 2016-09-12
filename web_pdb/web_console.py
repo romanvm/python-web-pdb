@@ -31,7 +31,7 @@ class ThreadSafeBuffer(object):
     def __init__(self, contents=None):
         self._lock = Lock()
         self._contents = contents
-        self._is_dirty = False if contents is None else True
+        self._is_dirty = contents is not None
 
     @property
     def is_dirty(self):
