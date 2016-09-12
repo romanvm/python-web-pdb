@@ -6,6 +6,10 @@ html, body {
   padding: 5px;
 }
 
+.row {
+  padding-top: 5px;
+}
+
 .info {
-  height: 240px;
+  height: 250px;
 }

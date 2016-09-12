@@ -61,6 +61,7 @@ class WebConsole(object):
         self._debugger = debugger
         self._history = ThreadSafeBuffer('')
         self._variables = ThreadSafeBuffer('')
+        self._frame_data = ThreadSafeBuffer()
         self._in_queue = Queue()
         self._stop_server = Event()
         self._server_process = Thread(target=self._run_server, args=(host, port))
@@ -75,6 +76,7 @@ class WebConsole(object):
         app.in_queue = self._in_queue
         app.history = self._history
         app.variables = self._variables
+        app.frame_data = self._frame_data
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
         print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
@@ -96,8 +98,15 @@ class WebConsole(object):
         self._history.contents += data
         try:
             self._variables.contents = self._debugger.get_variables()
+            self._frame_data.contents = self._debugger.get_current_frame_data()
         except AttributeError:
             self._variables.contents = ''
+            self._frame_data.contents = {
+                'filename': '',
+                'listing': '',
+                'start_line': -1,
+                'curr_line': -1
+            }
 
     write = writeline
 

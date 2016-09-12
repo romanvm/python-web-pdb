@@ -7,11 +7,31 @@ function write_to_console(endpoint, schedule_next)
   .done(function(data)
   {
     $('#stdout').text(data.history);
+    var console_elem = document.getElementById('console');
+    console_elem.scrollTop = console_elem.scrollHeight;
     $('#vars').text(data.variables);
+    $('#filename').text(data.frame_data.filename);
+    $('#curr_frame_code').text(data.frame_data.listing);
+    if (data.frame_data.start_line != -1 && data.frame_data.curr_line != -1)
+    {
+      $('#curr_line').text(data.frame_data.curr_line);
+      $('#curr_frame').attr('data-start', data.frame_data.start_line);
+      var curr_line = data.frame_data.curr_line - data.frame_data.start_line + 1;
+      $('#curr_frame').attr('data-line', curr_line);
+      curr_frame_elem  = document.getElementById('curr_frame');
+      var offset;
+      if (curr_line >= 6)
+      {
+        offset = (curr_line - 6) / (data.frame_data.total_lines - 6);
+      }
+      else
+      {
+        offset = 0;
+      }
+      console.log(offset);
+      curr_frame_elem.scrollTop = curr_frame_elem.scrollHeight * offset;
+    }
     Prism.highlightAll();
-    window.scrollTo(0, document.body.scrollHeight);
-    var elem = document.getElementById('console');
-    elem.scrollTop = elem.scrollHeight;
     if (schedule_next)
     {
       setTimeout(function() { write_to_console(endpoint, true); }, 200);
@@ -29,7 +49,7 @@ function write_to_console(endpoint, schedule_next)
 
 function resize_console()
 {
-  var con_height = win_height = $(window).height() - 500;
+  var con_height = win_height = $(window).height() - 480;
   if (con_height <= 240)
   {
     con_height = 240;
@@ -43,9 +63,8 @@ $(function()
   var command_history = [];
   var history_index = -1;
 
-  var tile = 'Web-PDB Console on ' + window.location.host;
-  $('title').text(tile)
-  $('#host').text(tile);
+  $('title').text('Web-PDB Console on ' + window.location.host);
+  $('#host').html('Web-PDB Console on <em>' + window.location.host + '</em>');
 
   $('#send-btn').click(function()
   {

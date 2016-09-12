@@ -5,7 +5,6 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
-import pprint
 import sys
 import traceback
 from contextlib import contextmanager as _contextmanager
@@ -46,6 +45,23 @@ class WebPdb(Pdb):
 
     do_ll = do_longlist
 
+    def get_current_frame_data(self):
+        try:
+            filename = self.curframe.f_code.co_filename
+            lines, start_line = getsourcelines(self.curframe)
+            curr_line = self.curframe.f_lineno
+        except OSError:
+            filename = ''
+            lines = []
+            start_line = curr_line = -1
+        return {
+            'filename': filename,
+            'listing': ''.join(lines),
+            'start_line': start_line,
+            'curr_line': curr_line,
+            'total_lines': len(lines),
+        }
+
     def get_variables(self):
         raw_vars = {}
         raw_vars.update(self.curframe.f_globals)
@@ -54,7 +70,7 @@ class WebPdb(Pdb):
         for var, value in raw_vars.items():
             if var.startswith('__'):
                 continue
-            f_vars.append('{0} = {1}'.format(var, pprint.pformat(value)))
+            f_vars.append('{0} = {1}'.format(var, repr(value)))
         return '\n'.join(sorted(f_vars))
 
 
