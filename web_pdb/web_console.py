@@ -106,7 +106,7 @@ class WebConsole(object):
         i = 0
         while self._history.is_dirty and i <= 5:
             i += 1
-            time.sleep(0.05)
+            time.sleep(0.1)
 
     def close(self):
         print('Web-PDB: stopping web-server...')

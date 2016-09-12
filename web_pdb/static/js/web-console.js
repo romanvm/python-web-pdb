@@ -1,4 +1,4 @@
-function write_to_console(endpoint)
+function write_to_console(endpoint, schedule_next)
 {
   $.ajax(
   {
@@ -11,14 +11,17 @@ function write_to_console(endpoint)
     window.scrollTo(0, document.body.scrollHeight);
     var elem = document.getElementById('console');
     elem.scrollTop = elem.scrollHeight;
+    if (schedule_next)
+    {
+      setTimeout(function() { write_to_console(endpoint, true); }, 200);
+    }
+  }).fail(function(r, s, e)
+  {
+    if (e == 'Forbidden' && schedule_next)
+    {
+      setTimeout(function() { write_to_console(endpoint, true); }, 200);
+    }
   });
-}
-
-
-function update_console()
-{
-  write_to_console('output/update');
-  setTimeout(update_console, 500);
 }
 
 
@@ -87,7 +90,7 @@ $(function()
     }
   });
 
-  write_to_console('output/history');
+  write_to_console('output/history', false);
 
-  setTimeout(update_console, 500);
+  setTimeout(function() { write_to_console('output/update', true); }, 200);
 });
