@@ -66,6 +66,7 @@ class WebConsole(object):
         self._stop_server = Event()
         self._server_process = Thread(target=self._run_server, args=(host, port))
         self._server_process.daemon = True
+        print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
         self._server_process.start()
 
     @property
@@ -79,7 +80,6 @@ class WebConsole(object):
         app.frame_data = self._frame_data
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
-        print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
         while not self._stop_server.is_set():
             httpd.handle_request()
         httpd.socket.close()

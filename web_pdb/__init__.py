@@ -17,9 +17,22 @@ __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 class WebPdb(Pdb):
     active_instance = None
 
-    def __init__(self, host='', port=5555):
+    def __init__(self, host='', port=5555, patch_stdstreams=False):
         self.console = WebConsole(host, port, self)
         super(WebPdb, self).__init__(stdin=self.console, stdout=self.console)
+        # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
+        self.backup = []
+        if patch_stdstreams:
+            for name in (
+                    'stderr',
+                    'stdout',
+                    '__stderr__',
+                    '__stdout__',
+                    'stdin',
+                    '__stdin__',
+            ):
+                self.backup.append((name, getattr(sys, name)))
+                setattr(sys, name, self.console)
         WebPdb.active_instance = self
 
     def do_quit(self, arg):
@@ -27,6 +40,8 @@ class WebPdb(Pdb):
         quit || exit || q
         Stop and quit the current debugging session
         """
+        for name, fh in self.backup:
+            setattr(sys, name, fh)
         self.console.close()
         WebPdb.active_instance = None
         return super(WebPdb, self).do_quit(arg)
@@ -78,14 +93,14 @@ class WebPdb(Pdb):
         return '\n'.join(sorted(f_vars))
 
 
-def set_trace(host='', port=5555):
+def set_trace(host='', port=5555, patch_stdstreams=False):
     pdb = WebPdb.active_instance
     if pdb is None:
-        pdb = WebPdb(host, port)
+        pdb = WebPdb(host, port, patch_stdstreams)
     pdb.set_trace(sys._getframe().f_back)
 
 
-def post_mortem(tb=None, host='', port=5555):
+def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     if WebPdb.active_instance is not None:
         raise RuntimeError('No active WebPdb instances allowed when doing post-mortem!')
     # handling the default
@@ -99,7 +114,7 @@ def post_mortem(tb=None, host='', port=5555):
     if tb is None:
         raise ValueError('A valid traceback must be passed if no '
                          'exception is being handled')
-    p = WebPdb(host, port)
+    p = WebPdb(host, port, patch_stdstreams)
     p.console.write('Web-PDB post-mortem:\n')
     p.console.write(''.join(exc_data))
     p.reset()
