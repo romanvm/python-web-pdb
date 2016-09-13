@@ -99,11 +99,11 @@ class WebConsole(object):
         try:
             self._variables.contents = self._debugger.get_variables()
             self._frame_data.contents = self._debugger.get_current_frame_data()
-        except AttributeError:
-            self._variables.contents = ''
+        except (OSError, AttributeError):
+            self._variables.contents = 'No data available'
             self._frame_data.contents = {
                 'filename': '',
-                'listing': '',
+                'listing': 'No data available',
                 'start_line': -1,
                 'curr_line': -1
             }

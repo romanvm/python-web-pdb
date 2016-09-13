@@ -21,7 +21,7 @@ class WebPdb(Pdb):
         self.console = WebConsole(host, port, self)
         super(WebPdb, self).__init__(stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
-        self.backup = []
+        self._backup = []
         if patch_stdstreams:
             for name in (
                     'stderr',
@@ -31,7 +31,7 @@ class WebPdb(Pdb):
                     'stdin',
                     '__stdin__',
             ):
-                self.backup.append((name, getattr(sys, name)))
+                self._backup.append((name, getattr(sys, name)))
                 setattr(sys, name, self.console)
         WebPdb.active_instance = self
 
@@ -40,7 +40,7 @@ class WebPdb(Pdb):
         quit || exit || q
         Stop and quit the current debugging session
         """
-        for name, fh in self.backup:
+        for name, fh in self._backup:
             setattr(sys, name, fh)
         self.console.close()
         WebPdb.active_instance = None
@@ -65,14 +65,9 @@ class WebPdb(Pdb):
     do_ll = do_longlist
 
     def get_current_frame_data(self):
-        try:
-            filename = self.curframe.f_code.co_filename
-            lines, start_line = getsourcelines(self.curframe)
-            curr_line = self.curframe.f_lineno
-        except OSError:
-            filename = ''
-            lines = []
-            start_line = curr_line = -1
+        filename = self.curframe.f_code.co_filename
+        lines, start_line = getsourcelines(self.curframe)
+        curr_line = self.curframe.f_lineno
         return {
             'filename': filename,
             'listing': ''.join(lines),
