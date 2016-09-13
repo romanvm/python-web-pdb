@@ -7,7 +7,7 @@ from __future__ import unicode_literals
 
 import sys
 import traceback
-from contextlib import contextmanager as _contextmanager
+from contextlib import contextmanager
 from pdb import Pdb, getsourcelines
 from .web_console import WebConsole
 
@@ -116,9 +116,9 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     p.interaction(None, tb)
 
 
-@_contextmanager
-def catch_post_mortem(host='', port=5555):
+@contextmanager
+def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     try:
         yield
     except:
-        post_mortem(host=host, port=port)
+        post_mortem(None, host, port, patch_stdstreams)
