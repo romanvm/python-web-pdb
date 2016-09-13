@@ -7,8 +7,7 @@ function write_to_console(endpoint, schedule_next)
   .done(function(data)
   {
     $('#stdout').text(data.history);
-    var console_elem = document.getElementById('console');
-    console_elem.scrollTop = console_elem.scrollHeight;
+    $('#console').scrollTop($('#console').prop('scrollHeight'));
     $('#vars').text(data.variables);
     $('#filename').text(data.frame_data.filename);
     $('#curr_frame_code').text(data.frame_data.listing);
@@ -18,7 +17,6 @@ function write_to_console(endpoint, schedule_next)
       $('#curr_frame').attr('data-start', data.frame_data.start_line);
       var curr_line = data.frame_data.curr_line - data.frame_data.start_line + 1;
       $('#curr_frame').attr('data-line', curr_line);
-      curr_frame_elem  = document.getElementById('curr_frame');
       var offset;
       if (curr_line >= 6)
       {
@@ -28,8 +26,7 @@ function write_to_console(endpoint, schedule_next)
       {
         offset = 0;
       }
-      console.log(offset);
-      curr_frame_elem.scrollTop = curr_frame_elem.scrollHeight * offset;
+      $('#curr_frame').scrollTop($('#curr_frame').prop('scrollHeight') * offset);
     }
     Prism.highlightAll();
     if (schedule_next)
