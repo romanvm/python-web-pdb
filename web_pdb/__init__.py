@@ -81,22 +81,25 @@ def set_trace(host='', port=5555):
     pdb.set_trace(sys._getframe().f_back)
 
 
-def post_mortem(t=None, host='', port=5555):
+def post_mortem(tb=None, host='', port=5555):
+    if WebPdb.active_instance is not None:
+        raise RuntimeError('No active WebPdb instances allowed when doing post-mortem!')
     # handling the default
-    if t is None:
+    if tb is None:
         # sys.exc_info() returns (type, value, traceback) if an exception is
         # being handled, otherwise it returns None
-        t = sys.exc_info()[2]
-    if t is None:
+        t, v, tb = sys.exc_info()
+        exc_data = traceback.format_exception(t, v, tb)
+    else:
+        exc_data = traceback.format_tb(tb)
+    if tb is None:
         raise ValueError('A valid traceback must be passed if no '
                          'exception is being handled')
-    p = WebPdb.active_instance
-    if p is None:
-        p = WebPdb(host, port)
+    p = WebPdb(host, port)
     p.console.write('Web-PDB post-mortem:\n')
-    p.console.write(''.join(traceback.format_tb(t)))
+    p.console.write(''.join(exc_data))
     p.reset()
-    p.interaction(None, t)
+    p.interaction(None, tb)
 
 
 @_contextmanager
