@@ -32,6 +32,7 @@ class WebPdbTestCase(TestCase):
         cls.stdin.send_keys('q')
         cls.send_btn.click()
         cls.db_proc.kill()
+        cls.browser.quit()
 
     def test_1_set_trace(self):
         """
@@ -81,6 +82,42 @@ class WebPdbTestCase(TestCase):
         self.assertEqual(self.stdin.get_attribute('value'), 'h ll')
         self.stdin.send_keys(Keys.ARROW_UP)
         self.assertEqual(self.stdin.get_attribute('value'), 'n')
+
+
+class PatchStdStreamsTestCase(TestCase):
+    """
+    This class tests patching sys.std* streams
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_ps.py')], shell=False)
+        cls.browser = webdriver.PhantomJS()
+        time.sleep(1)
+        cls.browser.get('http://127.0.0.1:5555')
+        cls.stdin = cls.browser.find_element_by_id('stdin')
+        cls.send_btn = cls.browser.find_element_by_id('send-btn')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.stdin.clear()
+        cls.stdin.send_keys('q')
+        cls.send_btn.click()
+        cls.db_proc.kill()
+        cls.browser.quit()
+
+    def test_patching_std_streams(self):
+        self.stdin.send_keys('n')
+        self.send_btn.click()
+        time.sleep(0.5)
+        stdout_tag = self.browser.find_element_by_id('stdout')
+        self.assertIn('Enter something:', stdout_tag.text)
+        self.stdin.send_keys('spam')
+        self.send_btn.click()
+        time.sleep(0.1)
+        self.stdin.send_keys('n')
+        self.send_btn.click()
+        time.sleep(0.5)
+        self.assertIn('You have entered: spam', stdout_tag.text)
 
 
 if __name__ == '__main__':
