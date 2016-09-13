@@ -73,6 +73,10 @@ class WebConsole(object):
     def seekable(self):
         return False
 
+    @property
+    def writable(self):
+        return True
+
     def _run_server(self, host, port):
         app.in_queue = self._in_queue
         app.history = self._history
