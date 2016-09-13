@@ -23,6 +23,10 @@ class WebPdb(Pdb):
         WebPdb.active_instance = self
 
     def do_quit(self, arg):
+        """
+        quit || exit || q
+        Stop and quit the current debugging session
+        """
         self.console.close()
         WebPdb.active_instance = None
         return super(WebPdb, self).do_quit(arg)
