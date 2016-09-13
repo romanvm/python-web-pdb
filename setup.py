@@ -18,5 +18,5 @@ setup(
     description='Web interface for Python\'s built-in PDB debugger',
     install_requires=['bottle'],
     test_suite = 'nose.collector',
-    tests_require=['nose', 'selenium', 'bs4', 'html5lib==0.99999'],
+    tests_require=['nose', 'selenium'],
 )
