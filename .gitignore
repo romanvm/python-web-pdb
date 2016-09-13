@@ -95,4 +95,5 @@ ENV/
 
 # Custom
 *.bat
+*.cmd
 *.zip

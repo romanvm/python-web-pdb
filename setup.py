@@ -16,5 +16,7 @@ setup(
     author='Roman Miroshnychenko',
     author_email='romanvm@yandex.ua',
     description='Web interface for Python\'s built-in PDB debugger',
-    install_requires=['bottle']
+    install_requires=['bottle'],
+    test_suite = 'nose.collector',
+    tests_require=['nose', 'selenium', 'bs4', 'html5lib==0.99999'],
 )
