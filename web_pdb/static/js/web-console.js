@@ -1,5 +1,5 @@
 /*
-(c) Roman Miroshnychenko <romanvm@yandex.ua>
+(c) 2016 Roman Miroshnychenko <romanvm@yandex.ua>
 License: MIT
 */
 function write_to_console(endpoint, schedule_next)
