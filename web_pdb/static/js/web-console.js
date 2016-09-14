@@ -1,3 +1,7 @@
+/*
+(c) Roman Miroshnychenko <romanvm@yandex.ua>
+License: MIT
+*/
 function write_to_console(endpoint, schedule_next)
 {
   $.getJSON(
@@ -66,7 +70,6 @@ $(function()
   $('#send-btn').click(function()
   {
     var input = $('#stdin').val();
-    history_index = -1;
     $.ajax(
     {
       url: 'input',
@@ -75,6 +78,8 @@ $(function()
     })
     .done(function()
     {
+      $('#stdin').val('');
+      history_index = -1;
       if (input != '' && input != command_history[0])
       {
         command_history.unshift(input);
@@ -83,7 +88,6 @@ $(function()
             command_history.pop();
         }
       }
-      $('#stdin').val('');
     });
   });
 
