@@ -21,6 +21,7 @@ class WebPdbTestCase(TestCase):
     def setUpClass(cls):
         cls.db_proc = Popen(['python', db_py], shell=False)
         cls.browser = webdriver.PhantomJS()
+        time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send-btn')
@@ -91,6 +92,7 @@ class PatchStdStreamsTestCase(TestCase):
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_ps.py')], shell=False)
         cls.browser = webdriver.PhantomJS()
+        time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send-btn')
