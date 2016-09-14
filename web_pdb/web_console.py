@@ -9,9 +9,9 @@ import time
 from socket import gethostname
 from threading import Thread, Event, Lock
 try:
-    from queue import Queue
+    import queue
 except ImportError:
-    from threading import Queue
+    import Queue as queue
 from wsgiref.simple_server import make_server, WSGIRequestHandler
 from .wsgi_app import app
 
@@ -62,8 +62,8 @@ class WebConsole(object):
         self._history = ThreadSafeBuffer('')
         self._variables = ThreadSafeBuffer('')
         self._frame_data = ThreadSafeBuffer()
-        self._in_queue = Queue()
-        self._stop_server = Event()
+        self._in_queue = queue.Queue()
+        self._stop_all = Event()
         self._server_process = Thread(target=self._run_server, args=(host, port))
         self._server_process.daemon = True
         print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
@@ -84,12 +84,19 @@ class WebConsole(object):
         app.frame_data = self._frame_data
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
-        while not self._stop_server.is_set():
+        while not self._stop_all.is_set():
             httpd.handle_request()
         httpd.socket.close()
 
     def readline(self):
-        data = self._in_queue.get()
+        while not self._stop_all.is_set():
+            try:
+                data = self._in_queue.get(timeout=0.1)
+                break
+            except queue.Empty:
+                continue
+        else:
+            data = ''
         self.write(data)
         return data
 
@@ -130,6 +137,10 @@ class WebConsole(object):
 
     def close(self):
         print('Web-PDB: stopping web-server...')
-        self._stop_server.set()
+        self._stop_all.set()
         self._server_process.join()
         print('Web-PDB: web-server stopped.')
+
+    @property
+    def closed(self):
+        return self._stop_all.is_set()
