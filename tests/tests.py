@@ -36,8 +36,7 @@ class WebPdbTestCase(TestCase):
 
     def test_1_set_trace(self):
         """
-        Test if the back-end correctly sends and the front-end JS
-        correctly renders debugging data.
+        Test back-end/front-end interaction during debugging
         """
         filename_tag = self.browser.find_element_by_id('filename')
         self.assertEqual(filename_tag.text, db_py)
@@ -106,6 +105,9 @@ class PatchStdStreamsTestCase(TestCase):
         cls.browser.quit()
 
     def test_patching_std_streams(self):
+        """
+        Test if std streams are correctly redirected to the web-console
+        """
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(0.5)
