@@ -21,7 +21,6 @@ class WebPdbTestCase(TestCase):
     def setUpClass(cls):
         cls.db_proc = Popen(['python', db_py], shell=False)
         cls.browser = webdriver.PhantomJS()
-        time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send-btn')
@@ -31,6 +30,7 @@ class WebPdbTestCase(TestCase):
         cls.stdin.clear()
         cls.stdin.send_keys('q')
         cls.send_btn.click()
+        time.sleep(1)
         cls.db_proc.kill()
         cls.browser.quit()
 
@@ -59,7 +59,7 @@ class WebPdbTestCase(TestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         # Wait for the front-end to refresh data via ajax
-        time.sleep(0.5)
+        time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '8')
         vars_tag = self.browser.find_element_by_id('vars')
@@ -69,7 +69,7 @@ class WebPdbTestCase(TestCase):
         self.assertEqual(self.stdin.get_attribute('value'), '')
         self.stdin.send_keys('h ll')
         self.send_btn.click()
-        time.sleep(0.5)
+        time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('longlist | ll', stdout_tag.text)
 
@@ -101,6 +101,7 @@ class PatchStdStreamsTestCase(TestCase):
         cls.stdin.clear()
         cls.stdin.send_keys('q')
         cls.send_btn.click()
+        time.sleep(1)
         cls.db_proc.kill()
         cls.browser.quit()
 
@@ -110,15 +111,15 @@ class PatchStdStreamsTestCase(TestCase):
         """
         self.stdin.send_keys('n')
         self.send_btn.click()
-        time.sleep(0.5)
+        time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('Enter something:', stdout_tag.text)
         self.stdin.send_keys('spam')
         self.send_btn.click()
-        time.sleep(0.1)
+        time.sleep(1)
         self.stdin.send_keys('n')
         self.send_btn.click()
-        time.sleep(0.5)
+        time.sleep(1)
         self.assertIn('You have entered: spam', stdout_tag.text)
 
 
