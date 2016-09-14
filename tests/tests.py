@@ -42,7 +42,7 @@ class WebPdbTestCase(TestCase):
         filename_tag = self.browser.find_element_by_id('filename')
         self.assertEqual(filename_tag.text, db_py)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
-        self.assertEqual(curr_line_tag.text, '7')
+        self.assertEqual(curr_line_tag.text, '13')
         curr_frame_tag = self.browser.find_element_by_id('curr_frame_code')
         self.assertIn('foo = \'foo\'', curr_frame_tag.text)
         vars_tag = self.browser.find_element_by_id('vars')
@@ -62,7 +62,7 @@ class WebPdbTestCase(TestCase):
         # Wait for the front-end to refresh data via ajax
         time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
-        self.assertEqual(curr_line_tag.text, '8')
+        self.assertEqual(curr_line_tag.text, '14')
         vars_tag = self.browser.find_element_by_id('vars')
         self.assertIn('bar = \'bar\'', vars_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
