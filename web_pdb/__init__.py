@@ -5,15 +5,27 @@
 from __future__ import absolute_import
 from __future__ import unicode_literals
 
+import inspect
 import sys
 import traceback
 from contextlib import contextmanager
-from pdb import Pdb, getsourcelines
+from pdb import Pdb
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 
 __version__ = '1.0.0'
+
+
+# This function is added for compatibility with Python 2
+def getsourcelines(obj):
+    lines, lineno = inspect.findsource(obj)
+    if inspect.isframe(obj) and obj.f_globals is obj.f_locals:
+        # must be a module frame: do not try to cut a block out of it
+        return lines, 1
+    elif inspect.ismodule(obj):
+        return lines, 1
+    return inspect.getblock(lines[lineno:]), lineno+1
 
 
 class WebPdb(Pdb):
