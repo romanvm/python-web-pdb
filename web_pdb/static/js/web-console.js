@@ -50,7 +50,7 @@ function write_to_console(endpoint, schedule_next)
 
 function resize_console()
 {
-  var con_height = win_height = $(window).height() - 480;
+  var con_height = $(window).height() - 480;
   if (con_height <= 240)
   {
     con_height = 240;
