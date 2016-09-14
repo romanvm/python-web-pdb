@@ -33,7 +33,7 @@ class WebPdb(Pdb):
 
     def __init__(self, host='', port=5555, patch_stdstreams=False):
         self.console = WebConsole(host, port, self)
-        super(WebPdb, self).__init__(stdin=self.console, stdout=self.console)
+        Pdb.__init__(self, stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
         self._backup = []
         if patch_stdstreams:
