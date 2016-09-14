@@ -58,7 +58,7 @@ class WebPdb(Pdb):
             setattr(sys, name, fh)
         self.console.close()
         WebPdb.active_instance = None
-        return super(WebPdb, self).do_quit(arg)
+        return Pdb.do_quit(self, arg)
 
     do_q = do_exit = do_quit
 
