@@ -48,7 +48,7 @@ setup(
     ],
     install_requires=['bottle'],
     test_suite = 'nose.collector',
-    tests_require=['nose', 'selenium'],
+    tests_require=['nose', 'selenium==2.53.6'],
     platforms=['any'],
     zif_safe=False,
 )
