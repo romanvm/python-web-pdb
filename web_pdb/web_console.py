@@ -1,6 +1,9 @@
 # coding: utf-8
 # Author: Roman Miroshnychenko aka Roman V.M.
 # E-mail: romanvm@yandex.ua
+"""
+File-like web-based input/output console
+"""
 
 from __future__ import absolute_import
 from __future__ import print_function

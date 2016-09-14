@@ -1,8 +1,9 @@
 # coding: utf-8
 # Author: Roman Miroshnychenko aka Roman V.M.
 # E-mail: romanvm@yandex.ua
-
-from __future__ import absolute_import
+"""
+Web-UI WSGI application
+"""
 
 import json
 import os
@@ -10,7 +11,7 @@ import bottle
 
 __all__ = ['app']
 
-bottle.debug(True)
+bottle.debug(True)  # TODO: remove this!
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 bottle.TEMPLATE_PATH.append(os.path.join(cwd, 'templates'))
