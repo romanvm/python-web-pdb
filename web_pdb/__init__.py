@@ -131,7 +131,7 @@ class WebPdb(Pdb):
         raw_vars.update(self.curframe.f_locals)
         f_vars = []
         for var, value in raw_vars.items():
-            if var.startswith('__'):
+            if var.startswith('__') and var.endswith('__'):
                 continue
             f_vars.append('{0} = {1}'.format(var, repr(value)))
         return '\n'.join(sorted(f_vars))
