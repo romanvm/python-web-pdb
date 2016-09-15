@@ -24,7 +24,7 @@ Features
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.jpg
   :alt: Web-PDB screenshot
 
-  Web-PDB console in Chrome browser
+  *Web-PDB console in Chrome browser*
 
 Read docstrings in ``./web_pdb/__init__.py`` file for more info.
 
@@ -37,7 +37,7 @@ Compatibility
 License
 =======
 
-MIT, see LICENSE.txt
+MIT, see ``LICENSE.txt``
 
 .. _PDB: https://docs.python.org/3.5/library/pdb.html
 .. _Bootstrap: http://getbootstrap.com
