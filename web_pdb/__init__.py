@@ -117,9 +117,10 @@ class WebPdb(Pdb):
 
     def get_variables(self):
         """
-        Get all variables in the current scope
+        Get a listing of all variables in the current scope
 
-        .. note:: special variables starting with ``__`` are not included.
+        .. note:: special variables that start and end with
+            double underscores ``__`` are not included.
 
         :return: a listing of ``var = value`` pairs sorted alphabetically
         :rtype: str
@@ -139,14 +140,15 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
     """
     Start the debugger
 
-    This method suspend execution of the current script and starts PDB debugger.
-    A web-interface is opened on ``host:port``.
+    This method suspends execution of the current script
+    and starts a PDB debugging session. The web-interface is opened
+    on the specified port (default: ``5555``).
 
     Example::
 
-        import web_pdb; web_pdb.set_trace()
+        import web_pdb;web_pdb.set_trace()
 
-    thi
+    Subsequent :func:`set_trace` calls can be used as hardcoded breakpoints.
 
     :param host: web-UI hostname or IP-address
     :type host: str
@@ -186,6 +188,9 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
     :type patch_stdstreams: bool
+    :raises RuntimeError: if there is an active WebPdb instance
+    :raises ValueError: if no valid traceback is provided and the Python
+        interpreter is not handling any exception
     """
     if WebPdb.active_instance is not None:
         raise RuntimeError('No active WebPdb instances allowed when doing post-mortem!')
@@ -228,6 +233,7 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
     :type patch_stdstreams: bool
+    :raises RuntimeError: if there is an active WebPdb instance
     """
     try:
         yield
