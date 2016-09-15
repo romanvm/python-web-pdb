@@ -22,7 +22,7 @@ function write_to_console(endpoint, schedule_next)
       var offset;
       if (data.frame_data.curr_line >= 6)
       {
-        offset = (data.frame_data.curr_line - 6) / (data.frame_data.total_lines - 6);
+        offset = (data.frame_data.curr_line - 6) / data.frame_data.total_lines;
       }
       else
       {
