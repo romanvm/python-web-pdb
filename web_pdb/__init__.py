@@ -106,15 +106,13 @@ class WebPdb(Pdb):
         :raises IOError: if source code for the current execution frame is not accessible.
         """
         filename = self.curframe.f_code.co_filename
-        breaklist = self.get_file_breaks(filename)
         lines, start_line = inspect.findsource(self.curframe)
-        curr_line = self.curframe.f_lineno
         return {
             'filename': os.path.basename(filename),
             'listing': ''.join(lines),
-            'curr_line': curr_line,
+            'curr_line': self.curframe.f_lineno,
             'total_lines': len(lines),
-            'breaklist': breaklist,
+            'breaklist': self.get_file_breaks(filename),
         }
 
     def get_variables(self):
