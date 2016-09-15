@@ -40,7 +40,7 @@ class WebPdbTestCase(TestCase):
         Test back-end/front-end interaction during debugging
         """
         filename_tag = self.browser.find_element_by_id('filename')
-        self.assertEqual(filename_tag.text, db_py)
+        self.assertEqual(filename_tag.text, 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '13')
         curr_frame_tag = self.browser.find_element_by_id('curr_frame_code')
