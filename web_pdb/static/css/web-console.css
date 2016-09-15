@@ -13,3 +13,8 @@ html, body {
 .info {
   height: 250px;
 }
+
+.line-numbers-rows > span.breakpoint:before {
+  color: red;
+  font-weight: bold;
+}

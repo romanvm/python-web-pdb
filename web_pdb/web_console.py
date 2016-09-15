@@ -119,7 +119,8 @@ class WebConsole(object):
                 'filename': '',
                 'listing': 'No data available',
                 'start_line': -1,
-                'curr_line': -1
+                'curr_line': -1,
+                'breaklist': [],
             }
 
     write = writeline

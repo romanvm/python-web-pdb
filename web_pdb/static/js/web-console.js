@@ -33,6 +33,15 @@ function write_to_console(endpoint, schedule_next)
       $('#curr_frame').scrollTop($('#curr_frame').prop('scrollHeight') * offset);
     }
     Prism.highlightAll();
+    var line_spans = $('span.line-numbers-rows').children('span');
+    var i;
+    for (i = 0; i < line_spans.length; i++)
+    {
+      if (data.frame_data.breaklist.indexOf(i + data.frame_data.start_line) != -1)
+      {
+        line_spans[i].className += 'breakpoint';
+      }
+    }
     if (schedule_next)
     {
       setTimeout(function() { write_to_console(endpoint, true); }, 200);
