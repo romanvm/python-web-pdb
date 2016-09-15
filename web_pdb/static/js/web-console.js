@@ -15,16 +15,14 @@ function write_to_console(endpoint, schedule_next)
     $('#vars').text(data.variables);
     $('#filename').text(data.frame_data.filename);
     $('#curr_frame_code').text(data.frame_data.listing);
-    if (data.frame_data.start_line != -1 && data.frame_data.curr_line != -1)
+    if (data.frame_data.curr_line != -1)
     {
       $('#curr_line').text(data.frame_data.curr_line);
-      $('#curr_frame').attr('data-start', data.frame_data.start_line);
-      var curr_line = data.frame_data.curr_line - data.frame_data.start_line + 1;
-      $('#curr_frame').attr('data-line', curr_line);
+      $('#curr_frame').attr('data-line', data.frame_data.curr_line);
       var offset;
-      if (curr_line >= 6)
+      if (data.frame_data.curr_line >= 6)
       {
-        offset = (curr_line - 6) / (data.frame_data.total_lines - 6);
+        offset = (data.frame_data.curr_line - 6) / (data.frame_data.total_lines - 6);
       }
       else
       {
@@ -37,7 +35,7 @@ function write_to_console(endpoint, schedule_next)
     var i;
     for (i = 0; i < line_spans.length; i++)
     {
-      if (data.frame_data.breaklist.indexOf(i + data.frame_data.start_line) != -1)
+      if (data.frame_data.breaklist.indexOf(i + 1) != -1)
       {
         line_spans[i].className += 'breakpoint';
       }

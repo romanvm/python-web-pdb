@@ -102,16 +102,15 @@ class WebPdb(Pdb):
         :return: current frame data
         :rtype: dict
         :raises AttributeError: if the debugger does hold any execution frame.
-        :raises OSError: if source code for the current execution frame is not accessible.
+        :raises IOError: if source code for the current execution frame is not accessible.
         """
         filename = self.curframe.f_code.co_filename
         breaklist = self.get_file_breaks(filename)
-        lines, start_line = getsourcelines(self.curframe)
+        lines, start_line = inspect.findsource(self.curframe)
         curr_line = self.curframe.f_lineno
         return {
             'filename': filename,
             'listing': ''.join(lines),
-            'start_line': start_line,
             'curr_line': curr_line,
             'total_lines': len(lines),
             'breaklist': breaklist,
