@@ -9,6 +9,7 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 
 import inspect
+import os
 import sys
 import traceback
 from contextlib import contextmanager
@@ -109,7 +110,7 @@ class WebPdb(Pdb):
         lines, start_line = inspect.findsource(self.curframe)
         curr_line = self.curframe.f_lineno
         return {
-            'filename': filename,
+            'filename': os.path.basename(filename),
             'listing': ''.join(lines),
             'curr_line': curr_line,
             'total_lines': len(lines),
