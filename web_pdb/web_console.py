@@ -7,7 +7,7 @@ File-like web-based input/output console
 
 from __future__ import absolute_import
 from __future__ import print_function
-
+import sys
 import time
 from socket import gethostname
 from threading import Thread, Event, Lock
@@ -109,6 +109,8 @@ class WebConsole(object):
         return [self.readline()]
 
     def writeline(self, data):
+        if sys.version_info[0] == 2 and isinstance(data, str):
+            data = data.decode('utf-8')
         self._history.contents += data
         try:
             self._variables.contents = self._debugger.get_variables()

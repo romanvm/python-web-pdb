@@ -94,6 +94,25 @@ class WebPdbTestCase(TestCase):
         line_spans = line_numbers_rows.find_elements_by_tag_name('span')
         self.assertEqual(line_spans[14].get_attribute('class'), 'breakpoint')
 
+    def test_5_unicode_literal(self):
+        """
+        Test for highlighting breakpoints
+        """
+        self.stdin.clear()
+        self.stdin.send_keys('n')
+        self.send_btn.click()
+        time.sleep(1)
+        stdout_tag = self.browser.find_element_by_id('stdout')
+        self.assertIn('-> name =', stdout_tag.text)
+
+    def test_6_entering_unicode_string(self):
+        self.stdin.clear()
+        self.stdin.send_keys(u'p u\'python - питон\'')
+        self.send_btn.click()
+        time.sleep(1)
+        stdout_tag = self.browser.find_element_by_id('stdout')
+        self.assertIn('u\'python -', stdout_tag.text)
+
 
 class PatchStdStreamsTestCase(TestCase):
     """

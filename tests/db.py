@@ -13,3 +13,4 @@ foo = 'foo'
 from web_pdb import set_trace; set_trace()
 bar = 'bar'
 ham = 'spam'
+name = u'Монти'
