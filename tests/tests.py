@@ -57,9 +57,9 @@ class WebPdbTestCase(TestCase):
         """
         Test sending PDB commands
         """
+        self.stdin.clear()
         self.stdin.send_keys('n')
         self.send_btn.click()
-        # Wait for the front-end to refresh data via ajax
         time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
@@ -68,18 +68,17 @@ class WebPdbTestCase(TestCase):
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('-> ham = \'spam\'', stdout_tag.text)
         self.assertEqual(self.stdin.get_attribute('value'), '')
-        self.stdin.send_keys('h ll')
-        self.send_btn.click()
-        time.sleep(1)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('longlist | ll', stdout_tag.text)
 
     def test_3_history(self):
         """
         Test for the recent commands history
         """
+        self.stdin.clear()
+        self.stdin.send_keys('h')
+        self.send_btn.click()
+        time.sleep(1)
         self.stdin.send_keys(Keys.ARROW_UP)
-        self.assertEqual(self.stdin.get_attribute('value'), 'h ll')
+        self.assertEqual(self.stdin.get_attribute('value'), 'h')
         self.stdin.send_keys(Keys.ARROW_UP)
         self.assertEqual(self.stdin.get_attribute('value'), 'n')
 
