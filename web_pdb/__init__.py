@@ -6,8 +6,6 @@ A web-interface for Python's built-in PDB debugger
 """
 
 from __future__ import absolute_import
-from __future__ import unicode_literals
-
 import inspect
 import os
 import sys
