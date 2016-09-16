@@ -43,8 +43,8 @@ class WebPdbTestCase(TestCase):
         self.assertEqual(filename_tag.text, 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '13')
-        curr_frame_tag = self.browser.find_element_by_id('curr_frame_code')
-        self.assertIn('foo = \'foo\'', curr_frame_tag.text)
+        curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
+        self.assertIn('foo = \'foo\'', curr_file_tag.text)
         vars_tag = self.browser.find_element_by_id('vars')
         self.assertIn('foo = \'foo\'', vars_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
@@ -134,6 +134,40 @@ class PatchStdStreamsTestCase(TestCase):
         self.send_btn.click()
         time.sleep(1)
         self.assertIn('You have entered: spam', stdout_tag.text)
+
+
+class CatchPostMortemTestCase(TestCase):
+    """
+    This class tests patching sys.std* streams
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_pm.py')], shell=False)
+        cls.browser = webdriver.PhantomJS()
+        time.sleep(1)
+        cls.browser.get('http://127.0.0.1:5555')
+        cls.stdin = cls.browser.find_element_by_id('stdin')
+        cls.send_btn = cls.browser.find_element_by_id('send-btn')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.stdin.clear()
+        cls.stdin.send_keys('q')
+        cls.send_btn.click()
+        time.sleep(1)
+        cls.db_proc.kill()
+        cls.browser.quit()
+
+    def test_catch_post_mortem(self):
+        """
+        Test if std streams are correctly redirected to the web-console
+        """
+        curr_line_tag = self.browser.find_element_by_id('curr_line')
+        self.assertEqual(curr_line_tag.text, '14')
+        curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
+        self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
+        stdout_tag = self.browser.find_element_by_id('stdout')
+        self.assertIn('AssertionError', stdout_tag.text)
 
 
 if __name__ == '__main__':
