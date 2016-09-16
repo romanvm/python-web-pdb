@@ -35,9 +35,9 @@ def root():
 
 @app.route('/output/<mode>')
 def send(mode):
-    bottle.response.content_type = 'application/json'
-    bottle.response.cache_control = 'no-cache'
-    if mode == 'history' or app.history.is_dirty:
+    if app.history.is_dirty or mode == 'history':
+        bottle.response.content_type = 'application/json'
+        bottle.response.cache_control = 'no-cache'
         return json.dumps({
             'history': app.history.contents,
             'variables': app.variables.contents,
