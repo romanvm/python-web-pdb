@@ -42,7 +42,7 @@ class WebPdbTestCase(TestCase):
         filename_tag = self.browser.find_element_by_id('filename')
         self.assertEqual(filename_tag.text, 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
-        self.assertEqual(curr_line_tag.text, '13')
+        self.assertEqual(curr_line_tag.text, '14')
         curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
         vars_tag = self.browser.find_element_by_id('vars')
@@ -62,7 +62,7 @@ class WebPdbTestCase(TestCase):
         self.send_btn.click()
         time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
-        self.assertEqual(curr_line_tag.text, '14')
+        self.assertEqual(curr_line_tag.text, '15')
         vars_tag = self.browser.find_element_by_id('vars')
         self.assertIn('bar = \'bar\'', vars_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
@@ -87,12 +87,12 @@ class WebPdbTestCase(TestCase):
         Test for highlighting breakpoints
         """
         self.stdin.clear()
-        self.stdin.send_keys('b 11')
+        self.stdin.send_keys('b 15')
         self.send_btn.click()
         time.sleep(1)
         line_numbers_rows = self.browser.find_element_by_css_selector('span.line-numbers-rows')
         line_spans = line_numbers_rows.find_elements_by_tag_name('span')
-        self.assertEqual(line_spans[10].get_attribute('class'), 'breakpoint')
+        self.assertEqual(line_spans[14].get_attribute('class'), 'breakpoint')
 
 
 class PatchStdStreamsTestCase(TestCase):
