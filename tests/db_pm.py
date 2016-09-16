@@ -5,10 +5,10 @@
 
 import os
 import sys
-import web_pdb
 
 basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(basedir)
+import web_pdb
 
 with web_pdb.catch_post_mortem():
     assert False, 'Oops!'
