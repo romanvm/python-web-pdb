@@ -2,9 +2,10 @@ Web-PDB
 #######
 
 .. image:: https://travis-ci.org/romanvm/python-web-pdb.svg?branch=master
-    :target: https://travis-ci.org/romanvm/python-web-pdb
+  :target: https://travis-ci.org/romanvm/python-web-pdb
+  :alt: Travis-CI tests
 
-Web-PDB is a remote web-interface for Python's built-in `PDB`_ debugger.
+Web-PDB is a web-interface for Python's built-in `PDB`_ debugger.
 It allows to debug Python scripts remotely in a web-browser.
 
 Features
@@ -26,7 +27,47 @@ Features
 
   *Web-PDB console in Chrome browser*
 
-Read docstrings in ``./web_pdb/__init__.py`` file for more info.
+Usage
+=====
+
+Install Web-PDB into your working Python environment::
+
+  pip install git+https://github.com/romanvm/python-web-pdb.git#egg=web-pdb
+
+Insert the following line into your Python program at the point where you want
+to start debugging:
+
+.. code-block:: python
+
+  import web_pdb; web_pdb.set_trace()
+
+The ``set_trace()`` call will suspend your program and open a web-UI at the default port ``5555``
+(port value can be changed). Enter in your browser's address bar:
+``http://<your Python machine hostname or IP>:5555``,
+for example ``http://monty-python:5555``,
+and you should see the web-UI like the one on the preceding screenshot.
+Now you can use all PDB commands and features. Additional **Current file** and **Variables**
+information boxes help you better track your program runtime state.
+
+**Warning**: it is strongly recommended to work with the Web-PDB web-UI only in one browser session.
+With more than one browser window accessing the web-UI it can display incorrect data in one or more
+browser sessions.
+
+Subsequent ``set_trace()`` calls can be used as hardcoded breakpoints.
+
+Additionally, Web-PDB provides ``catch_post_mortem`` context manager that can catch
+unhandled exceptions raised within its scope and automatically start PDB post-mortem debugging session.
+For example:
+
+.. code-block:: python
+
+  import web_pdb
+
+  with web_pdb.catch_post_mortem():
+      # Some error-prone code
+      assert foo == bar, 'Oops!'
+
+For more detailed info about the Web-PDB API read docstrings in the ``./web_pdb/__init__.py`` file.
 
 Compatibility
 =============
