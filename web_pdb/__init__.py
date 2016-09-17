@@ -10,7 +10,10 @@ import inspect
 import sys
 import traceback
 from contextlib import contextmanager
-from pdb import Pdb
+if sys.version_info[0] == 2:
+    from .pdb_py2 import PdbPy2 as Pdb
+else:
+    from pdb import Pdb
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
@@ -102,7 +105,10 @@ class WebPdb(Pdb):
         for var, value in raw_vars.items():
             if var.startswith('__') and var.endswith('__'):
                 continue
-            f_vars.append('{0} = {1}'.format(var, repr(value)))
+            repr_value = repr(value)
+            if sys.version_info[0] == 2:
+                repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+            f_vars.append('{0} = {1}'.format(var, repr_value))
         return '\n'.join(sorted(f_vars))
 
 
