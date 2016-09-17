@@ -7,7 +7,6 @@ A web-interface for Python's built-in PDB debugger
 
 from __future__ import absolute_import
 import inspect
-import os
 import sys
 import traceback
 from contextlib import contextmanager
