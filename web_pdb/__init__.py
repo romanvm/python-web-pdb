@@ -79,7 +79,7 @@ class WebPdb(Pdb):
         filename = self.curframe.f_code.co_filename
         lines, start_line = inspect.findsource(self.curframe)
         return {
-            'filename': os.path.basename(filename),
+            'filename': filename,
             'listing': ''.join(lines),
             'curr_line': self.curframe.f_lineno,
             'total_lines': len(lines),
