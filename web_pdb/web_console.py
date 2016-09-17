@@ -109,8 +109,8 @@ class WebConsole(object):
         return [self.readline()]
 
     def writeline(self, data):
-        if sys.version_info[0] == 2 and isinstance(data, str):
-            data = data.decode('utf-8')
+        if sys.version_info[0] == 2 and isinstance(data, unicode):
+            data = data.encode('utf-8')
         self._history.contents += data
         try:
             self._variables.contents = self._debugger.get_variables()
