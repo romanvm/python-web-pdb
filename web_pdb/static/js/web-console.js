@@ -42,14 +42,14 @@ function write_to_console(endpoint, schedule_next)
     }
     if (schedule_next)
     {
-      setTimeout(function() { write_to_console(endpoint, true); }, 200);
+      setTimeout(function() { write_to_console(endpoint, true); }, 333);
     }
   })
   .fail(function(r, s, e)
   {
     if (e == 'Forbidden' && schedule_next)
     {
-      setTimeout(function() { write_to_console(endpoint, true); }, 200);
+      setTimeout(function() { write_to_console(endpoint, true); }, 333);
     }
   });
 }
@@ -92,7 +92,7 @@ $(function()
         command_history.unshift(input);
         if (command_history.length > 10)
         {
-            command_history.pop();
+          command_history.pop();
         }
       }
     });
@@ -134,5 +134,5 @@ $(function()
   $(window).resize(resize_console);
   resize_console();
   write_to_console('output/history', false);
-  setTimeout(function() { write_to_console('output/update', true); }, 200);
+  setTimeout(function() { write_to_console('output/update', true); }, 333);
 });
