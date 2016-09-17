@@ -78,8 +78,13 @@ Compatibility
 License
 =======
 
-MIT, see ``LICENSE.txt``
+MIT, see ``LICENSE.txt``.
+
+The debugger icon made by `Freepik`_ from `www.flaticon.com`_ is licensed by `CC 3.0 BY`_.
 
 .. _PDB: https://docs.python.org/3.5/library/pdb.html
 .. _Bootstrap: http://getbootstrap.com
 .. _Prism: http://prismjs.com/
+.. _Freepik: http://www.freepik.com
+.. _www.flaticon.com: http://www.flaticon.com
+.. _CC 3.0 BY: http://creativecommons.org/licenses/by/3.0/

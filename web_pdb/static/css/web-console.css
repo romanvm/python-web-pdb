@@ -22,3 +22,7 @@ html, body {
 .filename {
   font-size: 0.85em;
 }
+
+.navbar-text {
+  font-weight: bold;
+}
