@@ -24,7 +24,7 @@ class WebPdbTestCase(TestCase):
         time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send-btn')
+        cls.send_btn = cls.browser.find_element_by_id('send_btn')
 
     @classmethod
     def tearDownClass(cls):
@@ -43,7 +43,7 @@ class WebPdbTestCase(TestCase):
         self.assertEqual(filename_tag.text, 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
-        curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
+        curr_file_tag = self.browser.find_element_by_id('curr_file_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
         globals_tag = self.browser.find_element_by_id('globals')
         self.assertIn('foo = \'foo\'', globals_tag.text)
@@ -141,7 +141,7 @@ class PatchStdStreamsTestCase(TestCase):
         time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send-btn')
+        cls.send_btn = cls.browser.find_element_by_id('send_btn')
 
     @classmethod
     def tearDownClass(cls):
@@ -181,7 +181,7 @@ class CatchPostMortemTestCase(TestCase):
         time.sleep(1)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send-btn')
+        cls.send_btn = cls.browser.find_element_by_id('send_btn')
 
     @classmethod
     def tearDownClass(cls):
@@ -198,7 +198,7 @@ class CatchPostMortemTestCase(TestCase):
         """
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
-        curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
+        curr_file_tag = self.browser.find_element_by_id('curr_file_code')
         self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('AssertionError', stdout_tag.text)

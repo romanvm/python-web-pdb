@@ -10,18 +10,16 @@ function write_to_console(endpoint, schedule_next)
   })
   .done(function(data)
   {
-    console.log(data.frame_data.curr_line);
-    console.log(data.frame_data.total_lines);
     $('#stdout').text(data.history);
     $('#console').scrollTop($('#console').prop('scrollHeight'));
     $('#globals').text(data.globals);
     $('#locals').text(data.locals);
     $('#filename').text(data.frame_data.filename);
-    $('#curr_frame_code').text(data.frame_data.listing);
+    $('#curr_file_code').text(data.frame_data.listing);
     if (data.frame_data.curr_line != -1)
     {
       $('#curr_line').text(data.frame_data.curr_line);
-      $('#curr_frame').attr('data-line', data.frame_data.curr_line);
+      $('#curr_file').attr('data-line', data.frame_data.curr_line);
       var offset;
       if (data.frame_data.curr_line >= 6)
       {
@@ -31,7 +29,7 @@ function write_to_console(endpoint, schedule_next)
       {
         offset = 0;
       }
-      $('#curr_frame').scrollTop($('#curr_frame').prop('scrollHeight') * offset);
+      $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
     }
     Prism.highlightAll();
     var line_spans = $('span.line-numbers-rows').children('span');
@@ -77,7 +75,7 @@ $(function()
   $('title').text('Web-PDB Console on ' + window.location.host);
   $('#host').html('Web-PDB Console on <em>' + window.location.host + '</em>');
 
-  $('#send-btn').click(function()
+  $('#send_btn').click(function()
   {
     var input = $('#stdin').val();
     $.ajax(
@@ -105,7 +103,7 @@ $(function()
   {
     if (args.keyCode == 13)
     {
-      $('#send-btn').click();
+      $('#send_btn').click();
       return false;
     }
     else if (args.keyCode == 38)
