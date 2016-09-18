@@ -7,6 +7,7 @@ A web-interface for Python's built-in PDB debugger
 
 from __future__ import absolute_import
 import inspect
+import os
 import sys
 import traceback
 from contextlib import contextmanager
@@ -81,7 +82,7 @@ class WebPdb(Pdb):
         filename = self.curframe.f_code.co_filename
         lines, start_line = inspect.findsource(self.curframe)
         return {
-            'filename': filename,
+            'filename': os.path.basename(filename),
             'listing': ''.join(lines),
             'curr_line': self.curframe.f_lineno,
             'total_lines': len(lines),
