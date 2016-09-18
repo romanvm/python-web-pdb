@@ -10,6 +10,8 @@ function write_to_console(endpoint, schedule_next)
   })
   .done(function(data)
   {
+    console.log(data.frame_data.curr_line);
+    console.log(data.frame_data.total_lines);
     $('#stdout').text(data.history);
     $('#console').scrollTop($('#console').prop('scrollHeight'));
     $('#globals').text(data.globals);
