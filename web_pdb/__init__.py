@@ -96,7 +96,11 @@ class WebPdb(Pdb):
                 continue
             repr_value = repr(value)
             if sys.version_info[0] == 2:
-                repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+                # Try to convert Unicode string to human-readable form
+                try:
+                    repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+                except UnicodeError:
+                    pass
             f_vars.append('{0} = {1}'.format(var, repr_value))
         return '\n'.join(sorted(f_vars))
 

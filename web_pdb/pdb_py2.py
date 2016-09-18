@@ -13,12 +13,24 @@ class PdbPy2(Pdb):
     """
     def do_p(self, arg):
         try:
-            print >> self.stdout, repr(self._getval(arg)).decode('raw_unicode_escape').encode('utf-8')
+            repr_value = repr(self._getval(arg))
+            # Try to convert Unicode string to human-readable form
+            try:
+                repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+            except UnicodeError:
+                pass
+            print >> self.stdout, repr_value
         except:
             pass
 
     def do_pp(self, arg):
         try:
-            print >> self.stdout, pprint.pformat(self._getval(arg)).decode('raw_unicode_escape').encode('utf-8')
+            repr_value = pprint.pformat(self._getval(arg))
+            # Try to convert Unicode string to human-readable form
+            try:
+                repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+            except UnicodeError:
+                pass
+            print >> self.stdout, repr_value
         except:
             pass
