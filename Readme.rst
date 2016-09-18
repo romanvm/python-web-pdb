@@ -26,6 +26,7 @@ Features
 
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.jpg
   :alt: Web-PDB screenshot
+  :width: 640px
 
   *Web-PDB console in Chrome browser*
 
