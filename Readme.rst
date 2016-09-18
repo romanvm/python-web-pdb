@@ -21,7 +21,7 @@ Features
 - **Globals** and **Locals** boxes show local and global variables in the current scope.
   Special variables that start and end with double underscores ``__`` are excluded
   (you can always view them using PDB commands).
-- Human-readable unicode literals for Python 2.
+- Human-readable Unicode literals for Python 2.
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.jpg
