@@ -45,8 +45,8 @@ class WebPdbTestCase(TestCase):
         self.assertEqual(curr_line_tag.text, '14')
         curr_file_tag = self.browser.find_element_by_id('curr_frame_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
-        vars_tag = self.browser.find_element_by_id('vars')
-        self.assertIn('foo = \'foo\'', vars_tag.text)
+        globals_tag = self.browser.find_element_by_id('globals')
+        self.assertIn('foo = \'foo\'', globals_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('-> bar = \'bar\'', stdout_tag.text)
         # Test if Prismjs syntax coloring actually works
@@ -63,8 +63,8 @@ class WebPdbTestCase(TestCase):
         time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '15')
-        vars_tag = self.browser.find_element_by_id('vars')
-        self.assertIn('bar = \'bar\'', vars_tag.text)
+        globals_tag = self.browser.find_element_by_id('globals')
+        self.assertIn('bar = \'bar\'', globals_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('-> ham = \'spam\'', stdout_tag.text)
         self.assertEqual(self.stdin.get_attribute('value'), '')
@@ -87,12 +87,12 @@ class WebPdbTestCase(TestCase):
         Test for highlighting breakpoints
         """
         self.stdin.clear()
-        self.stdin.send_keys('b 15')
+        self.stdin.send_keys('b 20')
         self.send_btn.click()
         time.sleep(1)
         line_numbers_rows = self.browser.find_element_by_css_selector('span.line-numbers-rows')
         line_spans = line_numbers_rows.find_elements_by_tag_name('span')
-        self.assertEqual(line_spans[14].get_attribute('class'), 'breakpoint')
+        self.assertEqual(line_spans[19].get_attribute('class'), 'breakpoint')
 
     def test_5_unicode_literal(self):
         """
@@ -106,12 +106,28 @@ class WebPdbTestCase(TestCase):
         self.assertIn('-> name =', stdout_tag.text)
 
     def test_6_entering_unicode_string(self):
+        """
+        Test for entering unicode literal via console
+        """
         self.stdin.clear()
         self.stdin.send_keys(u'p u\'python - питон\'')
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('u\'python -', stdout_tag.text)
+
+    def test_7_local_vars(self):
+        """
+        Test for displaying local variables
+        """
+        self.stdin.clear()
+        self.stdin.send_keys('c')
+        self.send_btn.click()
+        time.sleep(1)
+        locals_tag = self.browser.find_element_by_id('locals')
+        self.assertIn('spam = \'spam\'', locals_tag.text)
+        globals_tag = self.browser.find_element_by_id('globals')
+        self.assertNotEqual(globals_tag.text, locals_tag.text)
 
 
 class PatchStdStreamsTestCase(TestCase):

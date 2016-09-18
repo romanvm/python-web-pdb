@@ -63,7 +63,8 @@ class WebConsole(object):
     def __init__(self, host, port, debugger):
         self._debugger = debugger
         self._history = ThreadSafeBuffer('')
-        self._variables = ThreadSafeBuffer('')
+        self._globals = ThreadSafeBuffer('')
+        self._locals = ThreadSafeBuffer('')
         self._frame_data = ThreadSafeBuffer()
         self._in_queue = queue.Queue()
         self._stop_all = Event()
@@ -83,7 +84,8 @@ class WebConsole(object):
     def _run_server(self, host, port):
         app.in_queue = self._in_queue
         app.history = self._history
-        app.variables = self._variables
+        app.globals = self._globals
+        app.locals = self._locals
         app.frame_data = self._frame_data
         httpd = make_server(host, port, app, handler_class=SilentWSGIRequestHandler)
         httpd.timeout = 0.1
@@ -113,10 +115,11 @@ class WebConsole(object):
             data = data.encode('utf-8')
         self._history.contents += data
         try:
-            self._variables.contents = self._debugger.get_variables()
+            self._globals.contents = self._debugger.get_globals()
+            self._locals.contents = self._debugger.get_locals()
             self._frame_data.contents = self._debugger.get_current_frame_data()
         except (IOError, AttributeError):
-            self._variables.contents = 'No data available'
+            self._globals.contents = self._locals.contents = 'No data available'
             self._frame_data.contents = {
                 'filename': '',
                 'listing': 'No data available',

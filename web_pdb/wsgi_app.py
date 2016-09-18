@@ -23,7 +23,8 @@ class WebConsoleApp(bottle.Bottle):
         super(WebConsoleApp, self).__init__()
         self.in_queue = None
         self.history = None
-        self.variables = None
+        self.globals = None
+        self.locals = None
         self.frame_data = None
 
 
@@ -42,8 +43,9 @@ def send(mode):
         bottle.response.cache_control = 'no-cache'
         return json.dumps({
             'history': app.history.contents,
-            'variables': app.variables.contents,
-            'frame_data': app.frame_data.contents
+            'globals': app.globals.contents,
+            'locals': app.locals.contents,
+            'frame_data': app.frame_data.contents,
         })
     else:
         raise bottle.HTTPError(403, 'Forbidden')

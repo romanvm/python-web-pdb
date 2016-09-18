@@ -18,8 +18,9 @@ Features
   to interact with Python scripts remotely.
 - **Current file** box tracks current position in a file being executed.
   Red line numbers indicate breakpoints, if any.
-- **Variables** box shows all variables in the current scope. Special variables that start and end with
-  double underscores ``__`` are excluded (you can always view them using PDB commands).
+- **Globals** and **Locals** boxes show local and global variables in the current scope.
+  Special variables that start and end with double underscores ``__`` are excluded
+  (you can always view them using PDB commands).
 - Human-readable unicode literals for Python 2.
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 

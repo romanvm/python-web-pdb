@@ -12,7 +12,8 @@ function write_to_console(endpoint, schedule_next)
   {
     $('#stdout').text(data.history);
     $('#console').scrollTop($('#console').prop('scrollHeight'));
-    $('#vars').text(data.variables);
+    $('#globals').text(data.globals);
+    $('#locals').text(data.locals);
     $('#filename').text(data.frame_data.filename);
     $('#curr_frame_code').text(data.frame_data.listing);
     if (data.frame_data.curr_line != -1)

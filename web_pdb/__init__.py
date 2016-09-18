@@ -89,19 +89,7 @@ class WebPdb(Pdb):
             'breaklist': self.get_file_breaks(filename),
         }
 
-    def get_variables(self):
-        """
-        Get a listing of all variables in the current scope
-
-        .. note:: special variables that start and end with
-            double underscores ``__`` are not included.
-
-        :return: a listing of ``var = value`` pairs sorted alphabetically
-        :rtype: str
-        """
-        raw_vars = {}
-        raw_vars.update(self.curframe.f_globals)
-        raw_vars.update(self.curframe.f_locals)
+    def _format_variables(self, raw_vars):
         f_vars = []
         for var, value in raw_vars.items():
             if var.startswith('__') and var.endswith('__'):
@@ -111,6 +99,31 @@ class WebPdb(Pdb):
                 repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
             f_vars.append('{0} = {1}'.format(var, repr_value))
         return '\n'.join(sorted(f_vars))
+
+    def get_globals(self):
+        """
+        Get the listing of global variables in the current scope
+
+        .. note:: special variables that start and end with
+            double underscores ``__`` are not included.
+
+        :return: a listing of ``var = value`` pairs sorted alphabetically
+        :rtype: str
+        """
+        return self._format_variables(self.curframe.f_globals)
+
+    def get_locals(self):
+        """
+        Get the listing of local variables in the current scope
+
+        .. note:: special variables that start and end with
+            double underscores ``__`` are not included.
+            For module scope globals and locals listings are the same.
+
+        :return: a listing of ``var = value`` pairs sorted alphabetically
+        :rtype: str
+        """
+        return self._format_variables(self.curframe.f_locals)
 
 
 def set_trace(host='', port=5555, patch_stdstreams=False):
