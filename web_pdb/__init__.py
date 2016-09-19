@@ -90,6 +90,12 @@ class WebPdb(Pdb):
 
     do_q = do_exit = do_quit
 
+    def set_continue(self):
+        """Gracefully close console if continue without breakpoints"""
+        Pdb.set_continue(self)
+        if not self.breaks:
+            self.console.close()
+
     def get_current_frame_data(self):
         """
         Get all date about the current execution frame
