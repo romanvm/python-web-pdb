@@ -96,7 +96,7 @@ class WebPdbTestCase(TestCase):
 
     def test_5_unicode_literal(self):
         """
-        Test for highlighting breakpoints
+        Test for displaying unicode literals
         """
         self.stdin.clear()
         self.stdin.send_keys('n')
@@ -172,7 +172,7 @@ class PatchStdStreamsTestCase(TestCase):
 
 class CatchPostMortemTestCase(TestCase):
     """
-    This class tests patching sys.std* streams
+    This class for catching exceptions
     """
     @classmethod
     def setUpClass(cls):
@@ -194,7 +194,7 @@ class CatchPostMortemTestCase(TestCase):
 
     def test_catch_post_mortem(self):
         """
-        Test if std streams are correctly redirected to the web-console
+        Test if catch_post_mortem context manager catches exceptions
         """
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
