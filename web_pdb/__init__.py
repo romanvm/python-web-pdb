@@ -84,6 +84,7 @@ class WebPdb(Pdb):
         """
         for name, fh in self._backup:
             setattr(sys, name, fh)
+        self.console.flush()
         self.console.close()
         WebPdb.active_instance = None
         return Pdb.do_quit(self, arg)
