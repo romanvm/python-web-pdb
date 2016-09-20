@@ -123,7 +123,7 @@ class WebConsole(object):
                 continue
         else:
             data = ''
-        self.write(data)
+        self.writeline(data)
         return data
 
     read = readline
