@@ -222,7 +222,7 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     # handling the default
     if tb is None:
         # sys.exc_info() returns (type, value, traceback) if an exception is
-        # being handled, otherwise it returns None
+        # being handled, otherwise it returns (None, None, None)
         t, v, tb = sys.exc_info()
         exc_data = traceback.format_exception(t, v, tb)
     else:
@@ -231,8 +231,8 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
         raise ValueError('A valid traceback must be passed if no '
                          'exception is being handled')
     p = WebPdb(host, port, patch_stdstreams)
-    p.console.write('Web-PDB post-mortem:\n')
-    p.console.write(''.join(exc_data))
+    p.console.writeline('Web-PDB post-mortem:\n')
+    p.console.writeline(''.join(exc_data))
     p.reset()
     p.interaction(None, tb)
 
