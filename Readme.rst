@@ -53,7 +53,7 @@ and you should see the web-UI like the one on the preceding screenshot.
 Now you can use all PDB commands and features. Additional **Current file**, **Globals**
 and **Locals** information boxes help you better track your program runtime state.
 
-**Warning**: it is strongly recommended to work with the Web-PDB web-UI only in one browser session.
+**Note**: it is strongly recommended to work with the Web-PDB web-UI only in one browser session.
 With more than one browser window accessing the web-UI it can display incorrect data in one or more
 browser sessions.
 
