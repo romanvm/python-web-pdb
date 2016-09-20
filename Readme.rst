@@ -24,7 +24,7 @@ Features
 - Human-readable Unicode literals for Python 2.
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
-.. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.jpg
+.. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.png
   :alt: Web-PDB screenshot
   :width: 640px
   :height: 490px
