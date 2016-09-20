@@ -90,6 +90,16 @@ class WebPdb(Pdb):
 
     do_q = do_exit = do_quit
 
+    def set_continue(self):
+        Pdb.set_continue(self)
+        if not self.breaks:
+            self.console.flush()
+
+    def dispatch_return(self, frame, arg):
+        if frame.f_back is None and not self.console.closed:
+            self.console.flush()
+        return Pdb.dispatch_return(self, frame, arg)
+
     def get_current_frame_data(self):
         """
         Get all date about the current execution frame
