@@ -59,7 +59,7 @@ def root():
 @app.route('/output/<mode>')
 def send(mode):
     if app.history.is_dirty or mode == 'history':
-        bottle.response.content_type = 'application/json'
+        bottle.response.content_type = 'application/json; charset=UTF-8'
         bottle.response.cache_control = 'no-cache'
         return json.dumps({
             'history': app.history.contents,
