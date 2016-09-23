@@ -89,10 +89,10 @@ class WebConsole(object):
         self._frame_data = ThreadSafeBuffer()
         self._in_queue = queue.Queue()
         self._stop_all = Event()
-        self._server_process = Thread(target=self._run_server, args=(host, port))
-        self._server_process.daemon = True
+        self._server_thread = Thread(target=self._run_server, args=(host, port))
+        self._server_thread.daemon = True
         print('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
-        self._server_process.start()
+        self._server_thread.start()
 
     @property
     def seekable(self):
@@ -167,7 +167,7 @@ class WebConsole(object):
     def close(self):
         print('Web-PDB: stopping web-server...')
         self._stop_all.set()
-        self._server_process.join()
+        self._server_thread.join()
         print('Web-PDB: web-server stopped.')
 
     @property
