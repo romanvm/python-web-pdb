@@ -4,6 +4,9 @@ Web-PDB
 .. image:: https://travis-ci.org/romanvm/python-web-pdb.svg?branch=master
   :target: https://travis-ci.org/romanvm/python-web-pdb
   :alt: Travis-CI tests
+.. image:: https://badge.fury.io/py/web-pdb.svg
+  :target: https://badge.fury.io/py/web-pdb
+  :alt: PyPI version
 
 Web-PDB is a web-interface for Python's built-in `PDB`_ debugger.
 It allows to debug Python scripts remotely in a web-browser.
