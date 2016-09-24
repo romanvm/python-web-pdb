@@ -4,5 +4,14 @@ python:
   - "3.5"
 install: pip install bottle selenium
 script: python ./tests/tests.py
+deploy:
+  - provider: pypi
+    skip_cleanup: true
+    user: $PYPI_USER
+    password: $PYPI_PASS
+    distributions: "sdist bdist_wheel"
+    on:
+      tags: true
+      python: "3.5"
 notifications:
   email: false
