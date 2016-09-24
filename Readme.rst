@@ -36,7 +36,7 @@ Usage
 
 Install Web-PDB into your working Python environment::
 
-  pip install git+https://github.com/romanvm/python-web-pdb.git#egg=web-pdb
+  pip install web-pdb
 
 Insert the following line into your Python program at the point where you want
 to start debugging:
