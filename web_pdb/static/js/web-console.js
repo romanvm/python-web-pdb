@@ -116,14 +116,14 @@ $(function()
     });
   });
 
-  $('#stdin').keydown(function(args)
+  $('#stdin').keydown(function(event)
   {
-    if (args.keyCode == 13)
+    if (event.keyCode == 13) // Enter key
     {
       $('#send_btn').click();
-      return false;
+      return;
     }
-    else if (args.keyCode == 38)
+    else if (event.keyCode == 38) // UP key
     {
       history_index++;
       if (history_index >= command_history.length)
@@ -131,9 +131,9 @@ $(function()
         history_index = 0;
       }
       $('#stdin').val(command_history[history_index]);
-      return false;
+      return;
     }
-    else if (args.keyCode == 40)
+    else if (event.keyCode == 40) // DOWN key
     {
       history_index--;
       if (history_index < 0)
@@ -145,7 +145,31 @@ $(function()
         history_index = 0;
       }
       $('#stdin').val(command_history[history_index]);
-      return false;
+      return;
+    }
+    else if (event.keyCode == 121) // F10
+    {
+      $('#stdin').val('n');
+      $('#send_btn').click();
+      return;
+    }
+    else if (event.keyCode == 122 && !event.shiftKey) // F11
+    {
+      $('#stdin').val('s');
+      $('#send_btn').click();
+      return;
+    }
+    else if (event.keyCode == 122 && event.shiftKey) // Shift + F11
+    {
+      $('#stdin').val('r');
+      $('#send_btn').click();
+      return;
+    }
+    else if (event.keyCode == 119) // F8 (since F5 won't work)
+    {
+      $('#stdin').val('c');
+      $('#send_btn').click();
+      return;
     }
   });
 
