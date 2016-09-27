@@ -21,8 +21,18 @@ THE SOFTWARE.
 */
 $(function()
 {
+  // Globals
   var command_history = [];
   var history_index = -1;
+  var filename = '';
+  var curent_line = -1;
+
+  // Functions
+  function send_command(command)
+  {
+    $('#stdin').val(command);
+    $('#send_btn').click();
+  }
 
   function write_to_console(endpoint, schedule_next)
   {
@@ -38,8 +48,11 @@ $(function()
       $('#locals').text(data.locals);
       $('#filename').text(data.frame_data.filename);
       $('#curr_file_code').text(data.frame_data.listing);
-      if (data.frame_data.curr_line != -1)
+      if (data.frame_data.curr_line != -1 &&
+        (data.frame_data.filename != filename || data.frame_data.curr_line != curent_line))
       {
+        filename = data.frame_data.filename;
+        curent_line = data.frame_data.curr_line;
         $('#curr_line').text(data.frame_data.curr_line);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
         var offset;
@@ -87,8 +100,11 @@ $(function()
     $('#console').height(con_height);
   }
 
-  $('title').text('Web-PDB Console on ' + window.location.host);
-  $('#host').html('Web-PDB Console on <em>' + window.location.host + '</em>');
+  // Button events
+  $('#next_btn').click(function()
+  {
+    send_command('n');
+  });
 
   $('#send_btn').click(function()
   {
@@ -112,6 +128,16 @@ $(function()
         }
       }
     });
+  });
+
+  // Key events
+  $(document).keydown(function(event)
+  {
+    if (event.keyCode == 121)
+    {
+      send_command('n');
+      return false;
+    }
   });
 
   $('#stdin').keydown(function(event)
@@ -148,6 +174,10 @@ $(function()
   });
 
   $(window).resize(resize_console);
+
+  // Main
+  $('title').text('Web-PDB Console on ' + window.location.host);
+  $('#host').html('Web-PDB Console on <em>' + window.location.host + '</em>');
   resize_console();
   write_to_console('output/history', false);
   setTimeout(function() { write_to_console('output/update', true); }, 333);
