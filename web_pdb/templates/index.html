@@ -64,19 +64,24 @@
               data-toggle="tooltip" title="Return from function (Shift + F11)">
             <span class="glyphicon glyphicon-export"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button id="continue_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Continue execution (F8)">
             <span class="glyphicon glyphicon-play"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button id="up_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="To upper frame">
             <span class="glyphicon glyphicon-arrow-up"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button id="down_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="To lower frame">
             <span class="glyphicon glyphicon-arrow-down"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button id="where_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Print stack trace (where)">
             <span class="glyphicon glyphicon-map-marker"></span>
           </button>
-          <button type="button" class="btn btn-default">
+          <button id="help_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Quick help">
             <span class="glyphicon glyphicon-question-sign"></span>
           </button>
         </div>
@@ -100,5 +105,21 @@
       </div>
     </div>
   </div>
+  <div id="help_window" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Web-PDB Quick Help</h4>
+        </div>
+        <div class="modal-body">
+          <p>Content</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </body>
 </html>

@@ -116,6 +116,31 @@ $(function()
     send_command('r');
   });
 
+  $('#continue_btn').click(function()
+  {
+    send_command('c');
+  });
+
+  $('#up_btn').click(function()
+  {
+    send_command('u');
+  });
+
+  $('#down_btn').click(function()
+  {
+    send_command('d');
+  });
+
+  $('#where_btn').click(function()
+  {
+    send_command('w');
+  });
+
+  $('#help_btn').click(function()
+  {
+    $('#help_window').modal();
+  });
+
   $('#send_btn').click(function()
   {
     var input = $('#stdin').val();
@@ -153,9 +178,14 @@ $(function()
       send_command('s');
       return false;
     }
-     else if (event.keyCode == 122 && event.shiftKey)
+    else if (event.keyCode == 122 && event.shiftKey)
     {
       send_command('r');
+      return false;
+    }
+    else if (event.keyCode == 119)
+    {
+      send_command('c');
       return false;
     }
   });
