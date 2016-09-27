@@ -111,6 +111,11 @@ $(function()
     send_command('s');
   });
 
+  $('#return_btn').click(function()
+  {
+    send_command('r');
+  });
+
   $('#send_btn').click(function()
   {
     var input = $('#stdin').val();
@@ -146,6 +151,11 @@ $(function()
     else if (event.keyCode == 122 && !event.shiftKey)
     {
       send_command('s');
+      return false;
+    }
+     else if (event.keyCode == 122 && event.shiftKey)
+    {
+      send_command('r');
       return false;
     }
   });
