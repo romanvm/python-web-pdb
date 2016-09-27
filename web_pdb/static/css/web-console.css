@@ -1,13 +1,9 @@
 html, body {
-  padding-top: 35px;
+  padding-top: 30px;
 }
 
 .container {
   padding: 5px;
-}
-
-.row {
-  padding-top: 5px;
 }
 
 .info {
@@ -21,4 +17,32 @@ html, body {
 
 .navbar-text {
   font-weight: bold;
+}
+
+div.infobox-label {
+  position: relative;
+}
+
+div.infobox-label > div.infobox-label-text {
+  color: black;
+  background-color: #CFCFCF;
+  display: inline-block;
+  position: absolute;
+  bottom: auto;
+  left: auto;
+  top: 0;
+  right: 0;
+  width: auto;
+  height: auto;
+  font-size: 0.9em;
+  border-radius: 0 0 0 5px;
+  padding: 0 0.5em;
+  text-shadow: none;
+  z-index: 1;
+  box-shadow: none;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  transform: none;
 }
