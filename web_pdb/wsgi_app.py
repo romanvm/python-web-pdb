@@ -31,7 +31,7 @@ import bottle
 
 __all__ = ['app']
 
-# bottle.debug(True)
+bottle.debug(True)
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 bottle.TEMPLATE_PATH.append(os.path.join(cwd, 'templates'))
