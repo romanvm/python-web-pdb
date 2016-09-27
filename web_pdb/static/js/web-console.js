@@ -116,14 +116,14 @@ $(function()
     });
   });
 
-  $('#stdin').keydown(function(args)
+  $('#stdin').keydown(function(event)
   {
-    if (args.keyCode == 13)
+    if (event.keyCode == 13)
     {
       $('#send_btn').click();
       return false;
     }
-    else if (args.keyCode == 38)
+    else if (event.keyCode == 38)
     {
       history_index++;
       if (history_index >= command_history.length)
@@ -133,7 +133,7 @@ $(function()
       $('#stdin').val(command_history[history_index]);
       return false;
     }
-    else if (args.keyCode == 40)
+    else if (event.keyCode == 40)
     {
       history_index--;
       if (history_index < 0)
