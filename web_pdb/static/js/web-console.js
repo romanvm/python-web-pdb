@@ -19,75 +19,73 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-function write_to_console(endpoint, schedule_next)
-{
-  $.getJSON(
-  {
-    url: endpoint,
-  })
-  .done(function(data)
-  {
-    $('#stdout').text(data.history);
-    $('#console').scrollTop($('#console').prop('scrollHeight'));
-    $('#globals').text(data.globals);
-    $('#locals').text(data.locals);
-    $('#filename').text(data.frame_data.filename);
-    $('#curr_file_code').text(data.frame_data.listing);
-    if (data.frame_data.curr_line != -1)
-    {
-      $('#curr_line').text(data.frame_data.curr_line);
-      $('#curr_file').attr('data-line', data.frame_data.curr_line);
-      var offset;
-      if (data.frame_data.curr_line >= 8)
-      {
-        offset = (data.frame_data.curr_line - 8) / data.frame_data.total_lines;
-      }
-      else
-      {
-        offset = 0;
-      }
-      $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
-    }
-    Prism.highlightAll();
-    var line_spans = $('span.line-numbers-rows').children('span');
-    var i;
-    for (i = 0; i < line_spans.length; i++)
-    {
-      if (data.frame_data.breaklist.indexOf(i + 1) != -1)
-      {
-        line_spans[i].className += 'breakpoint';
-      }
-    }
-    if (schedule_next)
-    {
-      setTimeout(function() { write_to_console(endpoint, true); }, 333);
-    }
-  })
-  .fail(function(r, s, e)
-  {
-    if (e == 'Forbidden' && schedule_next)
-    {
-      setTimeout(function() { write_to_console(endpoint, true); }, 333);
-    }
-  });
-}
-
-
-function resize_console()
-{
-  var con_height = $(window).height() - 480;
-  if (con_height <= 240)
-  {
-    con_height = 240;
-  }
-  $('#console').height(con_height);
-}
-
-
 $(function()
 {
   var command_history = [];
   var history_index = -1;
+
+  function write_to_console(endpoint, schedule_next)
+  {
+    $.getJSON(
+    {
+      url: endpoint,
+    })
+    .done(function(data)
+    {
+      $('#stdout').text(data.history);
+      $('#console').scrollTop($('#console').prop('scrollHeight'));
+      $('#globals').text(data.globals);
+      $('#locals').text(data.locals);
+      $('#filename').text(data.frame_data.filename);
+      $('#curr_file_code').text(data.frame_data.listing);
+      if (data.frame_data.curr_line != -1)
+      {
+        $('#curr_line').text(data.frame_data.curr_line);
+        $('#curr_file').attr('data-line', data.frame_data.curr_line);
+        var offset;
+        if (data.frame_data.curr_line >= 8)
+        {
+          offset = (data.frame_data.curr_line - 8) / data.frame_data.total_lines;
+        }
+        else
+        {
+          offset = 0;
+        }
+        $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
+      }
+      Prism.highlightAll();
+      var line_spans = $('span.line-numbers-rows').children('span');
+      var i;
+      for (i = 0; i < line_spans.length; i++)
+      {
+        if (data.frame_data.breaklist.indexOf(i + 1) != -1)
+        {
+          line_spans[i].className += 'breakpoint';
+        }
+      }
+      if (schedule_next)
+      {
+        setTimeout(function() { write_to_console(endpoint, true); }, 333);
+      }
+    })
+    .fail(function(r, s, e)
+    {
+      if (e == 'Forbidden' && schedule_next)
+      {
+        setTimeout(function() { write_to_console(endpoint, true); }, 333);
+      }
+    });
+  }
+
+  function resize_console()
+  {
+    var con_height = $(window).height() - 480;
+    if (con_height <= 240)
+    {
+      con_height = 240;
+    }
+    $('#console').height(con_height);
+  }
 
   $('title').text('Web-PDB Console on ' + window.location.host);
   $('#host').html('Web-PDB Console on <em>' + window.location.host + '</em>');
