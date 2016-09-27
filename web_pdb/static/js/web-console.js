@@ -38,9 +38,9 @@ function write_to_console(endpoint, schedule_next)
       $('#curr_line').text(data.frame_data.curr_line);
       $('#curr_file').attr('data-line', data.frame_data.curr_line);
       var offset;
-      if (data.frame_data.curr_line >= 6)
+      if (data.frame_data.curr_line >= 8)
       {
-        offset = (data.frame_data.curr_line - 6) / data.frame_data.total_lines;
+        offset = (data.frame_data.curr_line - 8) / data.frame_data.total_lines;
       }
       else
       {

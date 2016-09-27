@@ -7,7 +7,7 @@ html, body {
 }
 
 .info {
-  height: 250px;
+  height: 300px;
 }
 
 .line-numbers-rows > span.breakpoint:before {
