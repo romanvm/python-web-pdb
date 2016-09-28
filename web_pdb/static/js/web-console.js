@@ -74,6 +74,19 @@ $(function()
       var i;
       for (i = 0; i < line_spans.length; i++)
       {
+        line_spans[i].id = 'lineno_' + (i + 1);
+        line_spans[i].ondblclick = function(event)
+        {
+          var line_number = event.currentTarget.id.split('_')[1];
+          if (event.currentTarget.className == 'breakpoint')
+          {
+            send_command('cl ' + data.frame_data.filename + ':' + line_number);
+          }
+          else
+          {
+            send_command('b ' + line_number);
+          }
+        };
         if (data.frame_data.breaklist.indexOf(i + 1) != -1)
         {
           line_spans[i].className = 'breakpoint';

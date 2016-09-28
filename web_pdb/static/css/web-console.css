@@ -10,6 +10,11 @@ html, body {
   height: 300px;
 }
 
+.line-numbers-rows > span:before {
+  pointer-events: all;
+  cursor: default;
+}
+
 .line-numbers-rows > span.breakpoint:before {
   color: red;
   font-weight: bold;
