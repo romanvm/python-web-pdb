@@ -186,9 +186,16 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
     :type patch_stdstreams: bool
     """
     pdb = WebPdb.active_instance
+    frame = sys._getframe().f_back
     if pdb is None:
         pdb = WebPdb(host, port, patch_stdstreams)
-    pdb.set_trace(sys._getframe().f_back)
+    else:
+        # If the debugger is still attached reset trace to a new location
+        sys.settrace(None)
+        while frame and frame is not pdb.botframe:
+            del frame.f_trace
+            frame = frame.f_back
+    pdb.set_trace(frame)
 
 
 def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
