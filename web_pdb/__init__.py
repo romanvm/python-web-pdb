@@ -84,6 +84,7 @@ class WebPdb(Pdb):
         """
         for name, fh in self._backup:
             setattr(sys, name, fh)
+        self.console.writeline('*** Aborting program ***\n')
         self.console.flush()
         self.console.close()
         WebPdb.active_instance = None
@@ -94,10 +95,12 @@ class WebPdb(Pdb):
     def set_continue(self):
         Pdb.set_continue(self)
         if not self.breaks:
+            self.console.writeline('*** Continue execution ***\n')
             self.console.flush()
 
     def dispatch_return(self, frame, arg):
         if frame.f_back is None and not self.console.closed:
+            self.console.writeline('*** Program finished ***\n')
             self.console.flush()
         return Pdb.dispatch_return(self, frame, arg)
 

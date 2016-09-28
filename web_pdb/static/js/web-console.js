@@ -44,13 +44,13 @@ $(function()
     {
       $('#stdout').text(data.history);
       $('#console').scrollTop($('#console').prop('scrollHeight'));
-      $('#globals').text(data.globals);
-      $('#locals').text(data.locals);
-      $('#filename').text(data.frame_data.filename);
-      $('#curr_file_code').text(data.frame_data.listing);
       if (data.frame_data.curr_line != -1)
       {
+        $('#globals').text(data.globals);
+        $('#locals').text(data.locals);
+        $('#filename').text(data.frame_data.filename);
         $('#curr_line').text(data.frame_data.curr_line);
+        $('#curr_file_code').text(data.frame_data.listing);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
         if (data.frame_data.filename != filename || data.frame_data.curr_line != curent_line)
         {
