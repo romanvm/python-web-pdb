@@ -48,23 +48,26 @@ $(function()
       $('#locals').text(data.locals);
       $('#filename').text(data.frame_data.filename);
       $('#curr_file_code').text(data.frame_data.listing);
-      if (data.frame_data.curr_line != -1 &&
-        (data.frame_data.filename != filename || data.frame_data.curr_line != curent_line))
+      if (data.frame_data.curr_line != -1)
       {
-        filename = data.frame_data.filename;
-        curent_line = data.frame_data.curr_line;
         $('#curr_line').text(data.frame_data.curr_line);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
-        var offset;
-        if (data.frame_data.curr_line >= 8)
+        if (data.frame_data.filename != filename || data.frame_data.curr_line != curent_line)
         {
-          offset = (data.frame_data.curr_line - 8) / data.frame_data.total_lines;
+          // Auto-scroll only if moved to another line
+          filename = data.frame_data.filename;
+          curent_line = data.frame_data.curr_line;
+          var offset;
+          if (curent_line >= 8)
+          {
+            offset = (curent_line - 8) / data.frame_data.total_lines;
+          }
+          else
+          {
+            offset = 0;
+          }
+          $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
         }
-        else
-        {
-          offset = 0;
-        }
-        $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
       }
       Prism.highlightAll();
       var line_spans = $('span.line-numbers-rows').children('span');
@@ -73,7 +76,7 @@ $(function()
       {
         if (data.frame_data.breaklist.indexOf(i + 1) != -1)
         {
-          line_spans[i].className += 'breakpoint';
+          line_spans[i].className = 'breakpoint';
         }
       }
       if (schedule_next)
