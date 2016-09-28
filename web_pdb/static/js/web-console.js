@@ -75,7 +75,7 @@ $(function()
       for (i = 0; i < line_spans.length; i++)
       {
         line_spans[i].id = 'lineno_' + (i + 1);
-        line_spans[i].ondblclick = function(event)
+        line_spans[i].onclick = function(event)
         {
           var line_number = event.currentTarget.id.split('_')[1];
           if (event.currentTarget.className == 'breakpoint')
