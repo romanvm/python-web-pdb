@@ -29,6 +29,7 @@ from __future__ import absolute_import
 import inspect
 import os
 import sys
+import random
 import traceback
 from contextlib import contextmanager
 if sys.version_info[0] == 2:
@@ -55,12 +56,16 @@ class WebPdb(Pdb):
         """
         :param host: web-UI hostname or IP-address
         :type host: str
-        :param port: web-UI port
+        :param port: web-UI port. If ``port=-1``, choose a random port value
+            between 32768 and 65536.
         :type port: int
         :param patch_stdstreams: redirect all standard input and output
             streams to the web-UI.
         :type patch_stdstreams: bool
         """
+        if port == -1:
+            random.seed()
+            port = random.randint(32768, 65536)
         self.console = WebConsole(host, port, self)
         Pdb.__init__(self, stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
@@ -192,7 +197,8 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
 
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+     between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
@@ -226,7 +232,8 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     :type tb: types.TracebackType
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+        between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
@@ -272,7 +279,8 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
 
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+        between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
