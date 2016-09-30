@@ -22,7 +22,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# Todo: add test for adding/removing breakpoints by click
 # Todo: don't forget to remove bottle.debug before release
 
 """
