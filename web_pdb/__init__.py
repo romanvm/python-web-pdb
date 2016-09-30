@@ -94,14 +94,13 @@ class WebPdb(Pdb):
     do_q = do_exit = do_quit
 
     def set_continue(self):
-        Pdb.set_continue(self)
-        if not self.breaks:
-            self.console.writeline('*** Continue execution ***\n')
-            self.console.flush()
+        # We do not detach the debugger
+        # for correct multiple set_trace() and post_mortem() calls.
+        self._set_stopinfo(self.botframe, None, -1)
 
     def dispatch_return(self, frame, arg):
-        if frame.f_back is None and not self.console.closed:
-            self.console.writeline('*** Program finished ***\n')
+        if frame.f_back is None:
+            self.console.writeline('*** Thread finished ***\n')
             self.console.flush()
         return Pdb.dispatch_return(self, frame, arg)
 
