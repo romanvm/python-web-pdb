@@ -24,6 +24,7 @@
 
 import os
 import re
+from codecs import open
 try:
     from setuptools import setup
 except ImportError:
@@ -37,8 +38,8 @@ def get_version():
         return re.search(r'__version__ = \'(\d+\.\d+\.\d+)\'', fo.read()).group(1)
 
 
-def get_long_descr():
-    with open('Readme.rst') as fo:
+def get_doc(filename):
+    with open(filename, encoding='utf-8') as fo:
         return fo.read()
 
 
@@ -48,7 +49,7 @@ setup(
     author='Roman Miroshnychenko',
     author_email='romanvm@yandex.ua',
     description='Web interface for Python\'s built-in PDB debugger',
-    long_description=get_long_descr(),
+    long_description=get_doc('Readme.rst') + u'\n\n' + get_doc('Changelog.rst'),
     url='https://github.com/romanvm/python-web-pdb',
     license='MIT License',
     packages=['web_pdb'],
