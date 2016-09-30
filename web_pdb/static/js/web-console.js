@@ -84,7 +84,7 @@ $(function()
           }
           else
           {
-            send_command('b ' + line_number);
+            send_command('b ' + data.frame_data.filename + ':'+ line_number);
           }
         };
         if (data.frame_data.breaklist.indexOf(i + 1) != -1)
