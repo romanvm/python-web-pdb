@@ -164,7 +164,8 @@ $(function()
     {
       url: 'input',
       data: input + '\n',
-      method: 'POST'
+      method: 'POST',
+      contentType: 'text/plain; charset=UTF-8'
     })
     .done(function()
     {
