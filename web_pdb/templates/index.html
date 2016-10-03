@@ -27,19 +27,71 @@
   <div class="container-fluid language-python">
     <div class="row">
       <div class="col-sm-6">
-        <p><strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp></p>
+        <div class="infobox-label">
+          <div class="infobox-label-text">
+            <strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp>
+          </div>
+        </div>
         <pre id="curr_file" class="line-numbers info"><code id="curr_file_code"></code></pre>
       </div>
       <div class="col-sm-3">
-        <p><strong>Globals</strong></p>
+        <div class="infobox-label">
+          <div class="infobox-label-text">
+            <strong>Globals</strong>
+          </div>
+        </div>
         <pre class="info"><code id="globals"></code></pre>
       </div>
       <div class="col-sm-3">
-        <p><strong>Locals</strong></p>
+        <div class="infobox-label">
+          <div class="infobox-label-text">
+            <strong>Locals</strong>
+          </div>
+        </div>
         <pre class="info"><code id="locals"></code></pre>
       </div>
       <div class="col-sm-12">
-        <p><strong>PDB Console</strong></p>
+        <div class="btn-group" role="group">
+          <button id="next_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Next line (F10)">
+            <span class="glyphicon glyphicon-step-forward"></span>
+          </button>
+          <button id="step_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Step into function (F11)">
+            <span class="glyphicon glyphicon-import"></span>
+          </button>
+          <button id="return_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Return from function (Shift + F11)">
+            <span class="glyphicon glyphicon-export"></span>
+          </button>
+          <button id="continue_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Continue execution (F8)">
+            <span class="glyphicon glyphicon-play"></span>
+          </button>
+          <button id="up_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="To upper frame">
+            <span class="glyphicon glyphicon-arrow-up"></span>
+          </button>
+          <button id="down_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="To lower frame">
+            <span class="glyphicon glyphicon-arrow-down"></span>
+          </button>
+          <button id="where_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Print stack trace (where)">
+            <span class="glyphicon glyphicon-map-marker"></span>
+          </button>
+          <button id="help_btn" type="button" class="btn btn-default"
+              data-toggle="tooltip" title="Quick help">
+            <span class="glyphicon glyphicon-question-sign"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-sm-12">
+        <div class="infobox-label">
+          <div class="infobox-label-text">
+            <strong>PDB Console</strong>
+          </div>
+        </div>
         <pre id="console"><code id="stdout"></code></pre>
       </div>
       <div class="col-sm-12">
@@ -53,5 +105,51 @@
       </div>
     </div>
   </div>
+  <div id="help_window" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign"></span> Web-PDB Quick Help</h4>
+        </div>
+        <div class="modal-body">
+          <h5>Web-PDB Shortcuts:</h5>
+          <ul>
+            <li><kbd>F10</kbd>: proceed to the next line, staying on the current level.</li>
+            <li><kbd>F11</kbd>: proceed to the next line and step into a function, if any.</li>
+            <li><kbd>Shift + F11</kbd>: step out of the current function.</li>
+            <li><kbd>F8</kbd>: continue execution.</li>
+            <li><kbd>&uarr;</kbd>: scroll command history from latest to earliest (in the command field).</li>
+            <li><kbd>&darr;</kbd>: scroll command history from earliest to latest (in the command field).</li>
+            <li><kbd>Enter</kbd>: send a PDB command (from the command field).</li>
+            <li>Click on a line number in <strong>Current file</strong> box:
+              set or remove a breakpoint.</li>
+          </ul>
+          <h5>Essential PDB Commands:</h5>
+          <ul>
+            <li><code>p (var)</code>: print the value of a variable or a Python expression.</li>
+            <li><code>pp (var)</code>: print the value of a variable or a Python expression with
+              pretty formatting.</li>
+            <li><code>!(expr)</code>: execute a Python expression in the current context.</li>
+            <li><code>h</code>: print the list of available commands.</li>
+            <li><code>h (command)</code>: print quick help for a given command.</li>
+            <li><code>restart [args]</code>: restart the program with the given arguments (optional).</li>
+            <li><code>q</code>: terminate the current program and quit.</li>
+          </ul>
+          <p>You can find more detailed info on PDB commands and usage in the
+            <a href="https://docs.python.org/3.5/library/pdb.html" target="_blank">
+              official Python documentation</a>.
+          </p>
+          <hr>
+          <p>This program is distributed under the terms of
+            <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+          <p>&copy; 2016 <a href="mailto:romanvm@yandex.ua">Roman Miroshnychenko</a>.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </body>
 </html>
