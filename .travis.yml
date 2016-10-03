@@ -3,6 +3,5 @@ python:
   - "2.7"
   - "3.5"
 script: python setup.py install test
-  - python ./tests/tests.py
 notifications:
   email: false

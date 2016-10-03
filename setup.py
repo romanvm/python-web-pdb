@@ -68,7 +68,7 @@ setup(
         'Topic :: Software Development :: Debuggers',
     ],
     install_requires=['bottle'],
-    test_suite = 'tests.tests',
+    test_suite='tests.tests',
     tests_require=['selenium==2.53.6'],
     platforms=['any'],
     zif_safe=False,
