@@ -68,8 +68,8 @@ setup(
         'Topic :: Software Development :: Debuggers',
     ],
     install_requires=['bottle'],
-    test_suite = 'nose.collector',
-    tests_require=['nose', 'selenium==2.53.6'],
+    test_suite = 'tests.tests',
+    tests_require=['selenium==2.53.6'],
     platforms=['any'],
     zif_safe=False,
 )
