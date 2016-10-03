@@ -6,5 +6,12 @@ install: pip install selenium
 script:
   - python setup.py install
   - python ./tests/tests.py  # Tests via setuptools run too long and hang too often on Travis
+deploy:
+  provider: pypi
+  user: $PYPI_USER
+  password: $PYPI_PASS
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
 notifications:
   email: false
