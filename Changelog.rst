@@ -1,7 +1,7 @@
 Changelog
 #########
 
-v.1.2.0 (yyyy-mm-dd)
+v.1.2.0 (2016-10-03)
 ====================
 
 * Minor UI redesign.
