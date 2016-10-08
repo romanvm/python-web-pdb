@@ -76,6 +76,21 @@ For example:
 
 For more detailed info about the Web-PDB API read docstrings in the ``./web_pdb/__init__.py`` file.
 
+Considerations for Multithreading and Multiprocessing Programs
+==============================================================
+Multithreading
+--------------
+
+Web-PDB maintains one debugger instance that traces only one thread. You should not call ``set_trace()``
+from different threads to avoid race conditions. Each thread needs to be debugged separately one at a time.
+
+Multiprocessing
+---------------
+
+Each process can have its own debugger instance provided you call ``set_trace`` with a different port value
+for each process. This way you can debug each process in a separate browser tab/window.
+To simplify this you can use ``set_trace(port=-1)`` to select a random port between 32768 and 65536.
+
 Compatibility
 =============
 

@@ -29,6 +29,7 @@ from __future__ import absolute_import
 import inspect
 import os
 import sys
+import random
 import traceback
 from contextlib import contextmanager
 if sys.version_info[0] == 2:
@@ -39,7 +40,7 @@ from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 
-__version__ = '1.1.0'
+__version__ = '1.2.0'
 
 
 class WebPdb(Pdb):
@@ -47,6 +48,7 @@ class WebPdb(Pdb):
     The main debugger class
 
     It provides a web-interface for Python's built-in PDB debugger
+    with extra convenience features.
     """
     active_instance = None
 
@@ -54,12 +56,16 @@ class WebPdb(Pdb):
         """
         :param host: web-UI hostname or IP-address
         :type host: str
-        :param port: web-UI port
+        :param port: web-UI port. If ``port=-1``, choose a random port value
+            between 32768 and 65536.
         :type port: int
         :param patch_stdstreams: redirect all standard input and output
             streams to the web-UI.
         :type patch_stdstreams: bool
         """
+        if port == -1:
+            random.seed()
+            port = random.randint(32768, 65536)
         self.console = WebConsole(host, port, self)
         Pdb.__init__(self, stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
@@ -84,6 +90,7 @@ class WebPdb(Pdb):
         """
         for name, fh in self._backup:
             setattr(sys, name, fh)
+        self.console.writeline('*** Aborting program ***\n')
         self.console.flush()
         self.console.close()
         WebPdb.active_instance = None
@@ -92,12 +99,13 @@ class WebPdb(Pdb):
     do_q = do_exit = do_quit
 
     def set_continue(self):
-        Pdb.set_continue(self)
-        if not self.breaks:
-            self.console.flush()
+        # We do not detach the debugger
+        # for correct multiple set_trace() and post_mortem() calls.
+        self._set_stopinfo(self.botframe, None, -1)
 
     def dispatch_return(self, frame, arg):
-        if frame.f_back is None and not self.console.closed:
+        if frame.f_back is None:
+            self.console.writeline('*** Thread finished ***\n')
             self.console.flush()
         return Pdb.dispatch_return(self, frame, arg)
 
@@ -159,6 +167,19 @@ class WebPdb(Pdb):
         """
         return self._format_variables(self.curframe.f_locals)
 
+    def remove_trace(self, frame=None):
+        """
+        Detach the debugger from the execution stack
+
+        :param frame: the lowest frame to detach the debugger from.
+        """
+        sys.settrace(None)
+        if frame is None:
+            frame = self.curframe
+        while frame and frame is not self.botframe:
+            del frame.f_trace
+            frame = frame.f_back
+
 
 def set_trace(host='', port=5555, patch_stdstreams=False):
     """
@@ -176,7 +197,8 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
 
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+     between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
@@ -185,6 +207,9 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
     pdb = WebPdb.active_instance
     if pdb is None:
         pdb = WebPdb(host, port, patch_stdstreams)
+    else:
+        # If the debugger is still attached reset trace to a new location
+        pdb.remove_trace()
     pdb.set_trace(sys._getframe().f_back)
 
 
@@ -207,17 +232,15 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     :type tb: types.TracebackType
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+        between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
     :type patch_stdstreams: bool
-    :raises RuntimeError: if there is an active WebPdb instance
     :raises ValueError: if no valid traceback is provided and the Python
         interpreter is not handling any exception
     """
-    if WebPdb.active_instance is not None:
-        raise RuntimeError('No active WebPdb instances allowed when doing post-mortem!')
     # handling the default
     if tb is None:
         # sys.exc_info() returns (type, value, traceback) if an exception is
@@ -229,11 +252,15 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     if tb is None:
         raise ValueError('A valid traceback must be passed if no '
                          'exception is being handled')
-    p = WebPdb(host, port, patch_stdstreams)
-    p.console.writeline('Web-PDB post-mortem:\n')
-    p.console.writeline(''.join(exc_data))
-    p.reset()
-    p.interaction(None, tb)
+    pdb = WebPdb.active_instance
+    if pdb is None:
+        pdb = WebPdb(host, port, patch_stdstreams)
+    else:
+        pdb.remove_trace()
+    pdb.console.writeline('*** Web-PDB post-mortem ***\n')
+    pdb.console.writeline(''.join(exc_data))
+    pdb.reset()
+    pdb.interaction(None, tb)
 
 
 @contextmanager
@@ -252,12 +279,12 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
 
     :param host: web-UI hostname or IP-address
     :type host: str
-    :param port: web-UI port
+    :param port: web-UI port. If ``port=-1``, choose a random port value
+        between 32768 and 65536.
     :type port: int
     :param patch_stdstreams: redirect all standard input and output
         streams to the web-UI.
     :type patch_stdstreams: bool
-    :raises RuntimeError: if there is an active WebPdb instance
     """
     try:
         yield
