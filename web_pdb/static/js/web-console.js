@@ -56,11 +56,11 @@ $(function()
         {
           // Auto-scroll only if moved to another line
           filename = data.frame_data.filename;
-          curent_line = data.frame_data.curr_line;
+          current_line = data.frame_data.curr_line;
           var offset;
-          if (curent_line >= 8)
+          if (current_line >= 8)
           {
-            offset = (curent_line - 8) / data.frame_data.total_lines;
+            offset = (current_line - 8) / data.frame_data.total_lines;
           }
           else
           {
