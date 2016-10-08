@@ -42,6 +42,7 @@ from .wsgi_app import app
 __all__ = ['WebConsole']
 
 logger = logging.getLogger('Web-PDB')
+logger.addHandler(logging.StreamHandler())
 
 
 class SilentWSGIRequestHandler(WSGIRequestHandler):
