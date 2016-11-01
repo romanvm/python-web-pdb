@@ -25,7 +25,7 @@ $(function()
   var command_history = [];
   var history_index = -1;
   var filename = '';
-  var curent_line = -1;
+  var current_line = -1;
 
   // Functions
   function send_command(command)
@@ -52,21 +52,27 @@ $(function()
         $('#curr_line').text(data.frame_data.curr_line);
         $('#curr_file_code').text(data.frame_data.listing);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
-        if (data.frame_data.filename != filename || data.frame_data.curr_line != curent_line)
+        if (data.frame_data.filename != filename || data.frame_data.curr_line != current_line)
         {
           // Auto-scroll only if moved to another line
           filename = data.frame_data.filename;
           current_line = data.frame_data.curr_line;
-          var offset;
-          if (current_line >= 8)
+          // The algorithm below is empirical and may need further polishing
+          var multiplier;
+          if (current_line < 8)
           {
-            offset = (current_line - 8) / data.frame_data.total_lines;
+            multiplier = 0;
+          }
+          if (current_line >= 8 && current_line < 100)
+          {
+            multiplier = (current_line - 8) / data.frame_data.total_lines;
           }
           else
           {
-            offset = 0;
+            var offset = 7 + 7 * (current_line / data.frame_data.total_lines);
+            multiplier = (current_line - offset) / data.frame_data.total_lines;
           }
-          $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * offset);
+          $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * multiplier);
         }
       }
       Prism.highlightAll();
