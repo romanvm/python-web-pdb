@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v.1.2.2 (2016-MM-DD)
+====================
+
+* Added deflate compression for data sent to a browser.
+* Attempt to fix **Current file** box auto-scrolling.
+
 v.1.2.1 (2016-10-08)
 ====================
 
