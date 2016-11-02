@@ -48,7 +48,7 @@ def compress(func):
     """
     Compress route return data with deflate compression
 
-    zlib.compress is very vast and has negligible performance impact
+    zlib.compress is very fast and has negligible performance impact
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
