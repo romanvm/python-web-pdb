@@ -1,7 +1,7 @@
 Changelog
 #########
 
-v.1.2.2 (2016-MM-DD)
+v.1.2.2 (2016-11-03)
 ====================
 
 * Added deflate compression for data sent to a browser.
