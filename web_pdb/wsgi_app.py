@@ -27,9 +27,9 @@ Web-UI WSGI application
 
 import json
 import os
-import bottle
 import zlib
 from functools import wraps
+import bottle
 
 __all__ = ['app']
 
