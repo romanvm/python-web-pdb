@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.3.0 (2016-12-XX)
+====================
+
+* Implemented a multi-threaded WSGI server to increase responsiveness of the web-UI.
+
 v.1.2.2 (2016-11-03)
 ====================
 
