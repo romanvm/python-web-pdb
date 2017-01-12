@@ -76,6 +76,10 @@ For example:
 
 For more detailed info about the Web-PDB API read docstrings in the ``./web_pdb/__init__.py`` file.
 
+**Note**: Web-PDB periodically sends AJAX ``GET`` requests to ``/output/update`` endpoint
+that may either be successful or return HTTP ``403`` error. This is normal behaviour and ``403`` errors
+from that endpoint can be safely ignored.
+
 Considerations for Multithreading and Multiprocessing Programs
 ==============================================================
 Multithreading
