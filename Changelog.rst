@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v.1.3.1 (2017-03-XX)
+====================
+
+* Now the back-end sends 'null' instead of 403 errors if web-console data
+  haven't changed.
+
 v.1.3.0 (2016-12-12)
 ====================
 
