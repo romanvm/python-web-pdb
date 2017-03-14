@@ -88,7 +88,7 @@ def root():
 def send(mode):
     if app.history.is_dirty or mode == 'history':
         bottle.response.content_type = 'application/json; charset=UTF-8'
-        bottle.response.cache_control = 'no-cache'
+        bottle.response.cache_control = 'no-store'
         return json.dumps({
             'history': app.history.contents,
             'globals': app.globals.contents,
