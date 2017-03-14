@@ -41,7 +41,8 @@ static_path = os.path.join(cwd, 'static')
 try:
     string_type = basestring
 except NameError:
-    string_type = str
+    string_type = (bytes, str)
+    unicode = str
 
 
 def compress(func):
@@ -53,10 +54,11 @@ def compress(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
-        if ('Accept-Encoding' in bottle.request.headers and
-                'deflate' in bottle.request.headers['Accept-Encoding'] and
+        if ('deflate' in bottle.request.headers.get('Accept-Encoding', '') and
                 isinstance(result, string_type)):
-            result = zlib.compress(result.encode('utf-8'))
+            if isinstance(result, unicode):
+                result = result.encode('utf-8')
+            result = zlib.compress(result)
             bottle.response.add_header('Content-Encoding', 'deflate')
         return result
     return wrapper
