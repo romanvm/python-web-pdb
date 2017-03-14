@@ -42,70 +42,66 @@ $(function()
     })
     .done(function(data)
     {
-      $('#stdout').text(data.history);
-      $('#console').scrollTop($('#console').prop('scrollHeight'));
-      if (data.frame_data.curr_line != -1)
+      if (data)
       {
-        $('#globals').text(data.globals);
-        $('#locals').text(data.locals);
-        $('#filename').text(data.frame_data.filename);
-        $('#curr_line').text(data.frame_data.curr_line);
-        $('#curr_file_code').text(data.frame_data.listing);
-        $('#curr_file').attr('data-line', data.frame_data.curr_line);
-        if (data.frame_data.filename != filename || data.frame_data.curr_line != current_line)
+        $('#stdout').text(data.history);
+        $('#console').scrollTop($('#console').prop('scrollHeight'));
+        if (data.frame_data.curr_line != -1)
         {
-          // Auto-scroll only if moved to another line
-          filename = data.frame_data.filename;
-          current_line = data.frame_data.curr_line;
-          // The algorithm below is empirical and may need further polishing
-          var multiplier;
-          if (current_line < 8)
+          $('#globals').text(data.globals);
+          $('#locals').text(data.locals);
+          $('#filename').text(data.frame_data.filename);
+          $('#curr_line').text(data.frame_data.curr_line);
+          $('#curr_file_code').text(data.frame_data.listing);
+          $('#curr_file').attr('data-line', data.frame_data.curr_line);
+          if (data.frame_data.filename != filename || data.frame_data.curr_line != current_line)
           {
-            multiplier = 0;
+            // Auto-scroll only if moved to another line
+            filename = data.frame_data.filename;
+            current_line = data.frame_data.curr_line;
+            // The algorithm below is empirical and may need further polishing
+            var multiplier;
+            if (current_line < 8)
+            {
+              multiplier = 0;
+            }
+            if (current_line >= 8 && current_line < 100)
+            {
+              multiplier = (current_line - 8) / data.frame_data.total_lines;
+            }
+            else
+            {
+              var offset = 7 + 7 * (current_line / data.frame_data.total_lines);
+              multiplier = (current_line - offset) / data.frame_data.total_lines;
+            }
+            $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * multiplier);
           }
-          if (current_line >= 8 && current_line < 100)
-          {
-            multiplier = (current_line - 8) / data.frame_data.total_lines;
-          }
-          else
-          {
-            var offset = 7 + 7 * (current_line / data.frame_data.total_lines);
-            multiplier = (current_line - offset) / data.frame_data.total_lines;
-          }
-          $('#curr_file').scrollTop($('#curr_file').prop('scrollHeight') * multiplier);
         }
-      }
-      Prism.highlightAll();
-      var line_spans = $('span.line-numbers-rows').children('span');
-      var i;
-      for (i = 0; i < line_spans.length; i++)
-      {
-        line_spans[i].id = 'lineno_' + (i + 1);
-        line_spans[i].onclick = function(event)
+        Prism.highlightAll();
+        var line_spans = $('span.line-numbers-rows').children('span');
+        var i;
+        for (i = 0; i < line_spans.length; i++)
         {
-          var line_number = event.currentTarget.id.split('_')[1];
-          if (event.currentTarget.className == 'breakpoint')
+          line_spans[i].id = 'lineno_' + (i + 1);
+          line_spans[i].onclick = function(event)
           {
-            send_command('cl ' + data.frame_data.filename + ':' + line_number);
-          }
-          else
+            var line_number = event.currentTarget.id.split('_')[1];
+            if (event.currentTarget.className == 'breakpoint')
+            {
+              send_command('cl ' + data.frame_data.filename + ':' + line_number);
+            }
+            else
+            {
+              send_command('b ' + data.frame_data.filename + ':'+ line_number);
+            }
+          };
+          if (data.frame_data.breaklist.indexOf(i + 1) != -1)
           {
-            send_command('b ' + data.frame_data.filename + ':'+ line_number);
+            line_spans[i].className = 'breakpoint';
           }
-        };
-        if (data.frame_data.breaklist.indexOf(i + 1) != -1)
-        {
-          line_spans[i].className = 'breakpoint';
         }
       }
       if (schedule_next)
-      {
-        setTimeout(function() { write_to_console(endpoint, true); }, 333);
-      }
-    })
-    .fail(function(r, s, e)
-    {
-      if (e == 'Forbidden' && schedule_next)
       {
         setTimeout(function() { write_to_console(endpoint, true); }, 333);
       }

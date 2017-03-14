@@ -86,17 +86,18 @@ def root():
 @app.route('/output/<mode>')
 @compress
 def send(mode):
+    bottle.response.content_type = 'application/json; charset=UTF-8'
+    bottle.response.cache_control = 'no-store'
     if app.history.is_dirty or mode == 'history':
-        bottle.response.content_type = 'application/json; charset=UTF-8'
-        bottle.response.cache_control = 'no-store'
-        return json.dumps({
+        body = {
             'history': app.history.contents,
             'globals': app.globals.contents,
             'locals': app.locals.contents,
             'frame_data': app.frame_data.contents,
-        })
+        }
     else:
-        raise bottle.HTTPError(403, 'Forbidden')
+        body = None
+    return json.dumps(body)
 
 
 @app.route('/input', method='POST')
