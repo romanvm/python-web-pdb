@@ -86,7 +86,7 @@ def root():
 @app.route('/output/<mode>')
 @compress
 def send(mode):
-    bottle.response.content_type = 'application/json; charset=UTF-8'
+    bottle.response.content_type = 'application/json'
     bottle.response.cache_control = 'no-store'
     if app.history.is_dirty or mode == 'history':
         body = {
