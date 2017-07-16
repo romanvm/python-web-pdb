@@ -120,6 +120,8 @@ class WebPdb(Pdb):
         """
         filename = self.curframe.f_code.co_filename
         lines, start_line = inspect.findsource(self.curframe)
+        if sys.version_info[0] == 2:
+            lines = (line.decode('utf-8') for line in lines)
         return {
             'filename': os.path.basename(filename),
             'listing': u''.join(lines),
@@ -144,7 +146,7 @@ class WebPdb(Pdb):
                     try:
                         repr_value = repr_value.decode('raw_unicode_escape')
                     except UnicodeError:
-                        pass
+                        repr_value = repr_value.decode('utf-8', 'replace')
                 f_vars.append(u'{0} = {1}'.format(var, repr_value))
         return u'\n'.join(sorted(f_vars))
 

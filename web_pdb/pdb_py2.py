@@ -38,7 +38,7 @@ class PdbPy2(Pdb):
             try:
                 repr_value = repr_value.decode('raw_unicode_escape')
             except UnicodeError:
-                pass
+                repr_value = repr_value.decode('utf-8', 'replace')
             print >> self.stdout, repr_value
         except:
             pass
@@ -50,7 +50,7 @@ class PdbPy2(Pdb):
             try:
                 repr_value = repr_value.decode('raw_unicode_escape')
             except UnicodeError:
-                pass
+                repr_value = repr_value.decode('utf-8', 'replace')
             print >> self.stdout, repr_value
         except:
             pass
