@@ -115,6 +115,10 @@ class WebConsole(object):
     def writable(self):
         return True
 
+    @property
+    def encoding(self):
+        return 'utf-8'
+
     def _run_server(self, host, port):
         app.in_queue = self._in_queue
         app.history = self._history
