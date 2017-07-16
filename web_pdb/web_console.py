@@ -96,9 +96,9 @@ class WebConsole(object):
     """
     def __init__(self, host, port, debugger):
         self._debugger = weakref.proxy(debugger)
-        self._history = ThreadSafeBuffer('')
-        self._globals = ThreadSafeBuffer('')
-        self._locals = ThreadSafeBuffer('')
+        self._history = ThreadSafeBuffer(u'')
+        self._globals = ThreadSafeBuffer(u'')
+        self._locals = ThreadSafeBuffer(u'')
         self._frame_data = ThreadSafeBuffer()
         self._in_queue = queue.Queue()
         self._stop_all = Event()
@@ -151,18 +151,18 @@ class WebConsole(object):
         return [self.readline()]
 
     def writeline(self, data):
-        if sys.version_info[0] == 2 and isinstance(data, unicode):
-            data = data.encode('utf-8')
+        if sys.version_info[0] == 2 and isinstance(data, str):
+            data = data.decode('utf-8')
         self._history.contents += data
         try:
             self._globals.contents = self._debugger.get_globals()
             self._locals.contents = self._debugger.get_locals()
             self._frame_data.contents = self._debugger.get_current_frame_data()
         except (IOError, AttributeError):
-            self._globals.contents = self._locals.contents = 'No data available'
+            self._globals.contents = self._locals.contents = u'No data available'
             self._frame_data.contents = {
-                'filename': '',
-                'listing': 'No data available',
+                'filename': u'',
+                'listing': u'No data available',
                 'curr_line': -1,
                 'breaklist': [],
             }

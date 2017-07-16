@@ -122,13 +122,19 @@ class WebPdb(Pdb):
         lines, start_line = inspect.findsource(self.curframe)
         return {
             'filename': os.path.basename(filename),
-            'listing': ''.join(lines),
+            'listing': u''.join(lines),
             'curr_line': self.curframe.f_lineno,
             'total_lines': len(lines),
             'breaklist': self.get_file_breaks(filename),
         }
 
     def _format_variables(self, raw_vars):
+        """
+        :param raw_vars:
+        :type raw_vars: dict
+        :return:
+        :rtype: unicode
+        """
         f_vars = []
         for var, value in raw_vars.items():
             if not (var.startswith('__') and var.endswith('__')):
@@ -136,11 +142,11 @@ class WebPdb(Pdb):
                 if sys.version_info[0] == 2:
                     # Try to convert Unicode string to human-readable form
                     try:
-                        repr_value = repr_value.decode('raw_unicode_escape').encode('utf-8')
+                        repr_value = repr_value.decode('raw_unicode_escape')
                     except UnicodeError:
                         pass
-                f_vars.append('{0} = {1}'.format(var, repr_value))
-        return '\n'.join(sorted(f_vars))
+                f_vars.append(u'{0} = {1}'.format(var, repr_value))
+        return u'\n'.join(sorted(f_vars))
 
     def get_globals(self):
         """
