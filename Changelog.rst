@@ -1,11 +1,16 @@
 Changelog
 #########
 
+v.1.3.2 (2017-07-XX)
+====================
+
+* Internal changes.
+
 v.1.3.1 (2017-03-14)
 ====================
 
-* Now the back-end sends "null" response body instead of 403 errors if
-  web-console data haven't changed.
+* Now if web-console data haven't changed
+  the back-end sends "null" response body instead of a 403 error.
 
 v.1.3.0 (2016-12-12)
 ====================
