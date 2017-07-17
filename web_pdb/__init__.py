@@ -158,7 +158,7 @@ class WebPdb(Pdb):
             double underscores ``__`` are not included.
 
         :return: a listing of ``var = value`` pairs sorted alphabetically
-        :rtype: str
+        :rtype: unicode
         """
         return self._format_variables(self.curframe.f_globals)
 
@@ -171,7 +171,7 @@ class WebPdb(Pdb):
             For module scope globals and locals listings are the same.
 
         :return: a listing of ``var = value`` pairs sorted alphabetically
-        :rtype: str
+        :rtype: unicode
         """
         return self._format_variables(self.curframe.f_locals)
 
