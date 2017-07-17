@@ -132,9 +132,9 @@ class WebPdb(Pdb):
 
     def _format_variables(self, raw_vars):
         """
-        :param raw_vars:
+        :param raw_vars: a `dict` of `var_name: var_object` pairs
         :type raw_vars: dict
-        :return:
+        :return: sorted list of variables as a unicode string
         :rtype: unicode
         """
         f_vars = []
@@ -180,6 +180,7 @@ class WebPdb(Pdb):
         Detach the debugger from the execution stack
 
         :param frame: the lowest frame to detach the debugger from.
+        :type frame: types.FrameType
         """
         sys.settrace(None)
         if frame is None:
