@@ -121,7 +121,7 @@ class WebPdb(Pdb):
         filename = self.curframe.f_code.co_filename
         lines, start_line = inspect.findsource(self.curframe)
         if sys.version_info[0] == 2:
-            lines = (line.decode('utf-8') for line in lines)
+            lines = [line.decode('utf-8') for line in lines]
         return {
             'filename': os.path.basename(filename),
             'listing': u''.join(lines),
