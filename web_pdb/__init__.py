@@ -106,7 +106,9 @@ class WebPdb(Pdb):
     def dispatch_return(self, frame, arg):
         if frame.f_back is None:
             self.console.writeline('*** Thread finished ***\n')
-            self.console.flush()
+            if not self.console.closed:
+                self.console.flush()
+                self.console.close()
         return Pdb.dispatch_return(self, frame, arg)
 
     def get_current_frame_data(self):
