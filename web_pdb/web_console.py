@@ -141,7 +141,7 @@ class WebConsole(object):
             except queue.Empty:
                 continue
         else:
-            data = ''
+            data = u''
         self.writeline(data)
         return data
 
