@@ -25,7 +25,7 @@
 File-like web-based input/output console
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import logging
 import sys
 import time
@@ -96,9 +96,9 @@ class WebConsole(object):
     """
     def __init__(self, host, port, debugger):
         self._debugger = weakref.proxy(debugger)
-        self._history = ThreadSafeBuffer(u'')
-        self._globals = ThreadSafeBuffer(u'')
-        self._locals = ThreadSafeBuffer(u'')
+        self._history = ThreadSafeBuffer('')
+        self._globals = ThreadSafeBuffer('')
+        self._locals = ThreadSafeBuffer('')
         self._frame_data = ThreadSafeBuffer()
         self._in_queue = queue.Queue()
         self._stop_all = Event()
@@ -141,7 +141,7 @@ class WebConsole(object):
             except queue.Empty:
                 continue
         else:
-            data = u''
+            data = ''
         self.writeline(data)
         return data
 
@@ -159,10 +159,10 @@ class WebConsole(object):
             self._locals.contents = self._debugger.get_locals()
             self._frame_data.contents = self._debugger.get_current_frame_data()
         except (IOError, AttributeError):
-            self._globals.contents = self._locals.contents = u'No data available'
+            self._globals.contents = self._locals.contents = 'No data available'
             self._frame_data.contents = {
-                'filename': u'',
-                'listing': u'No data available',
+                'filename': '',
+                'listing': 'No data available',
                 'curr_line': -1,
                 'breaklist': [],
             }

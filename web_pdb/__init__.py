@@ -25,7 +25,7 @@
 A web-interface for Python's built-in PDB debugger
 """
 
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import inspect
 import os
 import sys
@@ -126,7 +126,7 @@ class WebPdb(Pdb):
             lines = [line.decode('utf-8') for line in lines]
         return {
             'filename': os.path.basename(filename),
-            'listing': u''.join(lines),
+            'listing': ''.join(lines),
             'curr_line': self.curframe.f_lineno,
             'total_lines': len(lines),
             'breaklist': self.get_file_breaks(filename),
@@ -149,8 +149,8 @@ class WebPdb(Pdb):
                         repr_value = repr_value.decode('raw_unicode_escape')
                     except UnicodeError:
                         repr_value = repr_value.decode('utf-8', 'replace')
-                f_vars.append(u'{0} = {1}'.format(var, repr_value))
-        return u'\n'.join(sorted(f_vars))
+                f_vars.append('{0} = {1}'.format(var, repr_value))
+        return '\n'.join(sorted(f_vars))
 
     def get_globals(self):
         """
