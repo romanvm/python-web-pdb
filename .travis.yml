@@ -2,6 +2,13 @@ language: python
 python:
   - "2.7"
   - "3.6"
+addons:
+  chrome: stable
+before_install:
+  - wget https://chromedriver.storage.googleapis.com/2.32/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - chmod +x chromedriver
+  - export PATH=$TRAVIS_BUILD_DIR:$PATH
 install: pip install selenium
 script:
   - python setup.py install
