@@ -69,7 +69,7 @@ setup(
     ],
     install_requires=['bottle'],
     test_suite='tests.tests',
-    tests_require=['selenium==2.53.6'],
+    tests_require=['selenium'],
     platforms=['any'],
     zif_safe=False,
 )
