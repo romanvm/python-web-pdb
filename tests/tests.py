@@ -23,6 +23,7 @@
 # THE SOFTWARE.
 
 import os
+import sys
 import time
 from unittest import TestCase, main
 from subprocess import Popen
@@ -33,15 +34,16 @@ cwd = os.path.dirname(os.path.abspath(__file__))
 db_py = os.path.join(cwd, 'db.py')
 
 
-class WebPdbTestCase(TestCase):
-    """
-    This class provides basic functionality testing for Web-PDB
-    """
+class SeleniumTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.db_proc = Popen(['python', db_py], shell=False)
-        cls.browser = webdriver.PhantomJS()
-        time.sleep(1)
+        if sys.platform == 'win32':
+            cls.browser = webdriver.PhantomJS()
+        else:
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('disable-gpu')
+            cls.browser = webdriver.Chrome(chrome_options=options)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send_btn')
@@ -54,6 +56,17 @@ class WebPdbTestCase(TestCase):
         time.sleep(1)
         cls.db_proc.kill()
         cls.browser.quit()
+
+
+class WebPdbTestCase(SeleniumTestCase):
+    """
+    This class provides basic functionality testing for Web-PDB
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.db_proc = Popen(['python', db_py], shell=False)
+        time.sleep(1)
+        super(WebPdbTestCase, cls).setUpClass()
 
     def test_1_set_trace(self):
         """
@@ -150,27 +163,15 @@ class WebPdbTestCase(TestCase):
         self.assertNotEqual(globals_tag.text, locals_tag.text)
 
 
-class PatchStdStreamsTestCase(TestCase):
+class PatchStdStreamsTestCase(SeleniumTestCase):
     """
     This class tests patching sys.std* streams
     """
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_ps.py')], shell=False)
-        cls.browser = webdriver.PhantomJS()
         time.sleep(1)
-        cls.browser.get('http://127.0.0.1:5555')
-        cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send_btn')
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.stdin.clear()
-        cls.stdin.send_keys('q')
-        cls.send_btn.click()
-        time.sleep(1)
-        cls.db_proc.kill()
-        cls.browser.quit()
+        super(PatchStdStreamsTestCase, cls).setUpClass()
 
     def test_patching_std_streams(self):
         """
@@ -190,27 +191,15 @@ class PatchStdStreamsTestCase(TestCase):
         self.assertIn('You have entered: spam', stdout_tag.text)
 
 
-class CatchPostMortemTestCase(TestCase):
+class CatchPostMortemTestCase(SeleniumTestCase):
     """
     This class for catching exceptions
     """
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_pm.py')], shell=False)
-        cls.browser = webdriver.PhantomJS()
         time.sleep(1)
-        cls.browser.get('http://127.0.0.1:5555')
-        cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send_btn')
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.stdin.clear()
-        cls.stdin.send_keys('q')
-        cls.send_btn.click()
-        time.sleep(1)
-        cls.db_proc.kill()
-        cls.browser.quit()
+        super(CatchPostMortemTestCase, cls).setUpClass()
 
     def test_catch_post_mortem(self):
         """
