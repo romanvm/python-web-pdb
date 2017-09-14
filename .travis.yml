@@ -9,10 +9,9 @@ before_install:
   - unzip chromedriver_linux64.zip
   - chmod +x chromedriver
   - export PATH=$TRAVIS_BUILD_DIR:$PATH
-install: pip install selenium
+install: true
 script:
-  - python setup.py install
-  - python ./tests/tests.py  # Tests via setuptools run too long and hang too often on Travis
+  - python setup.py install test
 deploy:
   provider: pypi
   user: $PYPI_USER
