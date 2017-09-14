@@ -38,7 +38,7 @@ class SeleniumTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
         if sys.platform == 'win32':
-            cls.browser = webdriver.PhantomJS()
+            cls.browser = webdriver.Firefox()
         else:
             options = webdriver.ChromeOptions()
             options.add_argument('headless')
