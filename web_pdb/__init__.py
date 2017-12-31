@@ -104,12 +104,14 @@ class WebPdb(Pdb):
         self._set_stopinfo(self.botframe, None, -1)
 
     def dispatch_return(self, frame, arg):
+        # The parent's method needs to be called first.
+        ret = Pdb.dispatch_return(self, frame, arg)
         if frame.f_back is None:
             self.console.writeline('*** Thread finished ***\n')
             if not self.console.closed:
                 self.console.flush()
                 self.console.close()
-        return Pdb.dispatch_return(self, frame, arg)
+        return ret
 
     def get_current_frame_data(self):
         """
