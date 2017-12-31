@@ -1,6 +1,13 @@
 Changelog
 #########
 
+v.1.3.3
+=======
+
+* Fixed setting ``set_trace()`` at the last line of a Python script.
+* Fixed clearing a breakpoint at setups with the current workdir different
+  from the current module directory.
+
 v.1.3.2
 =======
 
