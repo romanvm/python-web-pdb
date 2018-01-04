@@ -99,6 +99,8 @@ class WebPdb(Pdb):
         finally:
             os.chdir(orig_cwd)
 
+    do_cl = do_clear
+
     def do_quit(self, arg):
         """
         quit || exit || q
