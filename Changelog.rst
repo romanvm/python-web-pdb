@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.3.4
+=======
+
+* Fix a bug with patched ``cl`` command not working.
+
 v.1.3.3
 =======
 
