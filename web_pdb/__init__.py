@@ -94,7 +94,8 @@ class WebPdb(Pdb):
         # than the main script, e.g. Kodi mediacenter built-in Python.
         orig_cwd = os.getcwd()
         try:
-            os.chdir(os.path.dirname(self.curframe.f_code.co_filename))
+            os.chdir(os.path.dirname(
+                os.path.abspath(self.curframe.f_code.co_filename)))
             Pdb.do_clear(self, arg)
         finally:
             os.chdir(orig_cwd)
