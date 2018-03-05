@@ -1,6 +1,6 @@
 # coding: utf-8
 # Author: Roman Miroshnychenko aka Roman V.M.
-# E-mail: romanvm@yandex.ua
+# E-mail: roman1972@gmail.com
 #
 # Copyright (c) 2016 Roman Miroshnychenko
 #

@@ -1,6 +1,6 @@
 # coding: utf-8
 # Created on: 
-# Author: Roman Miroshnychenko aka Roman V.M. (romanvm@yandex.ua)
+# Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 #
 # Copyright (c) 2016 Roman Miroshnychenko
 #
@@ -47,7 +47,7 @@ setup(
     name='web-pdb',
     version=get_version(),
     author='Roman Miroshnychenko',
-    author_email='romanvm@yandex.ua',
+    author_email='roman1972@gmail.com',
     description='Web interface for Python\'s built-in PDB debugger',
     long_description=get_doc('Readme.rst') + u'\n\n' + get_doc('Changelog.rst'),
     url='https://github.com/romanvm/python-web-pdb',
