@@ -46,25 +46,6 @@ function write_to_console(endpoint, schedule_next) {
         $('#curr_line').text(data.frame_data.curr_line);
         $('#curr_file_code').text(data.frame_data.listing);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
-        if (data.frame_data.filename != globals.filename ||
-            data.frame_data.curr_line != globals.current_line) {
-          // Auto-scroll only if moved to another line
-          globals.filename = data.frame_data.filename;
-          globals.current_line = data.frame_data.curr_line;
-          // The algorithm below is empirical and may need further polishing
-          let multiplier;
-          if (globals.current_line < 8) {
-            multiplier = 0;
-          }
-          if (globals.current_line >= 8 && globals.current_line < 100) {
-            multiplier = (globals.current_line - 8) / data.frame_data.total_lines;
-          } else {
-            let offset = 7 + 7 * (globals.current_line / data.frame_data.total_lines);
-            multiplier = (globals.current_line - offset) / data.frame_data.total_lines;
-          }
-          $('#curr_file').scrollTop(
-            $('#curr_file').prop('scrollHeight') * multiplier);
-        }
       }
       Prism.highlightAll();
       let line_spans = $('span.line-numbers-rows').children('span');
@@ -82,6 +63,17 @@ function write_to_console(endpoint, schedule_next) {
           span.className = 'breakpoint';
         }
       });
+      // Auto-scroll only if moved to another line
+      if (data.frame_data.curr_line != -1 &&
+          (data.frame_data.filename != globals.filename ||
+          data.frame_data.curr_line != globals.current_line)) {
+        globals.filename = data.frame_data.filename;
+        globals.current_line = data.frame_data.curr_line;
+        // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
+        let curr_file = $('#curr_file');
+        curr_file.scrollTop($(`#lineno_${globals.current_line}`).offset().top -
+          curr_file.offset().top + curr_file.scrollTop() - curr_file.height() / 2);
+      }
     }
     if (schedule_next) {
       setTimeout(() => { write_to_console(endpoint, true); }, 333);
