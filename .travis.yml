@@ -1,4 +1,7 @@
 language: python
+cache:
+  directories:
+    - "frontend/node_modules"
 python:
   - "2.7"
   - "3.6"
@@ -9,7 +12,11 @@ before_install:
   - unzip chromedriver_linux64.zip
   - chmod +x chromedriver
   - export PATH=$TRAVIS_BUILD_DIR:$PATH
-install: true
+install:
+  - cd frontend
+  - npm install
+  - npm run build
+  - cd $TRAVIS_BUILD_DIR
 script:
   - python setup.py install test
 deploy:

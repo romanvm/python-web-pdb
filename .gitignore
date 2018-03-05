@@ -11,6 +11,7 @@ __pycache__/
 # Distribution / packaging
 .Python
 env/
+.venv/
 build/
 develop-eggs/
 dist/
@@ -98,3 +99,5 @@ ENV/
 *.cmd
 *.zip
 main.py
+node_modules/
+.vscode/
