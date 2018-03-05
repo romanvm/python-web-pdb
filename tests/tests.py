@@ -43,7 +43,7 @@ class SeleniumTestCase(TestCase):
             options = webdriver.ChromeOptions()
             options.add_argument('headless')
             options.add_argument('disable-gpu')
-            cls.browser = webdriver.Chrome(chrome_options=options)
+            cls.browser = webdriver.Chrome(options=options)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send_btn')
