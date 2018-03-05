@@ -34,7 +34,7 @@ $(() => {
   bind_key_events();
   $(window).resize(resize_console);
   $('title').text(`Web-PDB Console on ${window.location.host}`);
-  $('#host').html(`'Web-PDB Console on <em>${window.location.host}</em>`);
+  $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
   resize_console();
   write_to_console('output/history', false);
   setTimeout(() => { write_to_console('output/update', true); }, 333);
