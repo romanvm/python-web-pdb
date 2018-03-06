@@ -71,5 +71,5 @@ setup(
     test_suite='tests.tests',
     tests_require=['selenium'],
     platforms=['any'],
-    zif_safe=False,
+    zip_safe=False,
 )
