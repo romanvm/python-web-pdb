@@ -14,5 +14,6 @@ Available Commands
 - ``npm run build-dev``: build development bundle.
 - ``npm run build``: build production (minified) bundle.
 - ``npm run watch``: watch the frontend source files for changes (during development).
+- ``npm run lint``: run ESLint with the default set of rules for ES6.
 
 Bundled static files are automatically placed in ``./web_pdb/static`` directory.
