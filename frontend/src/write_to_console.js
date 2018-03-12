@@ -24,12 +24,11 @@ import $ from 'jquery';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
-import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+import './prism-line-numbers.js';
 import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 import globals from './globals';
-import { send_command } from './utils';
 
 function write_to_console(endpoint, schedule_next) {
   $.getJSON({
@@ -37,6 +36,7 @@ function write_to_console(endpoint, schedule_next) {
   })
   .done((data) => {
     if (data) {
+      let has_moved = false;
       $('#stdout').text(data.history);
       $('#console').scrollTop($('#console').prop('scrollHeight'));
       if (data.frame_data.curr_line != -1) {
@@ -46,29 +46,17 @@ function write_to_console(endpoint, schedule_next) {
         $('#curr_line').text(data.frame_data.curr_line);
         $('#curr_file_code').text(data.frame_data.listing);
         $('#curr_file').attr('data-line', data.frame_data.curr_line);
+        if (data.frame_data.filename != globals.filename ||
+            data.frame_data.curr_line != globals.current_line) {
+          globals.filename = data.frame_data.filename;
+          globals.current_line = data.frame_data.curr_line;
+          has_moved = true
+        }
       }
+      globals.breaklist = data.frame_data.breaklist;
       Prism.highlightAll();
-      let line_spans = $('span.line-numbers-rows').children('span');
-      $(line_spans).each((i, span) => {
-        span.id = `lineno_${i + 1}`;
-        span.onclick = (event) => {
-          let line_number = event.currentTarget.id.split('_')[1];
-          if (event.currentTarget.className == 'breakpoint') {
-            send_command(`cl ${data.frame_data.filename}:${line_number}`);
-          } else {
-            send_command(`b ${data.frame_data.filename}:${line_number}`);
-          }
-        }
-        if (data.frame_data.breaklist.indexOf(i + 1) != -1) {
-          span.className = 'breakpoint';
-        }
-      });
       // Auto-scroll only if moved to another line
-      if (data.frame_data.curr_line != -1 &&
-          (data.frame_data.filename != globals.filename ||
-          data.frame_data.curr_line != globals.current_line)) {
-        globals.filename = data.frame_data.filename;
-        globals.current_line = data.frame_data.curr_line;
+      if (has_moved) {
         // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
         let curr_file = $('#curr_file');
         curr_file.scrollTop($(`#lineno_${globals.current_line}`).offset().top -

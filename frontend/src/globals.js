@@ -24,7 +24,8 @@ const globals = {
   command_history: [],
   history_index: -1,
   filename: '',
-  current_line: -1
+  current_line: -1,
+  breaklist: []
 };
 
 export default globals;
