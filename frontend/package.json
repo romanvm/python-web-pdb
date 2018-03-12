@@ -6,7 +6,7 @@
     "build": "webpack -p",
     "build-dev": "webpack",
     "watch": "webpack --watch",
-    "lint": "eslint src/*.js"
+    "lint": "eslint --ext .js src/"
   },
   "repository": {
     "type": "git",
