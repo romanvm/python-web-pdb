@@ -145,7 +145,7 @@ class WebConsole(object):
             except queue.Empty:
                 continue
         else:
-            data = ''
+            data = '\n'  # Empty string causes BdbQuit exception.
         self.writeline(data)
         return data
 
