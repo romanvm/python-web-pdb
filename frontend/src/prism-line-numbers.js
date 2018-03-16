@@ -123,12 +123,12 @@ var utils = require('./utils');
 			span.onclick = function(event) {
 				var line_number = event.currentTarget.id.split('_')[1];
 				if (event.currentTarget.className == 'breakpoint') {
-					utils.send_command('cl ' + globals.default.filename + ':' + line_number);
+					utils.send_command('cl ' + globals.state.frame_data.filename + ':' + line_number);
 				} else {
-					utils.send_command('b ' + globals.default.filename + ':' + line_number);
+					utils.send_command('b ' + globals.state.frame_data.filename + ':' + line_number);
 				}
 			};
-			if (globals.default.breaklist.indexOf(i) != -1) {
+			if (globals.state.frame_data.breakpoints.indexOf(i) != -1) {
 				span.className = 'breakpoint';
 			}
 			lineNumbersWrapper.appendChild(span);

@@ -21,12 +21,14 @@ SOFTWARE.
 */
 
 import $ from 'jquery';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import bind_button_events from './button_events';
 import bind_key_events from './key_events';
 import { resize_console } from './utils';
-import write_to_console from './write_to_console';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { init_stdout, update_frame_data } from './update_ui';
+
 import './styles.css';
 
 $(() => {
@@ -36,6 +38,6 @@ $(() => {
   $('title').text(`Web-PDB Console on ${window.location.host}`);
   $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
   resize_console();
-  write_to_console('output/history', false);
-  setTimeout(() => { write_to_console('output/update', true); }, 333);
+  init_stdout();
+  update_frame_data();
 });

@@ -21,7 +21,7 @@ SOFTWARE.
 */
 
 import $ from 'jquery';
-import globals from './globals';
+import { state } from './globals';
 import { send_command } from './utils';
 
 function bind_key_events() {
@@ -49,20 +49,20 @@ function bind_key_events() {
       $('#send_btn').click();
       return false;
     } else if (event.keyCode == 38) {
-      globals.history_index++;
-      if (globals.history_index >= globals.command_history.length) {
-        globals.history_index = 0;
+      state.history_index++;
+      if (state.history_index >= state.command_history.length) {
+        state.history_index = 0;
       }
-      $('#stdin').val(globals.command_history[globals.history_index]);
+      $('#stdin').val(state.command_history[state.history_index]);
       return false;
     } else if (event.keyCode == 40) {
-      globals.history_index--;
-      if (globals.history_index < 0) {
-        globals.history_index = globals.command_history.length - 1;
-      } else if (globals.history_index >= globals.command_history.length) {
-        globals.history_index = 0;
+      state.history_index--;
+      if (state.history_index < 0) {
+        state.history_index = state.command_history.length - 1;
+      } else if (state.history_index >= state.command_history.length) {
+        state.history_index = 0;
       }
-      $('#stdin').val(globals.command_history[globals.history_index]);
+      $('#stdin').val(state.command_history[state.history_index]);
       return false;
     }
   });

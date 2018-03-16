@@ -20,12 +20,15 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-const globals = {
+var websocket = new WebSocket('ws://' + window.location.host + '/ws');
+
+const state = {
   command_history: [],
   history_index: -1,
+  console_history: '',
   filename: '',
   current_line: -1,
-  breaklist: []
+  frame_data: null
 };
 
-export default globals;
+export { websocket, state };
