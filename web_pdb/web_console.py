@@ -45,9 +45,6 @@ from .wsgi_app import app
 
 __all__ = ['WebConsole']
 
-logger = logging.getLogger('Web-PDB')
-logger.addHandler(logging.StreamHandler())
-
 
 class SilentWSGIRequestHandler(WSGIRequestHandler):
     """WSGI request handler with logging disabled"""
@@ -104,7 +101,10 @@ class WebConsole(object):
         self._stop_all = Event()
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
-        logger.critical('Web-PDB: starting web-server on {0}:{1}...'.format(gethostname(), port))
+        logging.critical(
+            'Web-PDB: starting web-server on {0}:{1}...'.format(
+                gethostname(), port)
+        )
         self._server_thread.start()
 
     @property
@@ -188,7 +188,7 @@ class WebConsole(object):
             time.sleep(0.2)
 
     def close(self):
-        logger.critical('Web-PDB: stopping web-server...')
+        logging.critical('Web-PDB: stopping web-server...')
         self._stop_all.set()
         self._server_thread.join()
-        logger.critical('Web-PDB: web-server stopped.')
+        logging.critical('Web-PDB: web-server stopped.')
