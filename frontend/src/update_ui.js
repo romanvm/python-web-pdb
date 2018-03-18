@@ -32,29 +32,29 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import { websocket, state } from './globals';
 
-var wait_queue = [];
+var wait_buffer = [];
 
 function update_ui() {
   $.getJSON('/frame-data')
   .then((frame_data) => {
-    state.frame_data = frame_data;
     let $curr_file = $('#curr_file'),
         $curr_file_code = $('#curr_file_code'),
         $globals = $('#globals'),
         $locals = $('#locals'),
         $stdout = $('#stdout');
-    $globals.text(state.frame_data.globals);
-    $locals.text(state.frame_data.locals);
+    $globals.text(frame_data.globals);
+    $locals.text(frame_data.locals);
     $stdout.text(frame_data.console_history);
     $('#console').scrollTop($('#console').prop('scrollHeight'));
-    $curr_file_code.text(state.frame_data.file_listing);
-    $curr_file.attr('data-line', state.frame_data.current_line);
+    $curr_file_code.text(frame_data.file_listing);
+    $curr_file.attr('data-line', frame_data.current_line);
     Prism.highlightAll();
     if (frame_data.current_line != -1 &&
         (frame_data.filename != state.filename ||
           frame_data.current_line != state.current_line)) {
       state.filename = frame_data.filename;
       state.current_line = frame_data.current_line;
+      // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
       $curr_file.scrollTop($(`#lineno_${state.current_line}`).offset().top -
           $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
     }
@@ -63,10 +63,10 @@ function update_ui() {
 
 websocket.onmessage = () => {
   // This method prevents firing bursts of requests to the back-end when it sends a series of pings.
-  wait_queue.push(null);
+  wait_buffer.push(null);
   setTimeout(() => {
-    wait_queue.pop();
-    if (!wait_queue.length) {
+    wait_buffer.pop();
+    if (!wait_buffer.length) {
       update_ui();
     }
   }, 1);
