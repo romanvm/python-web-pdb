@@ -137,8 +137,11 @@ class WebConsole(object):
         app.frame_data = self._frame_data
         httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
         while not self._stop_all.is_set():
-            httpd.handle_request()
-        httpd.close()
+            try:
+                httpd.handle_request()
+            except (KeyboardInterrupt, SystemExit):
+                break
+        httpd.handle_close()
 
     def readline(self):
         while not self._stop_all.is_set():
