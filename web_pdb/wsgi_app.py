@@ -80,14 +80,6 @@ def root():
     return bottle.template('index')
 
 
-@app.route('/console-history')
-@compress
-def get_console_history():
-    bottle.response.cache_control = 'no-store'
-    bottle.response.content_type = 'text/plain; charset=UTF-8'
-    return app.console_history.contents
-
-
 @app.route('/frame-data')
 @compress
 def get_frame_data():

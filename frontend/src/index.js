@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Roman Miroshnychenko <roman1972@gmail.com>
+Copyright (c) 2018 Roman Miroshnychenko <roman1972@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import bind_button_events from './button_events';
 import bind_key_events from './key_events';
 import { resize_console } from './utils';
-import { init_stdout, update_frame_data } from './update_ui';
+import update_ui from './update_ui';
 
 import './styles.css';
 
@@ -38,6 +38,5 @@ $(() => {
   $('title').text(`Web-PDB Console on ${window.location.host}`);
   $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
   resize_console();
-  init_stdout();
-  update_frame_data();
+  update_ui();
 });

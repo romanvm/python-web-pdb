@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Roman Miroshnychenko <roman1972@gmail.com>
+Copyright (c) 2018 Roman Miroshnychenko <roman1972@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,62 +25,51 @@ import Prism from 'prismjs';
 import 'prismjs/components/prism-python.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
 import './prism-line-numbers.js';
+
 import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import { websocket, state } from './globals';
 
-var is_fetching = false;
+var wait_queue = [];
 
-function update_stdout(data) {
-  state.console_history += data;
-  let $stdout = $('#stdout');
-  $stdout.text(state.console_history);
-  Prism.highlightElement($stdout[0]);
-  $('#console').scrollTop($('#console').prop('scrollHeight'));
-}
-
-function update_frame_data() {
-  if (!is_fetching) {
-    is_fetching = true;
-    $.getJSON('/frame-data')
-    .then((frame_data) => {
-      state.frame_data = frame_data;
-      let $curr_file = $('#curr_file'),
-          $curr_file_code = $('#curr_file_code'),
-          $globals = $('#globals'),
-          $locals = $('#locals');
-      $globals.text(state.frame_data.globals);
-      Prism.highlightElement($globals[0]);
-      $locals.text(state.frame_data.locals);
-      Prism.highlightElement($locals[0]);
-      $curr_file_code.text(state.frame_data.file_listing);
-      $curr_file.attr('data-line', state.frame_data.current_line);
-      Prism.highlightElement($curr_file_code[0]);
-      if (frame_data.current_line != -1 &&
-          (frame_data.filename != state.filename ||
-            frame_data.current_line != state.current_line)) {
-        state.filename = frame_data.filename;
-        state.current_line = frame_data.current_line;
-        $curr_file.scrollTop($(`#lineno_${state.current_line}`).offset().top -
-           $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
-      }
-      is_fetching = false;
-    });
-  }
-}
-
-websocket.onmessage = (event) => {
-  update_stdout(event.data);
-  update_frame_data();
-};
-
-function init_stdout() {
-  $.get('/console-history')
-  .then((data) => {
-    update_stdout(data);
+function update_ui() {
+  $.getJSON('/frame-data')
+  .then((frame_data) => {
+    state.frame_data = frame_data;
+    let $curr_file = $('#curr_file'),
+        $curr_file_code = $('#curr_file_code'),
+        $globals = $('#globals'),
+        $locals = $('#locals'),
+        $stdout = $('#stdout');
+    $globals.text(state.frame_data.globals);
+    $locals.text(state.frame_data.locals);
+    $stdout.text(frame_data.console_history);
+    $('#console').scrollTop($('#console').prop('scrollHeight'));
+    $curr_file_code.text(state.frame_data.file_listing);
+    $curr_file.attr('data-line', state.frame_data.current_line);
+    Prism.highlightAll();
+    if (frame_data.current_line != -1 &&
+        (frame_data.filename != state.filename ||
+          frame_data.current_line != state.current_line)) {
+      state.filename = frame_data.filename;
+      state.current_line = frame_data.current_line;
+      $curr_file.scrollTop($(`#lineno_${state.current_line}`).offset().top -
+          $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
+    }
   });
 }
 
-export { update_frame_data, init_stdout };
+websocket.onmessage = () => {
+  // This method prevents firing bursts of requests to the back-end when it sends a series of pings.
+  wait_queue.push(null);
+  setTimeout(() => {
+    wait_queue.pop();
+    if (!wait_queue.length) {
+      update_ui();
+    }
+  }, 1);
+};
+
+export default update_ui;

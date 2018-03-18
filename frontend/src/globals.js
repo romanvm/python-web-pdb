@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Roman Miroshnychenko <roman1972@gmail.com>
+Copyright (c) 2018 Roman Miroshnychenko <roman1972@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,6 @@ const state = {
   console_history: '',
   filename: '',
   current_line: -1,
-  frame_data: null
 };
 
 export { websocket, state };

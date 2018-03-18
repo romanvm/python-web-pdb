@@ -77,6 +77,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
 
     @staticmethod
     def all_empty():
+        """Check if no client have output data enqueued"""
         for cl in WebConsoleSocket.clients:
             if cl.handshaked and cl.writable():
                 return False
@@ -86,23 +87,15 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     def send_message(msg):
         for cl in WebConsoleSocket.clients:
             if cl.handshaked:
-                logging.debug('Sending message "{}" to {}'.format(msg, cl))
-                cl.sendMessage(msg)
+                cl.sendMessage(msg)  # sendMessage is thread-safe
 
     def handleConnected(self):
-        logging.debug('WS connected')
         WebConsoleSocket.clients.append(self)
 
     def handleMessage(self):
-        logging.debug('WS message received: {}'.format(self.data))
         WebConsoleSocket.input_queue.put(self.data)
-        for cl in WebConsoleSocket.clients:
-            if cl is not self:
-                logging.debug('Resending to {}'.format(cl))
-                cl.sendMessage(self.data)
 
     def handleClose(self):
-        logging.debug('WS closed')
         WebConsoleSocket.clients.remove(self)
 
 
@@ -156,7 +149,6 @@ class WebConsole(object):
                 continue
         else:
             data = '\n'  # Empty string causes BdbQuit exception.
-        logging.debug('Received data: {}'.format(data))
         self.writeline(data)
         return data
 
@@ -181,7 +173,8 @@ class WebConsole(object):
                 'globals': 'No data available',
                 'locals': 'No data available'
             }
-        WebConsoleSocket.send_message(data)
+        self._frame_data.contents['console_history'] = self._console_history.contents
+        WebConsoleSocket.send_message('ping')
 
     write = writeline
 
@@ -191,7 +184,7 @@ class WebConsole(object):
 
     def flush(self):
         i = 0
-        while not WebConsoleSocket.all_empty() and i < 5:
+        while not WebConsoleSocket.all_empty() and i < 10:
             time.sleep(0.1)
             i += 1
 
