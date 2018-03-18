@@ -5,7 +5,9 @@ v.1.3.5
 =======
 
 * Fix crash when clearing a breakpoint on Linux.
+* Fix autoscrolling on large files.
 * Move frontend to modern JavaScript syntax and tooling.
+* Optimize Python syntax highlighting performance.
 
 v.1.3.4
 =======
