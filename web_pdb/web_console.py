@@ -63,12 +63,16 @@ class ThreadSafeBuffer(object):
 
 
 class WebConsoleSocket(AsyncWebSocketHandler):
+    """
+    WebConsoleSocket receives PDB commands from the front-end and
+    sends pings to client(s) about console updates
+    """
     clients = []
     input_queue = queue.Queue()
 
     @staticmethod
     def all_empty():
-        """Check if no client have output data enqueued"""
+        """Check if no client has output data enqueued"""
         for cl in WebConsoleSocket.clients:
             if cl.handshaked and cl.writable():
                 return False
