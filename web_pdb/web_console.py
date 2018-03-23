@@ -177,7 +177,7 @@ class WebConsole(object):
                 'locals': 'No data available'
             }
         self._frame_data.contents['console_history'] = self._console_history.contents
-        WebConsoleSocket.send_message('ping')
+        WebConsoleSocket.send_message('ping')  # Ping all clients about data update
 
     write = writeline
 
