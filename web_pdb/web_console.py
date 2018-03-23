@@ -49,26 +49,17 @@ class ThreadSafeBuffer(object):
     def __init__(self, contents=None):
         self._lock = RLock()
         self._contents = contents
-        self._is_dirty = contents is not None
-
-    @property
-    def is_dirty(self):
-        """Indicates whether a buffer contains unread data"""
-        with self._lock:
-            return self._is_dirty
 
     @property
     def contents(self):
         """Get or set buffer contents"""
         with self._lock:
-            self._is_dirty = False
             return self._contents
 
     @contents.setter
     def contents(self, value):
         with self._lock:
             self._contents = value
-            self._is_dirty = True
 
 
 class WebConsoleSocket(AsyncWebSocketHandler):
@@ -157,9 +148,6 @@ class WebConsole(object):
 
     read = readline
 
-    def readlines(self):
-        return [self.readline()]
-
     def writeline(self, data):
         if sys.version_info[0] == 2 and isinstance(data, str):
             data = data.decode('utf-8')
@@ -180,10 +168,6 @@ class WebConsole(object):
         WebConsoleSocket.send_message('ping')  # Ping all clients about data update
 
     write = writeline
-
-    def writelines(self, lines):
-        for line in lines:
-            self.writeline(line)
 
     def flush(self):
         i = 0
