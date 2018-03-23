@@ -37,6 +37,9 @@ var wait_buffer = [];
 function update_ui() {
   $.getJSON('/frame-data')
   .then((frame_data) => {
+    state.breakpoints = frame_data.breakpoints;
+    $('#filename').text(frame_data.filename);
+    $('#curr_line').text(frame_data.current_line);
     let $curr_file = $('#curr_file'),
         $curr_file_code = $('#curr_file_code'),
         $globals = $('#globals'),

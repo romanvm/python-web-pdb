@@ -28,6 +28,7 @@ const state = {
   console_history: '',
   filename: '',
   current_line: -1,
+  breakpoints: []
 };
 
 export { websocket, state };
