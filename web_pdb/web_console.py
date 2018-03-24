@@ -49,17 +49,26 @@ class ThreadSafeBuffer(object):
     def __init__(self, contents=None):
         self._lock = RLock()
         self._contents = contents
+        self._is_dirty = contents is not None
+
+    @property
+    def is_dirty(self):
+        """Indicates whether a buffer contains unread data"""
+        with self._lock:
+            return self._is_dirty
 
     @property
     def contents(self):
         """Get or set buffer contents"""
         with self._lock:
+            self._is_dirty = False
             return self._contents
 
     @contents.setter
     def contents(self, value):
         with self._lock:
             self._contents = value
+            self._is_dirty = True
 
 
 class WebConsoleSocket(AsyncWebSocketHandler):
@@ -157,9 +166,9 @@ class WebConsole(object):
             data = data.decode('utf-8')
         self._console_history.contents += data
         try:
-            self._frame_data.contents = self._debugger.get_current_frame_data()
+            frame_data = self._debugger.get_current_frame_data()
         except (IOError, AttributeError):
-            self._frame_data.contents = {
+            frame_data = {
                 'filename': '',
                 'file_listing': 'No data available',
                 'current_line': -1,
@@ -168,16 +177,21 @@ class WebConsole(object):
                 'globals': 'No data available',
                 'locals': 'No data available'
             }
-        self._frame_data.contents['console_history'] = self._console_history.contents
+        frame_data['console_history'] = self._console_history.contents
+        self._frame_data.contents = frame_data
         WebConsoleSocket.send_message('ping')  # Ping all clients about data update
 
     write = writeline
 
     def flush(self):
+        """
+        Wait until history is read but no more than 10 cycles
+        in case a browser session is closed.
+        """
         i = 0
-        while not WebConsoleSocket.all_empty() and i < 10:
-            time.sleep(0.1)
+        while self._frame_data.is_dirty and i < 10:
             i += 1
+            time.sleep(0.1)
 
     def close(self):
         logging.critical('Web-PDB: stopping web-server...')
