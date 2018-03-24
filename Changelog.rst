@@ -1,6 +1,14 @@
 Changelog
 #########
 
+v.1.4.0
+=======
+
+* Replaced a wsgiref-based multi-threaded WSGI server with a single-threaded
+  asynchronous WSGI/WebSocket server.
+* Implemented WebSockets instead of periodic back-end polling for retrieving
+  updated debugger data.
+
 v.1.3.5
 =======
 
