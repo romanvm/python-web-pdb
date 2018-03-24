@@ -65,6 +65,7 @@ function update_ui() {
 }
 
 websocket.onmessage = () => {
+  // WebSocket receives only data update pings from the back-end so payload does not matter.
   // This method prevents firing bursts of requests to the back-end when it sends a series of pings.
   wait_buffer.push(null);
   setTimeout(() => {
