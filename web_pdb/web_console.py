@@ -79,20 +79,20 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     clients = []
     input_queue = queue.Queue()
 
-    @staticmethod
-    def send_message(msg):
-        for cl in WebConsoleSocket.clients:
+    @classmethod
+    def send_message(cls, msg):
+        for cl in cls.clients:
             if cl.handshaked:
                 cl.sendMessage(msg)  # sendMessage is thread-safe
 
     def handleConnected(self):
-        WebConsoleSocket.clients.append(self)
+        self.clients.append(self)
 
     def handleMessage(self):
-        WebConsoleSocket.input_queue.put(self.data)
+        self.input_queue.put(self.data)
 
     def handleClose(self):
-        WebConsoleSocket.clients.remove(self)
+        self.clients.remove(self)
 
 
 class WebConsole(object):
