@@ -24,7 +24,7 @@
 
 import os
 import re
-from codecs import open
+from io import open
 try:
     from setuptools import setup
 except ImportError:
