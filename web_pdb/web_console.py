@@ -80,14 +80,6 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     input_queue = queue.Queue()
 
     @staticmethod
-    def all_empty():
-        """Check if no client has output data enqueued"""
-        for cl in WebConsoleSocket.clients:
-            if cl.handshaked and cl.writable():
-                return False
-        return True
-
-    @staticmethod
     def send_message(msg):
         for cl in WebConsoleSocket.clients:
             if cl.handshaked:
