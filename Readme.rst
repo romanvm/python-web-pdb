@@ -57,7 +57,7 @@ Now you can use all PDB commands and features. Additional **Current file**, **Gl
 and **Locals** information boxes help you better track your program runtime state.
 
 **Note**: it is strongly recommended to work with the Web-PDB web-UI only in one browser session.
-With more than one browser window accessing the web-UI it can display incorrect data in one or more
+With more than one browser window accessing the web-UI it may display incorrect data in one or more
 browser sessions.
 
 Subsequent ``set_trace()`` calls can be used as hardcoded breakpoints.
@@ -75,9 +75,6 @@ For example:
       assert foo == bar, 'Oops!'
 
 For more detailed info about the Web-PDB API read docstrings in the ``./web_pdb/__init__.py`` file.
-
-**Note**: Web-PDB periodically sends AJAX ``GET`` requests to
-``/output/update`` endpoint. This is normal behaviour.
 
 Considerations for Multithreading and Multiprocessing Programs
 ==============================================================

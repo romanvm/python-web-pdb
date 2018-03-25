@@ -40,7 +40,7 @@ from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 
-__version__ = '1.3.5'
+__version__ = '1.4.0'
 
 
 class WebPdb(Pdb):
@@ -147,10 +147,12 @@ class WebPdb(Pdb):
             lines = [line.decode('utf-8') for line in lines]
         return {
             'filename': os.path.basename(filename),
-            'listing': ''.join(lines),
-            'curr_line': self.curframe.f_lineno,
+            'file_listing': ''.join(lines),
+            'current_line': self.curframe.f_lineno,
             'total_lines': len(lines),
-            'breaklist': self.get_file_breaks(filename),
+            'breakpoints': self.get_file_breaks(filename),
+            'globals': self.get_globals(),
+            'locals': self.get_locals()
         }
 
     def _format_variables(self, raw_vars):

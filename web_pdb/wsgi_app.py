@@ -67,10 +67,7 @@ def compress(func):
 class WebConsoleApp(bottle.Bottle):
     def __init__(self):
         super(WebConsoleApp, self).__init__()
-        self.in_queue = None
-        self.history = None
-        self.globals = None
-        self.locals = None
+        self.console_history = None
         self.frame_data = None
 
 
@@ -83,27 +80,12 @@ def root():
     return bottle.template('index')
 
 
-@app.route('/output/<mode>')
+@app.route('/frame-data')
 @compress
-def send(mode):
-    bottle.response.content_type = 'application/json'
+def get_frame_data():
     bottle.response.cache_control = 'no-store'
-    if app.history.is_dirty or mode == 'history':
-        body = {
-            'history': app.history.contents,
-            'globals': app.globals.contents,
-            'locals': app.locals.contents,
-            'frame_data': app.frame_data.contents,
-        }
-    else:
-        body = None
-    return json.dumps(body)
-
-
-@app.route('/input', method='POST')
-def receive():
-    app.in_queue.put(bottle.request.body.read().decode('utf-8'))
-    return ''
+    bottle.response.content_type = 'application/json'
+    return json.dumps(app.frame_data.contents)
 
 
 @app.route('/static/<path:path>')

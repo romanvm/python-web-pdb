@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2017 Roman Miroshnychenko <roman1972@gmail.com>
+Copyright (c) 2018 Roman Miroshnychenko <roman1972@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,8 @@ SOFTWARE.
 */
 
 import $ from 'jquery';
-import globals from './globals';
+
+import { websocket, state } from './globals';
 import { send_command } from './utils';
 
 function bind_button_events() {
@@ -58,25 +59,19 @@ function bind_button_events() {
   });
 
   $('#send_btn').click(() => {
-    let input = $('#stdin').val();
-    $.ajax({
-      url: 'input',
-      data: input + '\n',
-      method: 'POST',
-      contentType: 'text/plain; charset=UTF-8'
-    })
-    .done(() => {
+    if (websocket.readyState === websocket.OPEN) {
+      let input = $('#stdin').val() + '\n';
       $('#stdin').val('');
-      globals.history_index = -1;
-      if (input != '' && input != globals.command_history[0]) {
-        globals.command_history.unshift(input);
-        if (globals.command_history.length > 10) {
-          globals.command_history.pop();
+      state.history_index = -1;
+      if (input !== '' && input !== state.command_history[0]) {
+        state.command_history.unshift(input);
+        if (state.command_history.length > 10) {
+          state.command_history.pop();
         }
       }
-    });
+      websocket.send(input);
+    }
   });
-
 }
 
 export default bind_button_events;
