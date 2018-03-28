@@ -83,7 +83,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     def send_message(cls, msg):
         for cl in cls.clients:
             if cl.handshaked:
-                cl.sendMessage(msg)  # sendMessage is thread-safe
+                cl.sendMessage(msg)  # sendMessage uses deque so it is thread-safe
 
     def handleConnected(self):
         self.clients.append(self)
