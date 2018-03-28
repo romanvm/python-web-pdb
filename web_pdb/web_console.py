@@ -129,7 +129,6 @@ class WebConsole(object):
         return self._stop_all.is_set()
 
     def _run_server(self, host, port):
-        app.console_history = self._console_history
         app.frame_data = self._frame_data
         httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
         while not self._stop_all.is_set():
