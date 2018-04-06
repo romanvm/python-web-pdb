@@ -146,7 +146,7 @@ class WebPdb(Pdb):
         if sys.version_info[0] == 2:
             lines = [line.decode('utf-8') for line in lines]
         return {
-            'filename': os.path.basename(filename),
+            'filename': filename,
             'file_listing': ''.join(lines),
             'current_line': self.curframe.f_lineno,
             'total_lines': len(lines),

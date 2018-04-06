@@ -73,7 +73,7 @@ class WebPdbTestCase(SeleniumTestCase):
         Test back-end/front-end interaction during debugging
         """
         filename_tag = self.browser.find_element_by_id('filename')
-        self.assertEqual(filename_tag.text, 'db.py')
+        self.assertEqual(filename_tag.text.split(os.path.sep)[-1], 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
         curr_file_tag = self.browser.find_element_by_id('curr_file_code')
