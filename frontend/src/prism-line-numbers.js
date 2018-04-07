@@ -123,9 +123,9 @@ var utils = require('./utils');
 			span.onclick = function(event) {
 				var line_number = event.currentTarget.id.split('_')[1];
 				if (event.currentTarget.className == 'breakpoint') {
-					utils.send_command('cl ' + globals.state.filename + ':' + line_number);
+					utils.send_command('cl ' + globals.state.dirname + globals.state.filename + ':' + line_number);
 				} else {
-					utils.send_command('b ' + globals.state.filename + ':' + line_number);
+					utils.send_command('b ' + globals.state.dirname + globals.state.filename + ':' + line_number);
 				}
 			};
 			if (globals.state.breakpoints.indexOf(i) != -1) {

@@ -83,24 +83,24 @@ class WebPdb(Pdb):
                 setattr(sys, name, self.console)
         WebPdb.active_instance = self
 
-    def do_clear(self, arg):
-        """cl(ear) filename:lineno\ncl(ear) [bpnumber [bpnumber...]]
-        With a space separated list of breakpoint numbers, clear
-        those breakpoints.  Without argument, clear all breaks (but
-        first ask confirmation).  With a filename:lineno argument,
-        clear all breaks at that line in that file.
-        """
-        # The method is overridden for systems where cwd is at different place
-        # than the main script, e.g. Kodi mediacenter built-in Python.
-        orig_cwd = os.getcwd()
-        try:
-            os.chdir(os.path.dirname(
-                os.path.abspath(self.curframe.f_code.co_filename)))
-            Pdb.do_clear(self, arg)
-        finally:
-            os.chdir(orig_cwd)
-
-    do_cl = do_clear
+    # def do_clear(self, arg):
+    #     """cl(ear) filename:lineno\ncl(ear) [bpnumber [bpnumber...]]
+    #     With a space separated list of breakpoint numbers, clear
+    #     those breakpoints.  Without argument, clear all breaks (but
+    #     first ask confirmation).  With a filename:lineno argument,
+    #     clear all breaks at that line in that file.
+    #     """
+    #     # The method is overridden for systems where cwd is at different place
+    #     # than the main script, e.g. Kodi mediacenter built-in Python.
+    #     orig_cwd = os.getcwd()
+    #     try:
+    #         os.chdir(os.path.dirname(
+    #             os.path.abspath(self.curframe.f_code.co_filename)))
+    #         Pdb.do_clear(self, arg)
+    #     finally:
+    #         os.chdir(orig_cwd)
+    #
+    # do_cl = do_clear
 
     def do_quit(self, arg):
         """
@@ -146,6 +146,7 @@ class WebPdb(Pdb):
         if sys.version_info[0] == 2:
             lines = [line.decode('utf-8') for line in lines]
         return {
+            'dirname': os.path.dirname(os.path.abspath(filename)) + os.path.sep,
             'filename': os.path.basename(filename),
             'file_listing': ''.join(lines),
             'current_line': self.curframe.f_lineno,

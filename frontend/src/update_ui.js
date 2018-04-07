@@ -38,6 +38,7 @@ function update_ui() {
   $.getJSON('/frame-data')
   .then((frame_data) => {
     state.breakpoints = frame_data.breakpoints;
+    state.dirname = frame_data.dirname;
     $('#filename').text(frame_data.filename);
     $('#curr_line').text(frame_data.current_line);
     let $curr_file = $('#curr_file'),
