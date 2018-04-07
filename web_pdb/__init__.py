@@ -131,7 +131,6 @@ class WebPdb(Pdb):
             'filename': os.path.basename(filename),
             'file_listing': ''.join(lines),
             'current_line': self.curframe.f_lineno,
-            'total_lines': len(lines),
             'breakpoints': self.get_file_breaks(filename),
             'globals': self.get_globals(),
             'locals': self.get_locals()
