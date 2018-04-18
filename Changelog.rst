@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.4.1
+=======
+
+* Use full path for setting and removing breakpoints.
+
 v.1.4.0
 =======
 
