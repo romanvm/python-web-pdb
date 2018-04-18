@@ -26,6 +26,7 @@ const state = {
   command_history: [],
   history_index: -1,
   console_history: '',
+  dirname: '',
   filename: '',
   current_line: -1,
   breakpoints: []
