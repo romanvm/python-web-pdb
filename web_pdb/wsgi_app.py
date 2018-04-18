@@ -67,7 +67,6 @@ def compress(func):
 class WebConsoleApp(bottle.Bottle):
     def __init__(self):
         super(WebConsoleApp, self).__init__()
-        self.console_history = None
         self.frame_data = None
 
 
