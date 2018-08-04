@@ -80,7 +80,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     input_queue = queue.Queue()
 
     @classmethod
-    def send_message(cls, msg):
+    def broadcast(cls, msg):
         for cl in cls.clients:
             if cl.handshaked:
                 cl.sendMessage(msg)  # sendMessage uses deque so it is thread-safe
@@ -170,7 +170,7 @@ class WebConsole(object):
             }
         frame_data['console_history'] = self._console_history.contents
         self._frame_data.contents = frame_data
-        WebConsoleSocket.send_message('ping')  # Ping all clients about data update
+        WebConsoleSocket.broadcast('ping')  # Ping all clients about data update
 
     write = writeline
 
