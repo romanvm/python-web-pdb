@@ -62,6 +62,10 @@ browser sessions.
 
 Subsequent ``set_trace()`` calls can be used as hardcoded breakpoints.
 
+Web-PDB is compatible with the new `breakpoint()`_ function added in Python 3.7.
+Set environment variable ``PYTHONBREAKPOINT="web_pdb.set_trace"`` to launch Web-PDB
+with ``breakpoint()``.
+
 Additionally, Web-PDB provides ``catch_post_mortem`` context manager that can catch
 unhandled exceptions raised within its scope and automatically start PDB post-mortem debugging session.
 For example:
@@ -110,3 +114,4 @@ The debugger icon made by `Freepik`_ from `www.flaticon.com`_ is licensed by `CC
 .. _Freepik: http://www.freepik.com
 .. _www.flaticon.com: http://www.flaticon.com
 .. _CC 3.0 BY: http://creativecommons.org/licenses/by/3.0/
+.. _breakpoint(): https://docs.python.org/3/library/functions.html#breakpoint
