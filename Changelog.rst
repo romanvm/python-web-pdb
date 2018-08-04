@@ -1,6 +1,13 @@
 Changelog
 #########
 
+v.1.4.2
+=======
+
+* Bump ``asyncore-wsgi`` dependency version. This fixes issues with the web-UI
+  on some platforms.
+* Code cleanup.
+
 v.1.4.1
 =======
 
