@@ -303,5 +303,5 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     """
     try:
         yield
-    except:
+    except Exception:
         post_mortem(None, host, port, patch_stdstreams)
