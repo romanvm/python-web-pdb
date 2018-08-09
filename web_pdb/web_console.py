@@ -27,7 +27,6 @@ File-like web-based input/output console
 
 from __future__ import absolute_import, unicode_literals
 import logging
-import sys
 import time
 import weakref
 from socket import gethostname
@@ -80,7 +79,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     input_queue = queue.Queue()
 
     @classmethod
-    def send_message(cls, msg):
+    def broadcast(cls, msg):
         for cl in cls.clients:
             if cl.handshaked:
                 cl.sendMessage(msg)  # sendMessage uses deque so it is thread-safe
@@ -153,24 +152,24 @@ class WebConsole(object):
     read = readline
 
     def writeline(self, data):
-        if sys.version_info[0] == 2 and isinstance(data, str):
+        if isinstance(data, bytes):  # Works for Python 2.7 too
             data = data.decode('utf-8')
         self._console_history.contents += data
         try:
             frame_data = self._debugger.get_current_frame_data()
         except (IOError, AttributeError):
             frame_data = {
+                'dirname': '',
                 'filename': '',
                 'file_listing': 'No data available',
                 'current_line': -1,
-                'total_lines': -1,
                 'breakpoints': [],
                 'globals': 'No data available',
                 'locals': 'No data available'
             }
         frame_data['console_history'] = self._console_history.contents
         self._frame_data.contents = frame_data
-        WebConsoleSocket.send_message('ping')  # Ping all clients about data update
+        WebConsoleSocket.broadcast('ping')  # Ping all clients about data update
 
     write = writeline
 

@@ -40,7 +40,7 @@ from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 
-__version__ = '1.4.1'
+__version__ = '1.4.2'
 
 
 class WebPdb(Pdb):
@@ -303,5 +303,5 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     """
     try:
         yield
-    except:
+    except Exception:
         post_mortem(None, host, port, patch_stdstreams)
