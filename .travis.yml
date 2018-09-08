@@ -18,7 +18,7 @@ before_install:
   - chmod +x chromedriver
   - export PATH=$TRAVIS_BUILD_DIR:$PATH
 install:
-  - pip install tox tox-travis
+  - pip -q install tox tox-travis
   - cd frontend
   - npm install
   - cd $TRAVIS_BUILD_DIR
