@@ -25,10 +25,12 @@
 Web-UI WSGI application
 """
 
+import gzip
 import json
 import os
-import zlib
 from functools import wraps
+from io import BytesIO
+from shutil import copyfileobj
 import bottle
 
 __all__ = ['app']
@@ -45,22 +47,32 @@ except NameError:
     unicode = str
 
 
-def compress(func):
+def compress(route):
     """
-    Compress route return data with deflate compression
-
-    zlib.compress is very fast and has negligible performance impact
+    Compress route return data with gzip compression
     """
-    @wraps(func)
+    @wraps(route)
     def wrapper(*args, **kwargs):
-        result = func(*args, **kwargs)
-        if ('deflate' in bottle.request.headers.get('Accept-Encoding', '') and
-                isinstance(result, string_type)):
-            if isinstance(result, unicode):
-                result = result.encode('utf-8')
-            result = zlib.compress(result)
-            bottle.response.add_header('Content-Encoding', 'deflate')
-        return result
+        response = route(*args, **kwargs)
+        if 'gzip' in bottle.request.headers.get('Accept-Encoding', ''):
+            fo = BytesIO()
+            if isinstance(response, string_type):
+                if isinstance(response, unicode):
+                    response = response.encode('utf-8')
+                with gzip.GzipFile(mode='wb', fileobj=fo) as gzip_fo:
+                    gzip_fo.write(response)
+                # gzip_fo must be closed, otherwise getvalue returns truncated data
+                response = fo.getvalue()
+                bottle.response.add_header('Content-Encoding', 'gzip')
+            elif hasattr(response, 'body') and hasattr(response.body, 'close'):
+                with gzip.GzipFile(mode='wb', fileobj=fo) as gzip_fo:
+                    copyfileobj(response.body, gzip_fo)
+                response.body = fo
+                fo.seek(0, 2)
+                response.headers['Content-Length'] = str(fo.tell())
+                fo.seek(0)
+                response.add_header('Content-Encoding', 'gzip')
+        return response
     return wrapper
 
 
@@ -88,5 +100,6 @@ def get_frame_data():
 
 
 @app.route('/static/<path:path>')
+@compress
 def get_static(path):
     return bottle.static_file(path, root=static_path)
