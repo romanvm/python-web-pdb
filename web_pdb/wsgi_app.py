@@ -27,8 +27,9 @@ Web-UI WSGI application
 
 import json
 import os
-import zlib
+import gzip
 from functools import wraps
+from io import BytesIO
 import bottle
 
 __all__ = ['app']
@@ -54,12 +55,15 @@ def compress(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
-        if ('deflate' in bottle.request.headers.get('Accept-Encoding', '') and
+        if ('gzip' in bottle.request.headers.get('Accept-Encoding', '') and
                 isinstance(result, string_type)):
             if isinstance(result, unicode):
                 result = result.encode('utf-8')
-            result = zlib.compress(result)
-            bottle.response.add_header('Content-Encoding', 'deflate')
+            tmp_fo = BytesIO()
+            with gzip.GzipFile(mode='wb', fileobj=tmp_fo) as gzip_fo:
+                gzip_fo.write(result)
+            result = tmp_fo.getvalue()
+            bottle.response.add_header('Content-Encoding', 'gzip')
         return result
     return wrapper
 
