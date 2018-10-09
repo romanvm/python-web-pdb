@@ -48,9 +48,7 @@ except NameError:
 
 def compress(func):
     """
-    Compress route return data with deflate compression
-
-    zlib.compress is very fast and has negligible performance impact
+    Compress route return data with gzip compression
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
