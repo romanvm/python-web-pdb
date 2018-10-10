@@ -55,7 +55,7 @@ def compress(func):
         result = func(*args, **kwargs)
         if ('gzip' in bottle.request.headers.get('Accept-Encoding', '') and
                 isinstance(result, string_type) and
-                len(result) > 100):
+                len(result) > 1024):
             if isinstance(result, unicode):
                 result = result.encode('utf-8')
             tmp_fo = BytesIO()
