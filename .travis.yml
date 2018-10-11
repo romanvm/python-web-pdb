@@ -1,3 +1,5 @@
+dist: xenial
+sudo: required
 language: python
 cache:
   pip: true
@@ -8,8 +10,6 @@ python:
   - "3.5"
   - "3.6"
   - "3.7"
-sudo: required
-dist: xenial
 addons:
   chrome: stable
 before_install:
@@ -18,6 +18,7 @@ before_install:
   - chmod +x chromedriver
   - export PATH=$TRAVIS_BUILD_DIR:$PATH
 install:
+  - pip -q install tox tox-travis
   - cd frontend
   - npm install
   - cd $TRAVIS_BUILD_DIR
@@ -26,7 +27,7 @@ script:
   - npm run lint
   - npm run build
   - cd $TRAVIS_BUILD_DIR
-  - python setup.py install test
+  - tox
 deploy:
   provider: pypi
   user: $PYPI_USER

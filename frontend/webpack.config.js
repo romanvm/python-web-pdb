@@ -19,7 +19,7 @@ var config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['es2015', 'stage-3']
+            presets: ['env', 'stage-3']
           }
         }
       },

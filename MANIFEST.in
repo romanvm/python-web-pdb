@@ -1,4 +1,4 @@
-include *.py Readme.rst LICENSE.txt
+include *.py Readme.rst Changelog.rst LICENSE.txt
 recursive-include web_pdb *
 recursive-include tests *
 exclude main.py
