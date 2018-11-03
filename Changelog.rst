@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v.1.4.3
+=======
+
+* Use gzip compression instead of deflate for web-console endpoints
+  (`more info <https://stackoverflow.com/a/9856879/4819775>`_).
+
 v.1.4.2
 =======
 
