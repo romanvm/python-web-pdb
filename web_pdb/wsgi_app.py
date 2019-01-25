@@ -36,9 +36,9 @@ __all__ = ['app']
 
 # bottle.debug(True)
 
-cwd = os.path.dirname(os.path.abspath(__file__))
-bottle.TEMPLATE_PATH.append(os.path.join(cwd, 'templates'))
-static_path = os.path.join(cwd, 'static')
+this_dir = os.path.dirname(os.path.abspath(__file__))
+bottle.TEMPLATE_PATH.append(os.path.join(this_dir, 'templates'))
+static_path = os.path.join(this_dir, 'static')
 try:
     string_type = basestring
 except NameError:
