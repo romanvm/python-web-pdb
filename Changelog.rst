@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.4.4
+=======
+
+* Upgrade Prism.js to v.1.15.0
+
 v.1.4.3
 =======
 
