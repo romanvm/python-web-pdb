@@ -35,7 +35,7 @@ import { websocket, state } from './globals';
 var wait_buffer = [];
 
 function update_ui() {
-  $.getJSON('/frame-data')
+  $.getJSON(window.location.href + 'frame-data')
   .then((frame_data) => {
     state.breakpoints = frame_data.breakpoints;
     state.dirname = frame_data.dirname;
