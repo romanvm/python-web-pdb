@@ -1,0 +1,39 @@
+version: '3.7'
+services:
+  web_pdb:
+    build:
+      context: .
+    ports:
+      - "5555"
+
+  web_pdb_post_mortem:
+    build:
+      context: .
+    command: "./tests/db_pm.py"
+    ports:
+      - "5555"
+
+  web_pdb_patch_stdstreams:
+    build:
+      context: .
+    command: "./tests/db_ps.py"
+    ports:
+      - "5555"
+
+  proxy:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    # taken from: https://github.com/nginxinc/docker-nginx/issues/127#issuecomment-293371443
+    # nginx can't resolve hosts using resolv.conf, and one can't be sure
+    # which IP address the nameserver has.
+    command: [/bin/sh, -c,
+      "export NAMESERVER=$$(cat /etc/resolv.conf \
+        | grep 'nameserver' | awk '{print $$2}' | tr '\\n' ' ') && env \
+      && echo Creating /etc/nginx/conf.d/resolver.conf \
+      using nameserver $$NAMESERVER from /etc/resolv.conf \
+      && echo 'resolver' $$NAMESERVER ';' > /etc/nginx/conf.d/resolver.conf; \
+      (test -e /etc/nginx/conf.d/default.conf \
+       && rm /etc/nginx/conf.d/default.conf); nginx -g 'daemon off;'"]

@@ -20,7 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-var websocket = new WebSocket('ws://' + window.location.host + '/ws');
+var websocket = new WebSocket('ws://' + window.location.host + window.location.pathname + 'ws');
 
 const state = {
   command_history: [],
