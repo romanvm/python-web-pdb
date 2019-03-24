@@ -60,8 +60,9 @@ function bind_button_events() {
 
   $('#send_btn').click(() => {
     if (websocket.readyState === websocket.OPEN) {
-      let input = $('#stdin').val() + '\n';
-      $('#stdin').val('');
+      const $stdin = $('#stdin');
+      let input = $stdin.val() + '\n';
+      $stdin.val('');
       state.history_index = -1;
       if (input !== '' && input !== state.command_history[0]) {
         state.command_history.unshift(input);

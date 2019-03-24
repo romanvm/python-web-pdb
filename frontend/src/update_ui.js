@@ -41,7 +41,8 @@ function update_ui() {
     state.dirname = frame_data.dirname;
     $('#filename').text(frame_data.filename);
     $('#curr_line').text(frame_data.current_line);
-    let $curr_file = $('#curr_file'),
+    const $console = $('#console'),
+        $curr_file = $('#curr_file'),
         $curr_file_code = $('#curr_file_code'),
         $globals = $('#globals'),
         $locals = $('#locals'),
@@ -49,13 +50,13 @@ function update_ui() {
     $globals.text(frame_data.globals);
     $locals.text(frame_data.locals);
     $stdout.text(frame_data.console_history);
-    $('#console').scrollTop($('#console').prop('scrollHeight'));
+    $console.scrollTop($console.prop('scrollHeight'));
     $curr_file_code.text(frame_data.file_listing);
     $curr_file.attr('data-line', frame_data.current_line);
     Prism.highlightAll();
-    if (frame_data.current_line != -1 &&
-        (frame_data.filename != state.filename ||
-          frame_data.current_line != state.current_line)) {
+    if (frame_data.current_line !== -1 &&
+        (frame_data.filename !== state.filename ||
+          frame_data.current_line !== state.current_line)) {
       state.filename = frame_data.filename;
       state.current_line = frame_data.current_line;
       // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery

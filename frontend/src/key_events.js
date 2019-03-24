@@ -26,36 +26,36 @@ import { send_command } from './utils';
 
 function bind_key_events() {
   $(document).keydown((event) => {
-    if (event.keyCode == 121) {
+    if (event.keyCode === 121) {
       send_command('n');
       return false;
     }
-    else if (event.keyCode == 122 && !event.shiftKey) {
+    else if (event.keyCode === 122 && !event.shiftKey) {
       send_command('s');
       return false;
     }
-    else if (event.keyCode == 122 && event.shiftKey) {
+    else if (event.keyCode === 122 && event.shiftKey) {
       send_command('r');
       return false;
     }
-    else if (event.keyCode == 119) {
+    else if (event.keyCode === 119) {
       send_command('c');
       return false;
     }
   });
 
   $('#stdin').keydown((event) => {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       $('#send_btn').click();
       return false;
-    } else if (event.keyCode == 38) {
+    } else if (event.keyCode === 38) {
       state.history_index++;
       if (state.history_index >= state.command_history.length) {
         state.history_index = 0;
       }
       $('#stdin').val(state.command_history[state.history_index]);
       return false;
-    } else if (event.keyCode == 40) {
+    } else if (event.keyCode === 40) {
       state.history_index--;
       if (state.history_index < 0) {
         state.history_index = state.command_history.length - 1;

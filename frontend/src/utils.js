@@ -28,7 +28,7 @@ function send_command(command) {
 }
 
 function resize_console() {
-  var con_height = $(window).height() - 490;
+  let con_height = $(window).height() - 490;
   if (con_height <= 240) {
     con_height = 240;
   }
