@@ -32,6 +32,7 @@ import sys
 import random
 import traceback
 from contextlib import contextmanager
+from pprint import pformat
 if sys.version_info[0] == 2:
     from .pdb_py2 import PdbPy2 as Pdb
 else:
@@ -98,6 +99,55 @@ class WebPdb(Pdb):
 
     do_q = do_exit = do_quit
 
+    def do_inspect(self, arg):
+        """
+        i(nspect) object
+        Inspect an object
+        """
+        obj = self.curframe.f_locals.get(arg) or self.curframe.f_globals.get(arg)
+        if obj is not None:
+            self.console.writeline(
+                '{0} = {1}:\n'.format(arg, type(obj))
+            )
+            for name, value in inspect.getmembers(obj):
+                if not (name.startswith('__') and (name.endswith('__'))):
+                    self.console.writeline('    {0}: {1}\n'.format(
+                        name, self._get_repr(value, pretty=True, indent=8)
+                    ))
+        else:
+            self.console.writeline(
+                'NameError: name "{0}" is not defined\n'.format(arg)
+            )
+        self.console.flush()
+
+    do_i = do_inspect
+
+    @staticmethod
+    def _get_repr(obj, pretty=False, indent=1):
+        """
+        Get string representation of an object
+
+        :param obj: object
+        :type obj: object
+        :param pretty: use pretty formatting
+        :type pretty: bool
+        :param indent: indentation for pretty formatting
+        :type indent: int
+        :return: string representation
+        :rtype: str
+        """
+        if pretty:
+            repr_value = pformat(obj, indent)
+        else:
+            repr_value = repr(obj)
+        if sys.version_info[0] == 2:
+            # Try to convert Unicode string to human-readable form
+            try:
+                repr_value = repr_value.decode('raw_unicode_escape')
+            except UnicodeError:
+                repr_value = repr_value.decode('utf-8', 'replace')
+        return repr_value
+
     def set_continue(self):
         # We do not detach the debugger
         # for correct multiple set_trace() and post_mortem() calls.
@@ -146,13 +196,7 @@ class WebPdb(Pdb):
         f_vars = []
         for var, value in raw_vars.items():
             if not (var.startswith('__') and var.endswith('__')):
-                repr_value = repr(value)
-                if sys.version_info[0] == 2:
-                    # Try to convert Unicode string to human-readable form
-                    try:
-                        repr_value = repr_value.decode('raw_unicode_escape')
-                    except UnicodeError:
-                        repr_value = repr_value.decode('utf-8', 'replace')
+                repr_value = self._get_repr(value)
                 f_vars.append('{0} = {1}'.format(var, repr_value))
         return '\n'.join(sorted(f_vars))
 
