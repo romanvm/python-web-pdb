@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.5.0
+=======
+
+* Added ``inspect`` command.
+
 v.1.4.4
 =======
 
