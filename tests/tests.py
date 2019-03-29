@@ -136,7 +136,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('-> name =', stdout_tag.text)
+        self.assertIn(u'-> name = u\'Монти\'', stdout_tag.text)
 
     def test_6_entering_unicode_string(self):
         """
@@ -147,7 +147,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('u\'python -', stdout_tag.text)
+        self.assertIn(u'u\'python - питон\'', stdout_tag.text)
 
     def test_7_local_vars(self):
         """
