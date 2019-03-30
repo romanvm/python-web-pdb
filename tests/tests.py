@@ -22,6 +22,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from __future__ import unicode_literals
 import os
 import sys
 import time
@@ -136,18 +137,18 @@ class WebPdbTestCase(SeleniumTestCase):
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn(u'-> name = u\'Монти\'', stdout_tag.text)
+        self.assertIn('-> name = u\'Монти\'', stdout_tag.text)
 
     def test_6_entering_unicode_string(self):
         """
         Test for entering unicode literal via console
         """
         self.stdin.clear()
-        self.stdin.send_keys(u'p u\'python - питон\'')
+        self.stdin.send_keys('p u\'python - питон\'')
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn(u'u\'python - питон\'', stdout_tag.text)
+        self.assertIn('u\'python - питон\'', stdout_tag.text)
 
     def test_7_local_vars(self):
         """
@@ -211,6 +212,28 @@ class CatchPostMortemTestCase(SeleniumTestCase):
         self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
         stdout_tag = self.browser.find_element_by_id('stdout')
         self.assertIn('AssertionError', stdout_tag.text)
+
+
+class InspectCommandTestCase(SeleniumTestCase):
+    """
+    Test for inspect command
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_i.py')], shell=False)
+        time.sleep(1)
+        super(InspectCommandTestCase, cls).setUpClass()
+
+    def test_inspect_command(self):
+        """
+        Test if inspect command works correctly
+        """
+        self.stdin.send_keys('i Foo')
+        self.send_btn.click()
+        time.sleep(1)
+        stdout_tag = self.browser.find_element_by_id('stdout')
+        self.assertIn('foo: \'foo\'', stdout_tag.text)
+        self.assertIn('bar: \'bar\'', stdout_tag.text)
 
 
 if __name__ == '__main__':
