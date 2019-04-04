@@ -52,6 +52,7 @@ class WebPdb(Pdb):
     with extra convenience features.
     """
     active_instance = None
+    null = object()
 
     def __init__(self, host='', port=5555, patch_stdstreams=False):
         """
@@ -104,8 +105,13 @@ class WebPdb(Pdb):
         i(nspect) object
         Inspect an object
         """
-        obj = self.curframe.f_locals.get(arg) or self.curframe.f_globals.get(arg)
-        if obj is not None:
+        if arg in self.curframe.f_locals:
+            obj = self.curframe.f_locals[arg]
+        elif arg in self.curframe.f_globals:
+            obj = self.curframe.f_globals[arg]
+        else:
+            obj = WebPdb.null
+        if obj is not WebPdb.null:
             self.console.writeline(
                 '{0} = {1}:\n'.format(arg, type(obj))
             )
