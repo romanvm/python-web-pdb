@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.5.1
+=======
+
+* Fixed using ``inspect`` command for variables with ``None`` values.
+
 v.1.5.0
 =======
 
