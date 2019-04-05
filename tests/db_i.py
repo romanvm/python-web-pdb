@@ -28,5 +28,7 @@ class Foo(object):
     bar = 'bar'
 
 
+bar = None
+
 import web_pdb; web_pdb.set_trace()
 pass

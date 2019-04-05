@@ -221,15 +221,30 @@ class InspectCommandTestCase(SeleniumTestCase):
         time.sleep(1)
         super(InspectCommandTestCase, cls).setUpClass()
 
-    def test_inspect_command(self):
+    def test_inspect_existing_object(self):
         """
-        Test if inspect command works correctly
+        Test inspecting existing object
         """
         self.stdin.send_keys('i Foo')
         self.send_btn.click()
         time.sleep(1)
         self.assertIn('foo: \'foo\'', self.stdout_tag.text)
         self.assertIn('bar: \'bar\'', self.stdout_tag.text)
+        self.stdin.send_keys('i bar')
+        self.send_btn.click()
+        time.sleep(1)
+        self.assertNotIn('NameError: name "bar" is not defined',
+                         self.stdout_tag.text)
+
+    def test_inspect_non_existing_object(self):
+        """
+        Test inspecting non-existing object
+        """
+        self.stdin.send_keys('i spam')
+        self.send_btn.click()
+        time.sleep(1)
+        self.assertIn('NameError: name "spam" is not defined',
+                      self.stdout_tag.text)
 
 
 if __name__ == '__main__':
