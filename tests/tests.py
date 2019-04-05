@@ -48,6 +48,7 @@ class SeleniumTestCase(TestCase):
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send_btn')
+        cls.stdout_tag = cls.browser.find_element_by_id('stdout')
 
     @classmethod
     def tearDownClass(cls):
@@ -81,8 +82,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
         globals_tag = self.browser.find_element_by_id('globals')
         self.assertIn('foo = \'foo\'', globals_tag.text)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('-> bar = \'bar\'', stdout_tag.text)
+        self.assertIn('-> bar = \'bar\'', self.stdout_tag.text)
         # Test if Prismjs syntax coloring actually works
         self.assertIn('foo <span class="token operator">=</span> <span class="token string">\'foo\'</span>',
                       self.browser.page_source)
@@ -99,8 +99,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.assertEqual(curr_line_tag.text, '15')
         globals_tag = self.browser.find_element_by_id('globals')
         self.assertIn('bar = \'bar\'', globals_tag.text)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('-> ham = \'spam\'', stdout_tag.text)
+        self.assertIn('-> ham = \'spam\'', self.stdout_tag.text)
         self.assertEqual(self.stdin.get_attribute('value'), '')
 
     def test_3_history(self):
@@ -136,8 +135,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('-> name = u\'Монти\'', stdout_tag.text)
+        self.assertIn('-> name = u\'Монти\'', self.stdout_tag.text)
 
     def test_6_entering_unicode_string(self):
         """
@@ -181,15 +179,14 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('Enter something:', stdout_tag.text)
+        self.assertIn('Enter something:', self.stdout_tag.text)
         self.stdin.send_keys('spam')
         self.send_btn.click()
         time.sleep(1)
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
-        self.assertIn('You have entered: spam', stdout_tag.text)
+        self.assertIn('You have entered: spam', self.stdout_tag.text)
 
 
 class CatchPostMortemTestCase(SeleniumTestCase):
@@ -231,9 +228,8 @@ class InspectCommandTestCase(SeleniumTestCase):
         self.stdin.send_keys('i Foo')
         self.send_btn.click()
         time.sleep(1)
-        stdout_tag = self.browser.find_element_by_id('stdout')
-        self.assertIn('foo: \'foo\'', stdout_tag.text)
-        self.assertIn('bar: \'bar\'', stdout_tag.text)
+        self.assertIn('foo: \'foo\'', self.stdout_tag.text)
+        self.assertIn('bar: \'bar\'', self.stdout_tag.text)
 
 
 if __name__ == '__main__':
