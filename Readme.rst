@@ -83,7 +83,7 @@ For more detailed info about the Web-PDB API read docstrings in the ``./web_pdb/
 The ``inspect`` Command
 -----------------------
 
-Web-PDB provides ``inspect`` or `i` command that is not present in the original PDB.
+Web-PDB provides ``inspect`` or ``i`` command that is not present in the original PDB.
 This command outputs the list of object's members along with their values.
 Syntax: ``inspect <object_name>`` or ``i <object_name>``.
 
