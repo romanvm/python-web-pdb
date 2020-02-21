@@ -45,6 +45,7 @@ class SeleniumTestCase(TestCase):
             options.add_argument('headless')
             options.add_argument('disable-gpu')
             cls.browser = webdriver.Chrome(options=options)
+        cls.browser.implicitly_wait(10)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element_by_id('stdin')
         cls.send_btn = cls.browser.find_element_by_id('send_btn')
@@ -67,13 +68,13 @@ class WebPdbTestCase(SeleniumTestCase):
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', db_py], shell=False)
-        time.sleep(1)
         super(WebPdbTestCase, cls).setUpClass()
 
     def test_1_set_trace(self):
         """
         Test back-end/front-end interaction during debugging
         """
+        time.sleep(1)
         filename_tag = self.browser.find_element_by_id('filename')
         self.assertEqual(filename_tag.text, 'db.py')
         curr_line_tag = self.browser.find_element_by_id('curr_line')
@@ -169,13 +170,13 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_ps.py')], shell=False)
-        time.sleep(1)
         super(PatchStdStreamsTestCase, cls).setUpClass()
 
     def test_patching_std_streams(self):
         """
         Test if std streams are correctly redirected to the web-console
         """
+        time.sleep(1)
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
@@ -196,13 +197,13 @@ class CatchPostMortemTestCase(SeleniumTestCase):
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_pm.py')], shell=False)
-        time.sleep(1)
         super(CatchPostMortemTestCase, cls).setUpClass()
 
     def test_catch_post_mortem(self):
         """
         Test if catch_post_mortem context manager catches exceptions
         """
+        time.sleep(1)
         curr_line_tag = self.browser.find_element_by_id('curr_line')
         self.assertEqual(curr_line_tag.text, '14')
         curr_file_tag = self.browser.find_element_by_id('curr_file_code')
@@ -218,13 +219,13 @@ class InspectCommandTestCase(SeleniumTestCase):
     @classmethod
     def setUpClass(cls):
         cls.db_proc = Popen(['python', os.path.join(cwd, 'db_i.py')], shell=False)
-        time.sleep(1)
         super(InspectCommandTestCase, cls).setUpClass()
 
     def test_inspect_existing_object(self):
         """
         Test inspecting existing object
         """
+        time.sleep(1)
         self.stdin.send_keys('i Foo')
         self.send_btn.click()
         time.sleep(1)

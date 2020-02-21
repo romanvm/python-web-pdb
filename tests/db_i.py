@@ -22,6 +22,12 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
+import sys
+
+basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(basedir)
+
 
 class Foo(object):
     foo = 'foo'
