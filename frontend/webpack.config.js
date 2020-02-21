@@ -52,6 +52,6 @@ var config = {
   }),
     new ExtractTextPlugin('styles.min.css')
   ]
-}
+};
 
 module.exports = config;
