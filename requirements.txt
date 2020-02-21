@@ -1,0 +1,3 @@
+bottle
+asyncore-wsgi>=0.0.4
+selenium
