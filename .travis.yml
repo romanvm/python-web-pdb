@@ -35,6 +35,6 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     tags: true
-    python: "3.7"
+    python: "3.8"
 notifications:
   email: false
