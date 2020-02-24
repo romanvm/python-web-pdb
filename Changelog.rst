@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.5.2
+=======
+
+* Updated frontend dependencies.
+
 v.1.5.1
 =======
 
