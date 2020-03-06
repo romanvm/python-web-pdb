@@ -167,6 +167,7 @@ class WebPdb(Pdb):
             if not self.console.closed:
                 self.console.flush()
                 self.console.close()
+                WebPdb.active_instance = None
         return ret
 
     def get_current_frame_data(self):
