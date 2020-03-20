@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.5.3
+
+* Fixed the issue with closed debugger still being stored in ``active_instance``
+  class property that prevented starting a new debugger session (thanks to **maiamcc**).
+
 v.1.5.2
 =======
 
