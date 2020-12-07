@@ -10,6 +10,7 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
+  - "3.9"
 addons:
   chrome: stable
 before_install:
@@ -35,6 +36,6 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     tags: true
-    python: "3.8"
+    python: "3.9"
 notifications:
   email: false
