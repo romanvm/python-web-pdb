@@ -1,6 +1,11 @@
 Changelog
 #########
 
+v.1.5.6
+
+* Fixed the issue when a local variable could not be assigned from the debugger console.
+* Updated frontend dependencies.
+
 v.1.5.3
 
 * Fixed the issue with closed debugger still being stored in ``active_instance``

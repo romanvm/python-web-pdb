@@ -41,7 +41,7 @@ from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
 
-__version__ = '1.5.3'
+__version__ = '1.5.6'
 
 
 class WebPdb(Pdb):
