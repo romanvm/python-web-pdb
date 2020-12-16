@@ -41,7 +41,9 @@ html, body {
 }
 
 .var-info {
-  height: 390px;
+  height: 400px;
+  margin-top: 0px !important;
+  margin-bottom: 5px !important;
 }
 
 .console-panel{
