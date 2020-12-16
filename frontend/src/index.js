@@ -26,7 +26,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import bind_button_events from './button_events';
 import bind_key_events from './key_events';
-import { resize_console } from './utils';
 import update_ui from './update_ui';
 
 import './styles.css';
@@ -34,9 +33,7 @@ import './styles.css';
 $(() => {
   bind_button_events();
   bind_key_events();
-  $(window).resize(resize_console);
   $('title').text(`Web-PDB Console on ${window.location.host}`);
   $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
-  resize_console();
   update_ui();
 });

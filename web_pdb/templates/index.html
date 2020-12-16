@@ -20,30 +20,8 @@
   </nav>
   <div class="container-fluid language-python">
     <div class="row">
-      <div class="col-sm-6">
-        <div class="infobox-label">
-          <div class="infobox-label-text">
-            <strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp>
-          </div>
-        </div>
-        <pre id="curr_file" class="line-numbers info"><code id="curr_file_code"></code></pre>
-      </div>
-      <div class="col-sm-3">
-        <div class="infobox-label">
-          <div class="infobox-label-text">
-            <strong>Globals</strong>
-          </div>
-        </div>
-        <pre class="info"><code id="globals"></code></pre>
-      </div>
-      <div class="col-sm-3">
-        <div class="infobox-label">
-          <div class="infobox-label-text">
-            <strong>Locals</strong>
-          </div>
-        </div>
-        <pre class="info"><code id="locals"></code></pre>
-      </div>
+
+      <!-- control bar -->
       <div class="col-sm-12">
         <div class="btn-group" role="group">
           <button id="next_btn" type="button" class="btn btn-default"
@@ -80,6 +58,43 @@
           </button>
         </div>
       </div>
+
+
+
+      <!-- code -->
+      <div class="col-sm-6">
+        <div class="infobox-label">
+          <div class="infobox-label-text">
+            <strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp>
+          </div>
+        </div>
+        <pre id="curr_file" class="line-numbers code-info"><code id="curr_file_code"></code></pre>
+      </div>
+
+      <div class="col-sm-6">
+        <!-- global -->
+        <div class="col-sm-12">
+          <div class="infobox-label">
+            <div class="infobox-label-text">
+              <strong>Globals</strong>
+            </div>
+          </div>
+          <pre class="var-info"><code id="globals"></code></pre>
+        </div>
+        <!-- local -->
+        <div class="col-sm-12">
+          <div class="infobox-label">
+            <div class="infobox-label-text">
+              <strong>Locals</strong>
+            </div>
+          </div>
+          <pre class="var-info"><code id="locals"></code></pre>
+        </div>
+      </div>
+
+
+
+      <!-- pbd console -->
       <div class="col-sm-12">
         <div class="infobox-label">
           <div class="infobox-label-text">
