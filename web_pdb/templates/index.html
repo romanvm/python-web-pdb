@@ -59,10 +59,8 @@
         </div>
       </div>
 
-
-
-      <!-- code -->
-      <div class="col-sm-6">
+      <!-- code panel -->
+      <div class="col-sm-6 padding-right-zero">
         <div class="infobox-label">
           <div class="infobox-label-text">
             <strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp>
@@ -71,7 +69,8 @@
         <pre id="curr_file" class="line-numbers code-info"><code id="curr_file_code"></code></pre>
       </div>
 
-      <div class="col-sm-6">
+      <!-- two variable panels -->
+      <div class="col-sm-6 padding-left-zero">
         <!-- global -->
         <div class="col-sm-12">
           <div class="infobox-label">
@@ -92,8 +91,6 @@
         </div>
       </div>
 
-
-
       <!-- pbd console -->
       <div class="col-sm-12">
         <div class="infobox-label">
@@ -101,7 +98,7 @@
             <strong>PDB Console</strong>
           </div>
         </div>
-        <pre id="console"><code id="stdout"></code></pre>
+        <pre class="console-panel" id="console"><code id="stdout"></code></pre>
       </div>
       <div class="col-sm-12">
         <div class="input-group">
@@ -112,6 +109,7 @@
           </span>
         </div>
       </div>
+
     </div>
   </div>
   <div id="help_window" class="modal fade" tabindex="-1" role="dialog">
