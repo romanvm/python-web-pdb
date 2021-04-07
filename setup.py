@@ -67,7 +67,7 @@ setup(
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Debuggers',
     ],
-    install_requires=['bottle==0.12.15', 'asyncore-wsgi>=0.0.4'],
+    install_requires=['bottle==0.12.19', 'asyncore-wsgi>=0.0.4'],
     test_suite='tests.tests',
     tests_require=['selenium==3.141.0'],
     platforms=['any'],
