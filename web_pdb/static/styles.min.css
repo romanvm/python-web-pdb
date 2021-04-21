@@ -151,8 +151,27 @@ html, body {
   padding: 5px;
 }
 
-.info {
-  height: 300px;
+.padding-right-zero {
+  padding-right: 0px !important;
+}
+
+.padding-left-zero {
+  padding-left: 0px !important;
+}
+
+.code-info {
+    height: 800px;
+}
+
+.var-info {
+  height: 400px;
+  margin-top: 0px !important;
+  margin-bottom: 5px !important;
+}
+
+.console-panel{
+  min-height: 300px;
+  max-height: 500px;
 }
 
 .line-numbers-rows > span:before {

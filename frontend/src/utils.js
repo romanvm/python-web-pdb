@@ -27,12 +27,4 @@ function send_command(command) {
   $('#send_btn').click();
 }
 
-function resize_console() {
-  let con_height = $(window).height() - 490;
-  if (con_height <= 240) {
-    con_height = 240;
-  }
-  $('#console').height(con_height);
-}
-
-export { send_command, resize_console };
+export { send_command};
