@@ -1,4 +1,4 @@
-name: Web-PDB
+name: Tests
 
 on:
   - push
@@ -23,4 +23,3 @@ jobs:
         pip install tox tox-gh-actions
     - name: Test with tox
       run: tox
-      
