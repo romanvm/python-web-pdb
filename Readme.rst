@@ -1,9 +1,9 @@
 Web-PDB
 #######
 
-.. image:: https://travis-ci.org/romanvm/python-web-pdb.svg?branch=master
-  :target: https://travis-ci.org/romanvm/python-web-pdb
-  :alt: Travis-CI tests
+.. image:: https://github.com/romanvm/python-web-pdb/actions/workflows/tests.yml/badge.svg
+  :target: https://github.com/romanvm/python-web-pdb/actions/workflows/tests.yml
+  :alt: GitHub Action tests
 .. image:: https://badge.fury.io/py/web-pdb.svg
   :target: https://badge.fury.io/py/web-pdb
   :alt: PyPI version
