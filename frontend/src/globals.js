@@ -27,7 +27,8 @@ const state = {
   dirname: '',
   filename: '',
   current_line: -1,
-  breakpoints: []
+  breakpoints: [],
+  theme: 'okaidia',
 },
   websocket = new WebSocket('ws://' + window.location.host + '/ws');
 

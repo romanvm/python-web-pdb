@@ -21,24 +21,32 @@ SOFTWARE.
 */
 
 import $ from 'jquery';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
 
-import bind_button_events from './button_events';
-import bind_key_events from './key_events';
-import bind_theme_events from './theme';
-import { resize_console } from './utils';
-import update_ui from './update_ui';
+import { state } from './globals';
 
-import './styles.css';
+function highlight_active_theme_dropdown_item(theme) {
+  $('.prism-theme-item').removeClass('active');
+  $('.prism-theme-item > a[data-theme=' + theme + ']').parent()
+    .addClass('active');
+}
 
-$(() => {
-  bind_button_events();
-  bind_key_events();
-  bind_theme_events();
-  $(window).resize(resize_console);
-  $('title').text(`Web-PDB Console on ${window.location.host}`);
-  $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
-  resize_console();
-  update_ui();
-});
+function set_prism_theme(theme) {
+  state.theme = theme;
+
+  const link = document.getElementById('prism-theme');
+  link.href = 'static/themes/prism-' + theme + '.css';
+
+  highlight_active_theme_dropdown_item(theme);
+}
+
+function bind_theme_events() {
+  highlight_active_theme_dropdown_item(state.theme);
+
+
+  $('.prism-theme-item').on('click', (event) => {
+    const theme = $(event.target).data('theme');
+    set_prism_theme(theme);
+  });
+}
+
+export default bind_theme_events;
