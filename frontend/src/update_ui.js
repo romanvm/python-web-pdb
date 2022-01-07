@@ -26,7 +26,6 @@ import 'prismjs/components/prism-python.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
 import './prism-line-numbers.js';
 
-import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
