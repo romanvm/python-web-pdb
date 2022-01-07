@@ -42,7 +42,6 @@ function set_prism_theme(theme) {
 function bind_theme_events() {
   highlight_active_theme_dropdown_item(state.theme);
 
-
   $('.prism-theme-item').on('click', (event) => {
     const theme = $(event.target).data('theme');
     set_prism_theme(theme);
