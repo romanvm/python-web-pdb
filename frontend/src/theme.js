@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2018 Roman Miroshnychenko <roman1972@gmail.com>
+Copyright (c) 2022 Christoph Buelter <buelter.christoph@gmail.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
