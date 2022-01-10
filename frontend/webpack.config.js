@@ -1,6 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var SRC = path.resolve(__dirname, 'src');
@@ -52,14 +52,14 @@ var config = {
       'window.Tether': 'tether',
   }),
     new ExtractTextPlugin('styles.min.css'),
-    new CopyPlugin({
-      patterns: [
+    new CopyWebpackPlugin(
+      [
         {
           from: 'node_modules/prismjs/themes/prism-*.css',
           to: BUILD + '/themes/[name].[ext]'
         },
       ]
-    }),
+    ),
   ]
 };
 
