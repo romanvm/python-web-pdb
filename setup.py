@@ -50,6 +50,7 @@ setup(
     author_email='roman1972@gmail.com',
     description='Web interface for Python\'s built-in PDB debugger',
     long_description=get_doc('Readme.rst') + u'\n\n' + get_doc('Changelog.rst'),
+    long_description_content_type='text/x-rst',
     url='https://github.com/romanvm/python-web-pdb',
     license='MIT License',
     packages=['web_pdb'],
