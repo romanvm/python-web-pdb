@@ -27,4 +27,4 @@ function send_command(command) {
   $('#send_btn').click();
 }
 
-export { send_command};
+export { send_command };
