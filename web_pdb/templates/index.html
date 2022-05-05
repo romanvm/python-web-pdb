@@ -11,18 +11,13 @@
 </head>
 <body>
   <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
+    <div id="navbar_container" class="container-fluid">
       <div class="navbar-header">
         <div class="navbar-brand"><img src="static/img/debug.svg" width="24" height="24"></div>
         <p id="host" class="navbar-text"></p>
       </div>
-    </div>
-  </nav>
-  <div class="container-fluid language-python">
-    <div class="row">
-
       <!-- control bar -->
-      <div class="col-sm-12">
+      <div class="col-sm-4">
         <div class="btn-group" role="group">
           <button id="next_btn" type="button" class="btn btn-default"
               data-toggle="tooltip" title="Next line (F10)">
@@ -59,6 +54,12 @@
         </div>
       </div>
 
+
+    </div>
+  </nav>
+  <div class="container-fluid language-python">
+    <div class="row">
+
       <!-- code panel -->
       <div class="col-sm-6 padding-right-zero">
         <div class="infobox-label">
@@ -72,22 +73,22 @@
       <!-- two variable panels -->
       <div class="col-sm-6 padding-left-zero">
         <!-- global -->
-        <div class="col-sm-12">
+        <div class="col-sm-12 padding-right-zero">
           <div class="infobox-label">
             <div class="infobox-label-text">
               <strong>Globals</strong>
             </div>
           </div>
-          <pre class="var-info"><code id="globals"></code></pre>
+          <pre id="globals_container" class="var-info"><code id="globals"></code></pre>
         </div>
         <!-- local -->
-        <div class="col-sm-12">
+        <div class="col-sm-12 padding-right-zero">
           <div class="infobox-label">
             <div class="infobox-label-text">
               <strong>Locals</strong>
             </div>
           </div>
-          <pre class="var-info"><code id="locals"></code></pre>
+          <pre id="locals_container" class="var-info"><code id="locals"></code></pre>
         </div>
       </div>
 
@@ -100,7 +101,7 @@
         </div>
         <pre class="console-panel" id="console"><code id="stdout"></code></pre>
       </div>
-      <div class="col-sm-12">
+      <div id="pdb_input" class="col-sm-12">
         <div class="input-group">
           <div class="input-group-addon">(Pdb)</div>
           <input class="form-control" id="stdin" type="text">

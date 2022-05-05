@@ -92,3 +92,42 @@ div.infobox-label > div.infobox-label-text {
   -o-transform: none;
   transform: none;
 }
+
+/* Media for container heights */
+@media (max-width: 1280px) {
+  #curr_file {
+    height: 300px;
+  }
+  #globals_container, #locals_container {
+    height: 150px;
+  }
+}
+
+@media (min-width: 1281px) and (max-width: 1366px) {
+  #curr_file {
+    height: 350px;
+  }
+  #globals_container, #locals_container {
+    height: 175px;
+  }
+}
+
+@media (min-width: 1367px) and (max-width: 1920px) {
+  #curr_file {
+    height: 500px;
+  }
+  #globals_container, #locals_container {
+    height: 250px;
+  }
+}
+
+/* Add color to pdb input */
+#pdb_input .input-group-addon, #send_btn {
+  background-color: #272822;
+  color: white;
+}
+
+#navbar_container {
+  display: flex;
+  align-items: center;
+}
