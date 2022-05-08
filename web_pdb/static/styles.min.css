@@ -73,6 +73,12 @@ div.infobox-label > div.infobox-label-text {
   -o-transform: none;
   transform: none;
 }
+
+a.prism-theme-dropdown-button:hover,
+.prism-theme-item > a:hover {
+  cursor: pointer;
+}
+
 /*!
  * Bootstrap v3.4.1 (https://getbootstrap.com/)
  * Copyright 2011-2019 Twitter, Inc.
