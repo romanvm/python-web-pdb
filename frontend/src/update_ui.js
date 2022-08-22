@@ -32,7 +32,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import { websocket, state } from './globals';
 
-var wait_buffer = [];
+let wait_buffer = [];
 
 function update_ui() {
   $.getJSON('/frame-data')
