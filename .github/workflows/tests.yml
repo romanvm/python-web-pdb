@@ -27,12 +27,13 @@ jobs:
 
       - name: JS lint
         run: |
+          cd frontend
           npm run lint
 
       - name: Build JS Bundle
         run: |
+          cd frontend
           npm run build
-          cd ..
 
   test:
     runs-on: ubuntu-latest
