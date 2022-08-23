@@ -1,4 +1,3 @@
-# coding: utf-8
 # Author: Roman Miroshnychenko aka Roman V.M.
 # E-mail: roman1972@gmail.com
 #
@@ -25,18 +24,15 @@
 A web-interface for Python's built-in PDB debugger
 """
 
-from __future__ import absolute_import, unicode_literals
 import inspect
 import os
-import sys
 import random
+import sys
 import traceback
 from contextlib import contextmanager
+from pdb import Pdb
 from pprint import pformat
-if sys.version_info[0] == 2:
-    from .pdb_py2 import PdbPy2 as Pdb
-else:
-    from pdb import Pdb
+
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
@@ -69,7 +65,7 @@ class WebPdb(Pdb):
             random.seed()
             port = random.randint(32768, 65536)
         self.console = WebConsole(host, port, self)
-        Pdb.__init__(self, stdin=self.console, stdout=self.console)
+        super().__init__(stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
         self._backup = []
         if patch_stdstreams:
@@ -96,7 +92,7 @@ class WebPdb(Pdb):
         self.console.flush()
         self.console.close()
         WebPdb.active_instance = None
-        return Pdb.do_quit(self, arg)
+        return super().do_quit(arg)
 
     do_q = do_exit = do_quit
 
@@ -117,13 +113,10 @@ class WebPdb(Pdb):
             )
             for name, value in inspect.getmembers(obj):
                 if not (name.startswith('__') and (name.endswith('__'))):
-                    self.console.writeline('    {0}: {1}\n'.format(
-                        name, self._get_repr(value, pretty=True, indent=8)
-                    ))
+                    repr_value = self._get_repr(value, pretty=True, indent=8)
+                    self.console.writeline(f'    {name}: {repr_value}\n')
         else:
-            self.console.writeline(
-                'NameError: name "{0}" is not defined\n'.format(arg)
-            )
+            self.console.writeline(f'NameError: name "{arg}" is not defined\n')
         self.console.flush()
 
     do_i = do_inspect
@@ -146,12 +139,6 @@ class WebPdb(Pdb):
             repr_value = pformat(obj, indent)
         else:
             repr_value = repr(obj)
-        if sys.version_info[0] == 2:
-            # Try to convert Unicode string to human-readable form
-            try:
-                repr_value = repr_value.decode('raw_unicode_escape')
-            except UnicodeError:
-                repr_value = repr_value.decode('utf-8', 'replace')
         return repr_value
 
     def set_continue(self):
@@ -161,7 +148,7 @@ class WebPdb(Pdb):
 
     def dispatch_return(self, frame, arg):
         # The parent's method needs to be called first.
-        ret = Pdb.dispatch_return(self, frame, arg)
+        ret = super().dispatch_return(frame, arg)
         if frame.f_back is None:
             self.console.writeline('*** Thread finished ***\n')
             if not self.console.closed:
@@ -181,8 +168,6 @@ class WebPdb(Pdb):
         """
         filename = self.curframe.f_code.co_filename
         lines, start_line = inspect.findsource(self.curframe)
-        if sys.version_info[0] == 2:
-            lines = [line.decode('utf-8') for line in lines]
         return {
             'dirname': os.path.dirname(os.path.abspath(filename)) + os.path.sep,
             'filename': os.path.basename(filename),
@@ -204,7 +189,7 @@ class WebPdb(Pdb):
         for var, value in raw_vars.items():
             if not (var.startswith('__') and var.endswith('__')):
                 repr_value = self._get_repr(value)
-                f_vars.append('{0} = {1}'.format(var, repr_value))
+                f_vars.append(f'{var} = {repr_value}')
         return '\n'.join(sorted(f_vars))
 
     def get_globals(self):
