@@ -35,6 +35,26 @@ jobs:
           cd frontend
           npm run build
 
+  pylint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.10
+
+    - name: Install dependencies
+      run: |
+        python -m pip install -q --upgrade pip
+        pip install -q Pylint
+
+    - name: Check with Pylint
+      run: |
+        pylint web_pdb
+
   test:
     runs-on: ubuntu-latest
     strategy:
@@ -51,8 +71,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install tox tox-gh-actions
+        python -m pip install -q --upgrade pip
+        pip install -q tox tox-gh-actions
 
     - name: Test with tox
       run: tox

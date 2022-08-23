@@ -48,6 +48,7 @@ def compress(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
+        # pylint: disable=no-member
         if ('gzip' in bottle.request.headers.get('Accept-Encoding', '') and
                 isinstance(result, str) and
                 len(result) > 1024):
@@ -64,7 +65,7 @@ def compress(func):
 
 class WebConsoleApp(bottle.Bottle):
     def __init__(self):
-        super(WebConsoleApp, self).__init__()
+        super().__init__()
         self.frame_data = None
 
 

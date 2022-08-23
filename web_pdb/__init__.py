@@ -108,9 +108,7 @@ class WebPdb(Pdb):
         else:
             obj = WebPdb.null
         if obj is not WebPdb.null:
-            self.console.writeline(
-                '{0} = {1}:\n'.format(arg, type(obj))
-            )
+            self.console.writeline(f'{arg} = {type(obj)}:\n')
             for name, value in inspect.getmembers(obj):
                 if not (name.startswith('__') and (name.endswith('__'))):
                     repr_value = self._get_repr(value, pretty=True, indent=8)
@@ -167,7 +165,7 @@ class WebPdb(Pdb):
         :raises IOError: if source code for the current execution frame is not accessible.
         """
         filename = self.curframe.f_code.co_filename
-        lines, start_line = inspect.findsource(self.curframe)
+        lines, _ = inspect.findsource(self.curframe)
         return {
             'dirname': os.path.dirname(os.path.abspath(filename)) + os.path.sep,
             'filename': os.path.basename(filename),
@@ -261,7 +259,7 @@ def set_trace(host='', port=5555, patch_stdstreams=False):
     else:
         # If the debugger is still attached reset trace to a new location
         pdb.remove_trace()
-    pdb.set_trace(sys._getframe().f_back)
+    pdb.set_trace(sys._getframe().f_back)  # pylint: disable=protected-access
 
 
 def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
@@ -339,5 +337,5 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     """
     try:
         yield
-    except Exception:
+    except Exception:  # pylint: disable=broad-except
         post_mortem(None, host, port, patch_stdstreams)

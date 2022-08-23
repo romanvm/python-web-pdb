@@ -38,7 +38,7 @@ from .wsgi_app import app
 __all__ = ['WebConsole']
 
 
-class ThreadSafeBuffer(object):
+class ThreadSafeBuffer:
     """
     A buffer for data exchange between threads
     """
@@ -91,7 +91,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
         self.clients.remove(self)
 
 
-class WebConsole(object):
+class WebConsole:
     """
     A file-like class for exchanging data between PDB and the web-UI
     """
@@ -103,7 +103,7 @@ class WebConsole(object):
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
         logging.critical(
-            f'Web-PDB: starting web-server on {gethostname()}:{port}...')
+            'Web-PDB: starting web-server on %s:%s...', gethostname(), port)
         self._server_thread.start()
 
     @property
