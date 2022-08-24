@@ -1,4 +1,3 @@
-# coding: utf-8
 # Author: Roman Miroshnychenko aka Roman V.M.
 # E-mail: roman1972@gmail.com
 #
@@ -25,23 +24,21 @@
 File-like web-based input/output console
 """
 
-from __future__ import absolute_import, unicode_literals
 import logging
+import queue
 import time
 import weakref
 from socket import gethostname
 from threading import Thread, Event, RLock
-try:
-    import queue
-except ImportError:
-    import Queue as queue
+
 from asyncore_wsgi import make_server, AsyncWebSocketHandler
+
 from .wsgi_app import app
 
 __all__ = ['WebConsole']
 
 
-class ThreadSafeBuffer(object):
+class ThreadSafeBuffer:
     """
     A buffer for data exchange between threads
     """
@@ -94,7 +91,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
         self.clients.remove(self)
 
 
-class WebConsole(object):
+class WebConsole:
     """
     A file-like class for exchanging data between PDB and the web-UI
     """
@@ -106,9 +103,7 @@ class WebConsole(object):
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
         logging.critical(
-            'Web-PDB: starting web-server on {0}:{1}...'.format(
-                gethostname(), port)
-        )
+            'Web-PDB: starting web-server on %s:%s...', gethostname(), port)
         self._server_thread.start()
 
     @property
@@ -152,8 +147,6 @@ class WebConsole(object):
     read = readline
 
     def writeline(self, data):
-        if isinstance(data, bytes):  # Works for Python 2.7 too
-            data = data.decode('utf-8')
         self._console_history.contents += data
         try:
             frame_data = self._debugger.get_current_frame_data()
