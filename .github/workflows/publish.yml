@@ -74,7 +74,10 @@ jobs:
       run: tox
 
   publish:
-    needs: test
+    needs:
+      - check-javascript
+      - pylint
+      - test
     runs-on: ubuntu-latest
 
     steps:
