@@ -1,5 +1,4 @@
-# coding: utf-8
-# Created on: 
+# Created on:
 # Author: Roman Miroshnychenko aka Roman V.M. (roman1972@gmail.com)
 #
 # Copyright (c) 2016 Roman Miroshnychenko
@@ -22,24 +21,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
+import pathlib
 import re
-from io import open
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
 
-cwd = os.path.dirname(os.path.abspath(__file__))
+from setuptools import setup
 
 
 def get_version():
-    with open(os.path.join(cwd, 'web_pdb', '__init__.py')) as fo:
+    init_py = pathlib.Path('.').absolute() / 'web_pdb' / '__init__.py'
+    with init_py.open('r', encoding='utf-8') as fo:
         return re.search(r'__version__ = \'(\d+\.\d+\.\d+)\'', fo.read()).group(1)
 
 
 def get_doc(filename):
-    with open(filename, encoding='utf-8') as fo:
+    with open(filename, 'r', encoding='utf-8') as fo:
         return fo.read()
 
 
@@ -49,7 +44,7 @@ setup(
     author='Roman Miroshnychenko',
     author_email='roman1972@gmail.com',
     description='Web interface for Python\'s built-in PDB debugger',
-    long_description=get_doc('Readme.rst') + u'\n\n' + get_doc('Changelog.rst'),
+    long_description=get_doc('Readme.rst') + '\n\n' + get_doc('Changelog.rst'),
     long_description_content_type='text/x-rst',
     url='https://github.com/romanvm/python-web-pdb',
     license='MIT License',
@@ -64,10 +59,10 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Topic :: Software Development :: Debuggers',
     ],
+    python_requires='>=3.6',
     install_requires=['bottle==0.12.23', 'asyncore-wsgi>=0.0.4'],
     test_suite='tests.tests',
     tests_require=['selenium==3.141.0'],
