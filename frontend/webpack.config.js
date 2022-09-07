@@ -1,17 +1,38 @@
-var webpack = require('webpack');
-var path = require('path');
+const webpack = require('webpack');
+const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-var SRC = path.resolve(__dirname, 'src');
-var BUILD = path.resolve(path.dirname(__dirname), 'web_pdb', 'static');
+const SRC = path.resolve(__dirname, 'src');
+const BUILD = path.resolve(path.dirname(__dirname), 'web_pdb', 'static');
 
-var config = {
+const config = {
   entry: SRC + '/index.js',
   output: {
     path: BUILD,
     filename: 'bundle.min.js'
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+      'window.jQuery': 'jquery',
+      tether: 'tether',
+      Tether: 'tether',
+      'window.Tether': 'tether',
+    }),
+    new MiniCssExtractPlugin({
+      filename: 'styles.min.css'
+    }),
+    new CopyWebpackPlugin(
+      [
+        {
+          from: 'node_modules/prismjs/themes/prism-*.css',
+          to: BUILD + '/themes/[name].[ext]'
+        },
+      ]
+    ),
+  ],
   module: {
     rules: [
       {
@@ -35,32 +56,10 @@ var config = {
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: 'css-loader'
-        })
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       }
     ]
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.jQuery': 'jquery',
-      tether: 'tether',
-      Tether: 'tether',
-      'window.Tether': 'tether',
-  }),
-    new ExtractTextPlugin('styles.min.css'),
-    new CopyWebpackPlugin(
-      [
-        {
-          from: 'node_modules/prismjs/themes/prism-*.css',
-          to: BUILD + '/themes/[name].[ext]'
-        },
-      ]
-    ),
-  ]
+  }
 };
 
 module.exports = config;
