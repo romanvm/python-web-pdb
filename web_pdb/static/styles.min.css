@@ -191,3 +191,8 @@ div.infobox-label > div.infobox-label-text {
   transform: none;
 }
 
+a.prism-theme-dropdown-button:hover,
+.prism-theme-item > a:hover {
+  cursor: pointer;
+}
+
