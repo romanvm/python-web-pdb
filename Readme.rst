@@ -119,7 +119,7 @@ Build frontend:
 
   cd frontend/
   npm install
-  npm run build
+  npm run build --legacy-peer-deps
 
 Run web-pdb:
 
