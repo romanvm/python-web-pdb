@@ -110,6 +110,25 @@ Compatibility
 - **Python**: 2.7, 3+
 - **Browsers**: Firefox, Chrome (all modern browsers should work)
 
+Development
+===========
+
+Build frontend:
+
+.. code-block:: bash
+
+  cd frontend/
+  npm install
+  npm run build
+
+Run web-pdb:
+
+.. code-block:: python
+
+  python tests/db.py
+
+Open http://localhost:5555 in your browser.
+
 License
 =======
 
