@@ -29,26 +29,16 @@ html, body {
 }
 
 .padding-right-zero {
-  padding-right: 0px !important;
+  padding-right: 0 !important;
 }
 
 .padding-left-zero {
-  padding-left: 0px !important;
-}
-
-.code-info {
-    height: 800px;
+  padding-left: 0 !important;
 }
 
 .var-info {
-  height: 400px;
-  margin-top: 0px !important;
+  margin-top: 0 !important;
   margin-bottom: 5px !important;
-}
-
-.console-panel{
-  min-height: 300px;
-  max-height: 500px;
 }
 
 .line-numbers-rows > span:before {
@@ -93,34 +83,6 @@ div.infobox-label > div.infobox-label-text {
   transform: none;
 }
 
-/* Media for container heights */
-@media (max-width: 1280px) {
-  #curr_file {
-    height: 300px;
-  }
-  #globals_container, #locals_container {
-    height: 150px;
-  }
-}
-
-@media (min-width: 1281px) and (max-width: 1366px) {
-  #curr_file {
-    height: 350px;
-  }
-  #globals_container, #locals_container {
-    height: 175px;
-  }
-}
-
-@media (min-width: 1367px) and (max-width: 1920px) {
-  #curr_file {
-    height: 500px;
-  }
-  #globals_container, #locals_container {
-    height: 250px;
-  }
-}
-
 /* Add color to pdb input */
 #pdb_input .input-group-addon, #send_btn {
   background-color: #272822;
@@ -130,4 +92,43 @@ div.infobox-label > div.infobox-label-text {
 #navbar_container {
   display: flex;
   align-items: center;
+}
+
+/* Make the whole layout fit exactly into viewport */
+body {
+  /* 30 is a height of navbar which fixed, so subtract it to account for padding-top */
+  height: calc(100vh - 30px);
+}
+.language-python, .layout-base {
+  height: 100%;
+}
+
+/* Create a grid for the layout */
+.layout-base {
+  display: grid;
+
+  grid-template-rows:
+    auto
+    auto
+    /* This is needed to prevent input row becoming taller than it's input will ever be */
+    34px;
+  grid-template-areas:
+    "code variables"
+    "pdb-console pdb-console"
+    "pdb-input pdb-input";
+}
+
+/* Assign grid areas */
+.code {grid-area: code;}
+.variables {
+  display: grid;
+  grid-area: variables;
+}
+.pdb-console {grid-area: pdb-console;}
+.pdb-input {grid-area: pdb-input;}
+
+/* Remove margins that are not longer needed for the grid */
+.web-pdb-window-content {
+  height: 100%;
+  margin: 0 !important;
 }
