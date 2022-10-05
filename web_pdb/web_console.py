@@ -103,7 +103,7 @@ class WebConsole:
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
         logging.critical(
-            'Web-PDB: starting web-server on %s:%s...', gethostname(), port)
+            'Web-PDB: starting web-server, running on http://%s:%s', gethostname(), port)
         self._server_thread.start()
 
     @property
