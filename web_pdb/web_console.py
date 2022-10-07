@@ -38,6 +38,9 @@ from .wsgi_app import app
 __all__ = ['WebConsole']
 
 
+logging.basicConfig(level=logging.INFO, format="[%(levelname)s] %(message)s")
+
+
 class ThreadSafeBuffer:
     """
     A buffer for data exchange between threads
@@ -102,7 +105,7 @@ class WebConsole:
         self._stop_all = Event()
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
-        logging.critical(
+        logging.info(
             'Web-PDB: starting web-server on %s:%s...', gethostname(), port)
         self._server_thread.start()
 
@@ -177,7 +180,7 @@ class WebConsole:
             time.sleep(0.1)
 
     def close(self):
-        logging.critical('Web-PDB: stopping web-server...')
+        logging.info('Web-PDB: stopping web-server...')
         self._stop_all.set()
         self._server_thread.join()
-        logging.critical('Web-PDB: web-server stopped.')
+        logging.info('Web-PDB: web-server stopped.')
