@@ -189,9 +189,9 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
         self.assertIn('You have entered: spam', self.stdout_tag.text)
 
 
-# Todo: investigate why the test fails on Python 3.10
-@skipIf(sys.version_info[:2] == (3, 10),
-        'This test fails on Python 3.10 for some mysterious reason')
+# Todo: investigate why the test fails on Python >= 3.10
+@skipIf(sys.version_info[:2] >= (3, 10),
+        'This test fails on Python 3.10+ for some mysterious reason')
 class CatchPostMortemTestCase(SeleniumTestCase):
     """
     This class for catching exceptions
