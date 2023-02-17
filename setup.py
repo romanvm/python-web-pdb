@@ -21,16 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pathlib
-import re
-
 from setuptools import setup
 
-
-def get_version():
-    init_py = pathlib.Path('.').absolute() / 'web_pdb' / '__init__.py'
-    with init_py.open('r', encoding='utf-8') as fo:
-        return re.search(r'__version__ = \'(\d+\.\d+\.\d+)\'', fo.read()).group(1)
+import web_pdb
 
 
 def get_doc(filename):
@@ -40,7 +33,7 @@ def get_doc(filename):
 
 setup(
     name='web-pdb',
-    version=get_version(),
+    version=web_pdb.__version__,
     author='Roman Miroshnychenko',
     author_email='roman1972@gmail.com',
     description='Web interface for Python\'s built-in PDB debugger',
