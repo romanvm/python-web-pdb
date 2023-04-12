@@ -28,7 +28,7 @@ from setuptools import setup
 
 
 def get_version():
-    init_py = pathlib.Path('.').absolute() / 'web_pdb' / '__init__.py'
+    init_py = pathlib.Path(__file__).absolute().parent / 'web_pdb' / '__init__.py'
     with init_py.open('r', encoding='utf-8') as fo:
         return re.search(r'__version__ = \'(\d+\.\d+\.\d+)\'', fo.read()).group(1)
 
