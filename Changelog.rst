@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v.1.6.1
+=======
+* Bump asyncore-wsgi version in dependencies.
+
 v.1.6.0
 =======
 

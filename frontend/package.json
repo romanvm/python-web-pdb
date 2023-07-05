@@ -1,6 +1,6 @@
 {
   "name": "web-pdb",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Front-end for Web-PDB Python debugger",
   "scripts": {
     "build": "webpack --mode=production",
