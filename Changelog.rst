@@ -1,8 +1,9 @@
 Changelog
 #########
 
-v.1.6.1
+v.1.6.2
 =======
+* Rewrite tests with the latest Selenium version.
 * Bump asyncore-wsgi version in dependencies.
 
 v.1.6.0
