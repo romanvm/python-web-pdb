@@ -29,7 +29,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
     "bootstrap": "^3.4.1",
-    "css-loader": "^3.6.0",
+    "css-loader": "^6.8.1",
     "eslint": "^8.22.0",
     "file-loader": "^1.1.11",
     "jquery": "^3.6.0",
