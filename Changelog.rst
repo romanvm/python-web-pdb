@@ -1,17 +1,30 @@
 Changelog
 #########
 
+v.1.6.2
+=======
+* Rewrite tests with the latest Selenium version.
+* Bump asyncore-wsgi version in dependencies.
+
+v.1.6.0
+=======
+
+* Removed Python 2 support.
+* Moved to the modern Python package layout.
+
 v.1.5.7
 =======
 
 * Updated frontend dependencies.
 
 v.1.5.6
+=======
 
 * Fixed the issue when a local variable could not be assigned from the debugger console.
 * Updated frontend dependencies.
 
 v.1.5.3
+=======
 
 * Fixed the issue with closed debugger still being stored in ``active_instance``
   class property that prevented starting a new debugger session (thanks to **maiamcc**).

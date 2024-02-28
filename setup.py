@@ -21,51 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import pathlib
-import re
-
 from setuptools import setup
 
-
-def get_version():
-    init_py = pathlib.Path('.').absolute() / 'web_pdb' / '__init__.py'
-    with init_py.open('r', encoding='utf-8') as fo:
-        return re.search(r'__version__ = \'(\d+\.\d+\.\d+)\'', fo.read()).group(1)
-
-
-def get_doc(filename):
-    with open(filename, 'r', encoding='utf-8') as fo:
-        return fo.read()
-
-
-setup(
-    name='web-pdb',
-    version=get_version(),
-    author='Roman Miroshnychenko',
-    author_email='roman1972@gmail.com',
-    description='Web interface for Python\'s built-in PDB debugger',
-    long_description=get_doc('Readme.rst') + '\n\n' + get_doc('Changelog.rst'),
-    long_description_content_type='text/x-rst',
-    url='https://github.com/romanvm/python-web-pdb',
-    license='MIT License',
-    packages=['web_pdb'],
-    include_package_data=True,
-    keywords='pdb remote web debugger',
-    classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'Environment :: Web Environment',
-        'Framework :: Bottle',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python',
-        'Programming Language :: Python :: 3',
-        'Topic :: Software Development :: Debuggers',
-    ],
-    python_requires='>=3.6',
-    install_requires=['bottle==0.12.23', 'asyncore-wsgi>=0.0.4'],
-    test_suite='tests.tests',
-    tests_require=['selenium==3.141.0'],
-    platforms=['any'],
-    zip_safe=False,
-)
+setup()
