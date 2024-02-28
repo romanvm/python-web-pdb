@@ -32,18 +32,16 @@ const config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['env', 'stage-3']
+            presets: ['@babel/preset-env']
           }
         }
       },
       {
         test: /\.(svg|woff2?|ttf|eot)$/,
-        use: {
-          loader: 'file-loader',
-          options: {
-            name: './fonts/[name].[ext]'
-          },
-        },
+        type: 'asset/resource',
+        generator: {
+          filename: './fonts/[name][ext]'
+        }
       },
       {
         test: /\.css$/,
