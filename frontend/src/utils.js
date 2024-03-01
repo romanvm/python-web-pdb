@@ -22,9 +22,24 @@ SOFTWARE.
 
 import $ from 'jquery';
 
-function send_command(command) {
-  $('#stdin').val(command);
-  $('#send_btn').click();
+import { websocket, state } from './globals';
+
+function save_command_in_history(command) {
+  state.history_index = -1;
+  if (command !== '' && command !== state.command_history[0]) {
+    state.command_history.unshift(command);
+    if (state.command_history.length > 10) {
+      state.command_history.pop();
+    }
+  }
 }
 
-export { send_command };
+function send_command(command) {
+  if (websocket.readyState === websocket.OPEN) {
+    websocket.send(command + '\n');
+    return true;
+  }
+  return false;
+}
+
+export { save_command_in_history, send_command };

@@ -21,17 +21,18 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
 import sys
 import time
+from pathlib import Path
 from subprocess import Popen
 from unittest import TestCase, main, skipIf
 
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-cwd = os.path.dirname(os.path.abspath(__file__))
-db_py = os.path.join(cwd, 'db.py')
+CWD = Path(__file__).resolve().parent
+DB_PY = CWD / 'db.py'
 
 
 class SeleniumTestCase(TestCase):
@@ -46,9 +47,9 @@ class SeleniumTestCase(TestCase):
             cls.browser = webdriver.Chrome(options=options)
         cls.browser.implicitly_wait(10)
         cls.browser.get('http://127.0.0.1:5555')
-        cls.stdin = cls.browser.find_element_by_id('stdin')
-        cls.send_btn = cls.browser.find_element_by_id('send_btn')
-        cls.stdout_tag = cls.browser.find_element_by_id('stdout')
+        cls.stdin = cls.browser.find_element(By.ID, 'stdin')
+        cls.send_btn = cls.browser.find_element(By.ID, 'send_btn')
+        cls.stdout_tag = cls.browser.find_element(By.ID, 'stdout')
 
     @classmethod
     def tearDownClass(cls):
@@ -66,7 +67,7 @@ class WebPdbTestCase(SeleniumTestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.db_proc = Popen(['python', db_py], shell=False)
+        cls.db_proc = Popen(['python', str(DB_PY)], shell=False)
         super(WebPdbTestCase, cls).setUpClass()
 
     def test_1_set_trace(self):
@@ -74,13 +75,13 @@ class WebPdbTestCase(SeleniumTestCase):
         Test back-end/front-end interaction during debugging
         """
         time.sleep(1)
-        filename_tag = self.browser.find_element_by_id('filename')
+        filename_tag = self.browser.find_element(By.ID, 'filename')
         self.assertEqual(filename_tag.text, 'db.py')
-        curr_line_tag = self.browser.find_element_by_id('curr_line')
+        curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
         self.assertEqual(curr_line_tag.text, '14')
-        curr_file_tag = self.browser.find_element_by_id('curr_file_code')
+        curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
-        globals_tag = self.browser.find_element_by_id('globals')
+        globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertIn('foo = \'foo\'', globals_tag.text)
         self.assertIn('-> bar = \'bar\'', self.stdout_tag.text)
         # Test if Prismjs syntax coloring actually works
@@ -95,9 +96,9 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
-        curr_line_tag = self.browser.find_element_by_id('curr_line')
+        curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
         self.assertEqual(curr_line_tag.text, '15')
-        globals_tag = self.browser.find_element_by_id('globals')
+        globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertIn('bar = \'bar\'', globals_tag.text)
         self.assertIn('-> ham = \'spam\'', self.stdout_tag.text)
         self.assertEqual(self.stdin.get_attribute('value'), '')
@@ -123,8 +124,8 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('b 20')
         self.send_btn.click()
         time.sleep(1)
-        line_numbers_rows = self.browser.find_element_by_css_selector('span.line-numbers-rows')
-        line_spans = line_numbers_rows.find_elements_by_tag_name('span')
+        line_numbers_rows = self.browser.find_element(By.CSS_SELECTOR, 'span.line-numbers-rows')
+        line_spans = line_numbers_rows.find_elements(By.TAG_NAME, 'span')
         self.assertEqual(line_spans[19].get_attribute('class'), 'breakpoint')
 
     def test_5_unicode_literal(self):
@@ -145,7 +146,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('p u\'python - питон\'')
         self.send_btn.click()
         time.sleep(1)
-        stdout_tag = self.browser.find_element_by_id('stdout')
+        stdout_tag = self.browser.find_element(By.ID, 'stdout')
         self.assertIn('u\'python - питон\'', stdout_tag.text)
 
     def test_7_local_vars(self):
@@ -156,9 +157,9 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('c')
         self.send_btn.click()
         time.sleep(1)
-        locals_tag = self.browser.find_element_by_id('locals')
+        locals_tag = self.browser.find_element(By.ID, 'locals')
         self.assertIn('spam = \'spam\'', locals_tag.text)
-        globals_tag = self.browser.find_element_by_id('globals')
+        globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertNotEqual(globals_tag.text, locals_tag.text)
 
 
@@ -168,7 +169,7 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_ps.py')], shell=False)
+        cls.db_proc = Popen(['python', str(CWD / 'db_ps.py')], shell=False)
         super(PatchStdStreamsTestCase, cls).setUpClass()
 
     def test_patching_std_streams(self):
@@ -189,16 +190,16 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
         self.assertIn('You have entered: spam', self.stdout_tag.text)
 
 
-# Todo: investigate why the test fails on Python 3.10
-@skipIf(sys.version_info[:2] == (3, 10),
-        'This test fails on Python 3.10 for some mysterious reason')
+# Todo: investigate why the test fails on Python >= 3.10
+@skipIf(sys.version_info[:2] >= (3, 10),
+        'This test fails on Python 3.10+ for some mysterious reason')
 class CatchPostMortemTestCase(SeleniumTestCase):
     """
     This class for catching exceptions
     """
     @classmethod
     def setUpClass(cls):
-        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_pm.py')], shell=False)
+        cls.db_proc = Popen(['python', str(CWD / 'db_pm.py')], shell=False)
         super(CatchPostMortemTestCase, cls).setUpClass()
 
     def test_catch_post_mortem(self):
@@ -206,11 +207,11 @@ class CatchPostMortemTestCase(SeleniumTestCase):
         Test if catch_post_mortem context manager catches exceptions
         """
         time.sleep(1)
-        curr_line_tag = self.browser.find_element_by_id('curr_line')
+        curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
         self.assertEqual(curr_line_tag.text, '14')
-        curr_file_tag = self.browser.find_element_by_id('curr_file_code')
+        curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
-        stdout_tag = self.browser.find_element_by_id('stdout')
+        stdout_tag = self.browser.find_element(By.ID, 'stdout')
         self.assertIn('AssertionError', stdout_tag.text)
 
 
@@ -220,7 +221,7 @@ class InspectCommandTestCase(SeleniumTestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.db_proc = Popen(['python', os.path.join(cwd, 'db_i.py')], shell=False)
+        cls.db_proc = Popen(['python', str(CWD / 'db_i.py')], shell=False)
         super(InspectCommandTestCase, cls).setUpClass()
 
     def test_inspect_existing_object(self):

@@ -11,6 +11,15 @@ Web-PDB
 Web-PDB is a web-interface for Python's built-in `PDB`_ debugger.
 It allows to debug Python scripts remotely in a web-browser.
 
+Important Notice
+================
+
+Currently this project is in a minimum maintenance mode.
+It means that I will try to maintain compatibility with new Python versions and address
+critical issues, if any arise. But at the moment I have no time or resources to develop
+new features or properly review external contributions. That is why only pull requests
+with bug fixes will be prioritized. Other issues or pull requests may or may not be reviewed or accepted.
+
 Features
 ========
 
@@ -24,7 +33,6 @@ Features
 - **Globals** and **Locals** boxes show local and global variables in the current scope.
   Special variables that start and end with double underscores ``__`` are excluded
   (you can always view them using PDB commands).
-- Human-readable Unicode literals for Python 2.
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.png
@@ -107,7 +115,7 @@ To simplify this you can use ``set_trace(port=-1)`` to select a random port betw
 Compatibility
 =============
 
-- **Python**: 2.7, 3+
+- **Python**: 3.6+
 - **Browsers**: Firefox, Chrome (all modern browsers should work)
 
 License

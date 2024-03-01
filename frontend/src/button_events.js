@@ -22,8 +22,7 @@ SOFTWARE.
 
 import $ from 'jquery';
 
-import { websocket, state } from './globals';
-import { send_command } from './utils';
+import { save_command_in_history, send_command } from './utils';
 
 function bind_button_events() {
   $('#next_btn').click(() => {
@@ -59,18 +58,11 @@ function bind_button_events() {
   });
 
   $('#send_btn').click(() => {
-    if (websocket.readyState === websocket.OPEN) {
-      const $stdin = $('#stdin');
-      let input = $stdin.val() + '\n';
+    const $stdin = $('#stdin');
+    let command = $stdin.val();
+    if (send_command(command)) {
+      save_command_in_history(command);
       $stdin.val('');
-      state.history_index = -1;
-      if (input !== '' && input !== state.command_history[0]) {
-        state.command_history.unshift(input);
-        if (state.command_history.length > 10) {
-          state.command_history.pop();
-        }
-      }
-      websocket.send(input);
     }
   });
 }
