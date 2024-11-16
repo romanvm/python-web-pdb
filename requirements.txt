@@ -1,4 +1,4 @@
-bottle==0.12.25
+bottle>=0.12.25
 asyncore-wsgi>=0.0.11
 selenium==4.10.0
 Pylint==2.15.0
