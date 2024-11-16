@@ -32,6 +32,8 @@ from io import BytesIO
 
 import bottle
 
+from .buffer import ThreadSafeBuffer
+
 __all__ = ['app']
 
 # bottle.debug(True)
@@ -66,7 +68,7 @@ def compress(func):
 class WebConsoleApp(bottle.Bottle):
     def __init__(self):
         super().__init__()
-        self.frame_data = None
+        self.frame_data = ThreadSafeBuffer()
 
 
 app = WebConsoleApp()

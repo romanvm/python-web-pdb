@@ -29,42 +29,14 @@ import queue
 import time
 import weakref
 from socket import gethostname
-from threading import Thread, Event, RLock
+from threading import Thread, Event
 
 from asyncore_wsgi import make_server, AsyncWebSocketHandler
 
+from .buffer import ThreadSafeBuffer
 from .wsgi_app import app
 
 __all__ = ['WebConsole']
-
-
-class ThreadSafeBuffer:
-    """
-    A buffer for data exchange between threads
-    """
-    def __init__(self, contents=None):
-        self._lock = RLock()
-        self._contents = contents
-        self._is_dirty = contents is not None
-
-    @property
-    def is_dirty(self):
-        """Indicates whether a buffer contains unread data"""
-        with self._lock:
-            return self._is_dirty
-
-    @property
-    def contents(self):
-        """Get or set buffer contents"""
-        with self._lock:
-            self._is_dirty = False
-            return self._contents
-
-    @contents.setter
-    def contents(self, value):
-        with self._lock:
-            self._contents = value
-            self._is_dirty = True
 
 
 class WebConsoleSocket(AsyncWebSocketHandler):
@@ -98,7 +70,7 @@ class WebConsole:
     def __init__(self, host, port, debugger):
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
-        self._frame_data = ThreadSafeBuffer()
+        self._frame_data = None
         self._stop_all = Event()
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
@@ -123,7 +95,7 @@ class WebConsole:
         return self._stop_all.is_set()
 
     def _run_server(self, host, port):
-        app.frame_data = self._frame_data
+        self._frame_data = app.frame_data
         httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
         while not self._stop_all.is_set():
             try:
