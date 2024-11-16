@@ -1,6 +1,10 @@
 Changelog
 #########
 
+v.1.6.3
+=======
+* Fixed incompatibility with latest Bottle versions
+
 v.1.6.2
 =======
 * Rewrite tests with the latest Selenium version.
