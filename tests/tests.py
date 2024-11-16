@@ -34,6 +34,8 @@ from selenium.webdriver.common.keys import Keys
 CWD = Path(__file__).resolve().parent
 DB_PY = CWD / 'db.py'
 
+IS_PY_310 = sys.version_info[:2] >= (3, 10)
+IS_PY_313 = sys.version_info[:2] >= (3, 13)
 
 class SeleniumTestCase(TestCase):
     @classmethod
@@ -46,6 +48,7 @@ class SeleniumTestCase(TestCase):
             options.add_argument('disable-gpu')
             cls.browser = webdriver.Chrome(options=options)
         cls.browser.implicitly_wait(10)
+        cls.browser.set_window_size(1280, 1024)
         cls.browser.get('http://127.0.0.1:5555')
         cls.stdin = cls.browser.find_element(By.ID, 'stdin')
         cls.send_btn = cls.browser.find_element(By.ID, 'send_btn')
@@ -60,6 +63,13 @@ class SeleniumTestCase(TestCase):
         cls.db_proc.kill()
         cls.browser.quit()
 
+    def tearDown(self):
+        if hasattr(self, '_outcome'):
+            result = self._outcome.result
+            if result.failures:
+                failed_tests = [test for test, _ in result.failures]
+                if self in failed_tests:
+                    self.browser.save_screenshot(f'screenshot-{self}.png')
 
 class WebPdbTestCase(SeleniumTestCase):
     """
@@ -76,13 +86,18 @@ class WebPdbTestCase(SeleniumTestCase):
         """
         time.sleep(1)
         filename_tag = self.browser.find_element(By.ID, 'filename')
-        self.assertEqual(filename_tag.text, 'db.py')
+        self.assertEqual('db.py', filename_tag.text)
         curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
-        self.assertEqual(curr_line_tag.text, '14')
+        expected = '13' if IS_PY_313 else '14'
+        self.assertEqual(expected, curr_line_tag.text)
         curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
         globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertIn('foo = \'foo\'', globals_tag.text)
+        if IS_PY_313:
+            self.stdin.send_keys('n')
+            self.send_btn.click()
+            time.sleep(1)
         self.assertIn('-> bar = \'bar\'', self.stdout_tag.text)
         # Test if Prismjs syntax coloring actually works
         self.assertIn('foo <span class="token operator">=</span> <span class="token string">\'foo\'</span>',
@@ -101,7 +116,7 @@ class WebPdbTestCase(SeleniumTestCase):
         globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertIn('bar = \'bar\'', globals_tag.text)
         self.assertIn('-> ham = \'spam\'', self.stdout_tag.text)
-        self.assertEqual(self.stdin.get_attribute('value'), '')
+        self.assertEqual('', self.stdin.get_attribute('value'))
 
     def test_3_history(self):
         """
@@ -112,9 +127,9 @@ class WebPdbTestCase(SeleniumTestCase):
         self.send_btn.click()
         time.sleep(1)
         self.stdin.send_keys(Keys.ARROW_UP)
-        self.assertEqual(self.stdin.get_attribute('value'), 'h')
+        self.assertEqual('h', self.stdin.get_attribute('value'))
         self.stdin.send_keys(Keys.ARROW_UP)
-        self.assertEqual(self.stdin.get_attribute('value'), 'n')
+        self.assertEqual('n', self.stdin.get_attribute('value'))
 
     def test_4_breakpints(self):
         """
@@ -126,7 +141,7 @@ class WebPdbTestCase(SeleniumTestCase):
         time.sleep(1)
         line_numbers_rows = self.browser.find_element(By.CSS_SELECTOR, 'span.line-numbers-rows')
         line_spans = line_numbers_rows.find_elements(By.TAG_NAME, 'span')
-        self.assertEqual(line_spans[19].get_attribute('class'), 'breakpoint')
+        self.assertEqual('breakpoint', line_spans[19].get_attribute('class'))
 
     def test_5_unicode_literal(self):
         """
@@ -180,6 +195,10 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
+        if IS_PY_313:
+            self.stdin.send_keys('n')
+            self.send_btn.click()
+            time.sleep(1)
         self.assertIn('Enter something:', self.stdout_tag.text)
         self.stdin.send_keys('spam')
         self.send_btn.click()
@@ -190,9 +209,6 @@ class PatchStdStreamsTestCase(SeleniumTestCase):
         self.assertIn('You have entered: spam', self.stdout_tag.text)
 
 
-# Todo: investigate why the test fails on Python >= 3.10
-@skipIf(sys.version_info[:2] >= (3, 10),
-        'This test fails on Python 3.10+ for some mysterious reason')
 class CatchPostMortemTestCase(SeleniumTestCase):
     """
     This class for catching exceptions
@@ -208,7 +224,8 @@ class CatchPostMortemTestCase(SeleniumTestCase):
         """
         time.sleep(1)
         curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
-        self.assertEqual(curr_line_tag.text, '14')
+        expected = '13' if IS_PY_310 else '14'
+        self.assertEqual(expected, curr_line_tag.text)
         curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
         stdout_tag = self.browser.find_element(By.ID, 'stdout')

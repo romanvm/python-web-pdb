@@ -76,3 +76,10 @@ jobs:
 
     - name: Test with tox
       run: tox
+
+    - name: 'Upload Screenshots'
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshots
+        path: tests/*.png
+        retention-days: 3
