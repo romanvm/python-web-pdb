@@ -48,7 +48,7 @@ class WebPdb(Pdb):
     active_instance = None
     null = object()
 
-    def __init__(self, host='', port=5555, patch_stdstreams=False):
+    def __init__(self, host='localhost', port=5555, patch_stdstreams=False):
         """
         :param host: web-UI hostname or IP-address
         :type host: str
