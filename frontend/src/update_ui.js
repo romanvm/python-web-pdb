@@ -24,13 +24,14 @@ import $ from 'jquery';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
-import './prism-line-numbers.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 
 import 'prismjs/themes/prism-okaidia.css';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.css';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import { websocket, state } from './globals';
+import { get_line_span } from './breakpoints';
 
 let wait_buffer = [];
 
@@ -60,8 +61,11 @@ function update_ui() {
       state.filename = frame_data.filename;
       state.current_line = frame_data.current_line;
       // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
-      $curr_file.scrollTop($(`#lineno_${state.current_line}`).offset().top -
-          $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
+      const lineSpan = get_line_span($curr_file[0], state.current_line);
+      if (lineSpan) {
+        $curr_file.scrollTop($(lineSpan).offset().top -
+            $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
+      }
     }
   });
 }
