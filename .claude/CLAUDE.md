@@ -128,3 +128,7 @@ time. The WebConsole spawns a daemon thread to run the web server. Thread safety
 - The `inspect`/`i` command is a custom extension; it lists object members, excluding `__` names.
 - Post-mortem debugging is supported via `post_mortem()` and the `catch_post_mortem()` context
   manager.
+
+## General Rules
+
+- Use `uv pip` to manage Python libraries.
