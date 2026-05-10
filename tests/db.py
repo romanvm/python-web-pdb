@@ -8,12 +8,12 @@ import sys
 basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(basedir)
 
-ustr = u'Тест'
+ustr = 'Тест'
 foo = 'foo'
 from web_pdb import set_trace; set_trace()
 bar = 'bar'
 ham = 'spam'
-name = u'Монти'
+name = 'Монти'
 
 
 def func(spam):

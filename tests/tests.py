@@ -25,7 +25,7 @@ import sys
 import time
 from pathlib import Path
 from subprocess import Popen
-from unittest import TestCase, main, skipIf
+from unittest import TestCase, main
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -36,6 +36,7 @@ DB_PY = CWD / 'db.py'
 
 IS_PY_310 = sys.version_info[:2] >= (3, 10)
 IS_PY_313 = sys.version_info[:2] >= (3, 13)
+
 
 class SeleniumTestCase(TestCase):
     @classmethod
@@ -151,18 +152,18 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys('n')
         self.send_btn.click()
         time.sleep(1)
-        self.assertIn('-> name = u\'Монти\'', self.stdout_tag.text)
+        self.assertIn('-> name = \'Монти\'', self.stdout_tag.text)
 
     def test_6_entering_unicode_string(self):
         """
         Test for entering unicode literal via console
         """
         self.stdin.clear()
-        self.stdin.send_keys('p u\'python - питон\'')
+        self.stdin.send_keys('p \'python - питон\'')
         self.send_btn.click()
         time.sleep(1)
         stdout_tag = self.browser.find_element(By.ID, 'stdout')
-        self.assertIn('u\'python - питон\'', stdout_tag.text)
+        self.assertIn('\'python - питон\'', stdout_tag.text)
 
     def test_7_local_vars(self):
         """
