@@ -30,6 +30,7 @@ class ThreadSafeBuffer:
     """
     A buffer for data exchange between threads
     """
+
     def __init__(self, contents=None):
         self._lock = RLock()
         self._contents = contents

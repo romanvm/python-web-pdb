@@ -44,6 +44,7 @@ class WebConsoleSocket(AsyncWebSocketHandler):
     WebConsoleSocket receives PDB commands from the front-end and
     sends pings to client(s) about console updates
     """
+
     clients = []
     input_queue = queue.Queue()
 
@@ -67,6 +68,7 @@ class WebConsole:
     """
     A file-like class for exchanging data between PDB and the web-UI
     """
+
     def __init__(self, host, port, debugger):
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
@@ -74,8 +76,7 @@ class WebConsole:
         self._stop_all = Event()
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
-        logging.critical(
-            'Web-PDB: starting web-server on http://%s:%s', gethostname(), port)
+        logging.critical('Web-PDB: starting web-server on http://%s:%s', gethostname(), port)
         self._server_thread.start()
 
     @property
@@ -100,7 +101,7 @@ class WebConsole:
         while not self._stop_all.is_set():
             try:
                 httpd.handle_request()
-            except (KeyboardInterrupt, SystemExit):
+            except KeyboardInterrupt, SystemExit:
                 break
         httpd.handle_close()
 
@@ -122,7 +123,7 @@ class WebConsole:
         self._console_history.contents += data
         try:
             frame_data = self._debugger.get_current_frame_data()
-        except (IOError, AttributeError):
+        except IOError, AttributeError:
             frame_data = {
                 'dirname': '',
                 'filename': '',
@@ -130,7 +131,7 @@ class WebConsole:
                 'current_line': -1,
                 'breakpoints': [],
                 'globals': 'No data available',
-                'locals': 'No data available'
+                'locals': 'No data available',
             }
         frame_data['console_history'] = self._console_history.contents
         self._frame_data.contents = frame_data

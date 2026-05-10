@@ -47,13 +47,16 @@ def compress(func):
     """
     Compress route return data with gzip compression
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         # pylint: disable=no-member
-        if ('gzip' in bottle.request.headers.get('Accept-Encoding', '') and
-                isinstance(result, str) and
-                len(result) > 1024):
+        if (
+            'gzip' in bottle.request.headers.get('Accept-Encoding', '')
+            and isinstance(result, str)
+            and len(result) > 1024
+        ):
             if isinstance(result, str):
                 result = result.encode('utf-8')
             tmp_fo = BytesIO()
@@ -62,6 +65,7 @@ def compress(func):
             result = tmp_fo.getvalue()
             bottle.response.add_header('Content-Encoding', 'gzip')
         return result
+
     return wrapper
 
 
