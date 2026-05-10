@@ -46,7 +46,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install -q --upgrade pip uv
-        uv pip install -q -r requirements.txt
+        uv pip install --system -q -r requirements.txt
 
     - name: Check with ruff
       run: |
@@ -69,7 +69,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip uv
-        uv pip install -q tox tox-gh-actions
+        uv pip install --system -q tox tox-gh-actions
     - name: Test with tox
       run: uv run tox
 
@@ -91,7 +91,7 @@ jobs:
     - name: Build artifacts
       run: |
         pip install uv
-        uv pip install wheel, build
+        uv pip install --system wheel, build
         python -m build
 
     - name: Publish a Python distribution to PyPI
