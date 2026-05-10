@@ -7,7 +7,7 @@ lint:
 	ruff check web_pdb/*.py
 
 lint-fix:
-	ruff format && ruff check --fix web_pdb/*.py
+	ruff format web_pdb/*.py && ruff check --fix web_pdb/*.py
 
 build:
 	python -m build
