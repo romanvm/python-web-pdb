@@ -144,6 +144,6 @@ time. The WebConsole spawns a daemon thread to run the web server. Thread safety
 
 ## General Rules
 
-- Save project-specific plans into project's `.claude/projects` directory.
+- Save project-specific plans into project's `.claude/plans` directory.
 - Do not commit anything to Git or push without an explicit approval!
 - Use `uv pip` to install/update Python libraries.
