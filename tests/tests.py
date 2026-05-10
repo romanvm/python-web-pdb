@@ -131,7 +131,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.stdin.send_keys(Keys.ARROW_UP)
         self.assertEqual('n', self.stdin.get_attribute('value'))
 
-    def test_4_breakpints(self):
+    def test_4_breakpoints(self):
         """
         Test for highlighting breakpoints
         """
