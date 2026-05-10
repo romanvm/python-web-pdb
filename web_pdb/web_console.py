@@ -101,7 +101,7 @@ class WebConsole:
         while not self._stop_all.is_set():
             try:
                 httpd.handle_request()
-            except KeyboardInterrupt, SystemExit:
+            except (KeyboardInterrupt, SystemExit):
                 break
         httpd.handle_close()
 
@@ -123,7 +123,7 @@ class WebConsole:
         self._console_history.contents += data
         try:
             frame_data = self._debugger.get_current_frame_data()
-        except IOError, AttributeError:
+        except (IOError, AttributeError):
             frame_data = {
                 'dirname': '',
                 'filename': '',
