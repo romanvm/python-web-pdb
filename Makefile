@@ -1,10 +1,13 @@
-.PHONY: test lint build clean
+.PHONY: test lint lint-fix build clean
 
 test:
-	python tests/tests.py
+	uv run tests/tests.py
 
 lint:
-	pylint web_pdb/
+	ruff check web_pdb/*.py
+
+lint-fix:
+	ruff format web_pdb/*.py && ruff check --fix web_pdb/*.py
 
 build:
 	python -m build

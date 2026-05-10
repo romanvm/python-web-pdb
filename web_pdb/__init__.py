@@ -45,6 +45,7 @@ class WebPdb(Pdb):
     It provides a web-interface for Python's built-in PDB debugger
     with extra convenience features.
     """
+
     active_instance = None
     null = object()
 
@@ -68,12 +69,12 @@ class WebPdb(Pdb):
         self._backup = []
         if patch_stdstreams:
             for name in (
-                    'stderr',
-                    'stdout',
-                    '__stderr__',
-                    '__stdout__',
-                    'stdin',
-                    '__stdin__',
+                'stderr',
+                'stdout',
+                '__stderr__',
+                '__stdout__',
+                'stdin',
+                '__stdin__',
             ):
                 self._backup.append((name, getattr(sys, name)))
                 setattr(sys, name, self.console)
@@ -171,7 +172,7 @@ class WebPdb(Pdb):
             'current_line': self.curframe.f_lineno,
             'breakpoints': self.get_file_breaks(filename),
             'globals': self.get_globals(),
-            'locals': self.get_locals()
+            'locals': self.get_locals(),
         }
 
     def _format_variables(self, raw_vars):
@@ -297,8 +298,7 @@ def post_mortem(tb=None, host='', port=5555, patch_stdstreams=False):
     else:
         exc_data = traceback.format_tb(tb)
     if tb is None:
-        raise ValueError('A valid traceback must be passed if no '
-                         'exception is being handled')
+        raise ValueError('A valid traceback must be passed if no exception is being handled')
     pdb = WebPdb.active_instance
     if pdb is None:
         pdb = WebPdb(host, port, patch_stdstreams)
