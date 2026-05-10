@@ -1,0 +1,265 @@
+/**
+ * prism.js default theme — light mode
+ * Based on dabblet (http://dabblet.com)
+ * @author Lea Verou
+ */
+
+:where(html[data-bs-theme="light"]) code[class*="language-"],
+:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+	color: black;
+	background: none;
+	text-shadow: 0 1px white;
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+:where(html[data-bs-theme="light"]) pre[class*="language-"]::-moz-selection,
+:where(html[data-bs-theme="light"]) pre[class*="language-"] ::-moz-selection,
+:where(html[data-bs-theme="light"]) code[class*="language-"]::-moz-selection,
+:where(html[data-bs-theme="light"]) code[class*="language-"] ::-moz-selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+:where(html[data-bs-theme="light"]) pre[class*="language-"]::selection,
+:where(html[data-bs-theme="light"]) pre[class*="language-"] ::selection,
+:where(html[data-bs-theme="light"]) code[class*="language-"]::selection,
+:where(html[data-bs-theme="light"]) code[class*="language-"] ::selection {
+	text-shadow: none;
+	background: #b3d4fc;
+}
+
+@media print {
+	:where(html[data-bs-theme="light"]) code[class*="language-"],
+	:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+		text-shadow: none;
+	}
+}
+
+:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+}
+
+:where(html[data-bs-theme="light"]) :not(pre) > code[class*="language-"],
+:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+	background: #f5f2f0;
+}
+
+:where(html[data-bs-theme="light"]) :not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+:where(html[data-bs-theme="light"]) .token.comment,
+:where(html[data-bs-theme="light"]) .token.prolog,
+:where(html[data-bs-theme="light"]) .token.doctype,
+:where(html[data-bs-theme="light"]) .token.cdata {
+	color: slategray;
+}
+
+:where(html[data-bs-theme="light"]) .token.punctuation {
+	color: #999;
+}
+
+:where(html[data-bs-theme="light"]) .token.namespace {
+	opacity: .7;
+}
+
+:where(html[data-bs-theme="light"]) .token.property,
+:where(html[data-bs-theme="light"]) .token.tag,
+:where(html[data-bs-theme="light"]) .token.boolean,
+:where(html[data-bs-theme="light"]) .token.number,
+:where(html[data-bs-theme="light"]) .token.constant,
+:where(html[data-bs-theme="light"]) .token.symbol,
+:where(html[data-bs-theme="light"]) .token.deleted {
+	color: #905;
+}
+
+:where(html[data-bs-theme="light"]) .token.selector,
+:where(html[data-bs-theme="light"]) .token.attr-name,
+:where(html[data-bs-theme="light"]) .token.string,
+:where(html[data-bs-theme="light"]) .token.char,
+:where(html[data-bs-theme="light"]) .token.builtin,
+:where(html[data-bs-theme="light"]) .token.inserted {
+	color: #690;
+}
+
+:where(html[data-bs-theme="light"]) .token.operator,
+:where(html[data-bs-theme="light"]) .token.entity,
+:where(html[data-bs-theme="light"]) .token.url,
+:where(html[data-bs-theme="light"]) .language-css .token.string,
+:where(html[data-bs-theme="light"]) .style .token.string {
+	color: #9a6e3a;
+	background: hsla(0, 0%, 100%, .5);
+}
+
+:where(html[data-bs-theme="light"]) .token.atrule,
+:where(html[data-bs-theme="light"]) .token.attr-value,
+:where(html[data-bs-theme="light"]) .token.keyword {
+	color: #07a;
+}
+
+:where(html[data-bs-theme="light"]) .token.function,
+:where(html[data-bs-theme="light"]) .token.class-name {
+	color: #DD4A68;
+}
+
+:where(html[data-bs-theme="light"]) .token.regex,
+:where(html[data-bs-theme="light"]) .token.important,
+:where(html[data-bs-theme="light"]) .token.variable {
+	color: #e90;
+}
+
+:where(html[data-bs-theme="light"]) .token.important,
+:where(html[data-bs-theme="light"]) .token.bold {
+	font-weight: bold;
+}
+
+:where(html[data-bs-theme="light"]) .token.italic {
+	font-style: italic;
+}
+
+:where(html[data-bs-theme="light"]) .token.entity {
+	cursor: help;
+}
+
+/**
+ * okaidia theme — dark mode
+ * Loosely based on Monokai textmate theme by http://www.monokai.nl/
+ * @author ocodia
+ */
+
+:where(html[data-bs-theme="dark"]) code[class*="language-"],
+:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+	color: #f8f8f2;
+	background: none;
+	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+	font-size: 1em;
+	text-align: left;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+	line-height: 1.5;
+
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+
+	-webkit-hyphens: none;
+	-moz-hyphens: none;
+	-ms-hyphens: none;
+	hyphens: none;
+}
+
+:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+	padding: 1em;
+	margin: .5em 0;
+	overflow: auto;
+	border-radius: 0.3em;
+}
+
+:where(html[data-bs-theme="dark"]) :not(pre) > code[class*="language-"],
+:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+	background: #272822;
+}
+
+:where(html[data-bs-theme="dark"]) :not(pre) > code[class*="language-"] {
+	padding: .1em;
+	border-radius: .3em;
+	white-space: normal;
+}
+
+:where(html[data-bs-theme="dark"]) .token.comment,
+:where(html[data-bs-theme="dark"]) .token.prolog,
+:where(html[data-bs-theme="dark"]) .token.doctype,
+:where(html[data-bs-theme="dark"]) .token.cdata {
+	color: #8292a2;
+}
+
+:where(html[data-bs-theme="dark"]) .token.punctuation {
+	color: #f8f8f2;
+}
+
+:where(html[data-bs-theme="dark"]) .token.namespace {
+	opacity: .7;
+}
+
+:where(html[data-bs-theme="dark"]) .token.property,
+:where(html[data-bs-theme="dark"]) .token.tag,
+:where(html[data-bs-theme="dark"]) .token.constant,
+:where(html[data-bs-theme="dark"]) .token.symbol,
+:where(html[data-bs-theme="dark"]) .token.deleted {
+	color: #f92672;
+}
+
+:where(html[data-bs-theme="dark"]) .token.boolean,
+:where(html[data-bs-theme="dark"]) .token.number {
+	color: #ae81ff;
+}
+
+:where(html[data-bs-theme="dark"]) .token.selector,
+:where(html[data-bs-theme="dark"]) .token.attr-name,
+:where(html[data-bs-theme="dark"]) .token.string,
+:where(html[data-bs-theme="dark"]) .token.char,
+:where(html[data-bs-theme="dark"]) .token.builtin,
+:where(html[data-bs-theme="dark"]) .token.inserted {
+	color: #a6e22e;
+}
+
+:where(html[data-bs-theme="dark"]) .token.operator,
+:where(html[data-bs-theme="dark"]) .token.entity,
+:where(html[data-bs-theme="dark"]) .token.url,
+:where(html[data-bs-theme="dark"]) .language-css .token.string,
+:where(html[data-bs-theme="dark"]) .style .token.string,
+:where(html[data-bs-theme="dark"]) .token.variable {
+	color: #f8f8f2;
+}
+
+:where(html[data-bs-theme="dark"]) .token.atrule,
+:where(html[data-bs-theme="dark"]) .token.attr-value,
+:where(html[data-bs-theme="dark"]) .token.function,
+:where(html[data-bs-theme="dark"]) .token.class-name {
+	color: #e6db74;
+}
+
+:where(html[data-bs-theme="dark"]) .token.keyword {
+	color: #66d9ef;
+}
+
+:where(html[data-bs-theme="dark"]) .token.regex,
+:where(html[data-bs-theme="dark"]) .token.important {
+	color: #fd971f;
+}
+
+:where(html[data-bs-theme="dark"]) .token.important,
+:where(html[data-bs-theme="dark"]) .token.bold {
+	font-weight: bold;
+}
+
+:where(html[data-bs-theme="dark"]) .token.italic {
+	font-style: italic;
+}
+
+:where(html[data-bs-theme="dark"]) .token.entity {
+	cursor: help;
+}

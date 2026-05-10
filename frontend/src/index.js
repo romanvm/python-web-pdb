@@ -29,6 +29,7 @@ import bind_key_events from './key_events';
 import bind_breakpoint_events from './breakpoints';
 import update_ui from './update_ui';
 import { resize_console } from './utils';
+import { apply_theme, bind_theme_toggle, get_initial_theme } from './theme';
 
 import './styles.css';
 
@@ -41,11 +42,13 @@ document.addEventListener('DOMContentLoaded', () => {
   bind_button_events();
   bind_key_events();
   bind_breakpoint_events();
+  bind_theme_toggle();
   resize_console();
   window.addEventListener('resize', resize_console);
 
   document.querySelectorAll('[data-bs-toggle="tooltip"]')
     .forEach((el) => new Tooltip(el));
 
+  apply_theme(get_initial_theme());
   update_ui();
 });

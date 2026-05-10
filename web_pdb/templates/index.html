@@ -7,15 +7,27 @@
   <title></title>
   <link rel="icon" href="static/img/debug.png" type="image/png">
   <link rel="icon" href="static/img/debug.svg" type="image/svg+xml">
+  <script>
+    (function() {
+      var saved = localStorage.getItem('web-pdb-theme');
+      var theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-bs-theme', theme);
+    }());
+  </script>
   <link rel="stylesheet" href="static/styles.min.css">
 </head>
 <body>
   <nav class="navbar navbar-expand fixed-top bg-body-tertiary border-bottom">
-    <div class="container-fluid d-flex align-items-center gap-2">
+    <div class="container-fluid position-relative d-flex align-items-center">
       <a class="navbar-brand p-0" href="#">
         <img src="static/img/debug.svg" width="24" height="24" alt="Web-PDB">
       </a>
-      <p id="host" class="navbar-text mb-0"></p>
+      <p id="host" class="navbar-text mb-0 position-absolute start-50 translate-middle-x"></p>
+      <button id="theme_toggle_btn" type="button"
+              class="btn btn-outline-secondary btn-sm ms-auto"
+              data-bs-toggle="tooltip" title="Switch to dark mode">
+        <i class="bi bi-sun-fill"></i>
+      </button>
     </div>
   </nav>
   <main class="container-fluid language-python">
@@ -94,7 +106,7 @@
         <div class="input-group">
           <span class="input-group-text">(Pdb)</span>
           <input class="form-control" id="stdin" type="text">
-          <button id="send_btn" class="btn btn-primary" type="button">Send</button>
+          <button id="send_btn" class="btn btn-light" type="button">Send</button>
         </div>
       </div>
     </div>

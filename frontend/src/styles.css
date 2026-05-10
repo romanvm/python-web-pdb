@@ -74,6 +74,10 @@ div.infobox-label > div.infobox-label-text {
   box-shadow: none;
 }
 
+#send_btn {
+  border-color: var(--bs-border-color);
+}
+
 .btn-group .btn {
   line-height: 1;
 }
@@ -81,4 +85,9 @@ div.infobox-label > div.infobox-label-text {
 .btn-group .bi {
   font-size: 1rem;
   vertical-align: middle;
+}
+
+:where(html[data-bs-theme="dark"]) div.infobox-label > div.infobox-label-text {
+  color: #eee;
+  background-color: #444;
 }
