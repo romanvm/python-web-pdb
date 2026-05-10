@@ -20,15 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+function ws_url() {
+  if (window.location.protocol === 'https:') {
+    return 'wss://' + window.location.host + '/ws';
+  }
+  return 'ws://' + window.location.host + '/ws';
+}
+
 const state = {
   command_history: [],
   history_index: -1,
   console_history: '',
-  dirname: '',
-  filename: '',
+  breakpoints: [],
   current_line: -1,
-  breakpoints: []
+  dirname: '',
+  filename: ''
 },
-  websocket = new WebSocket('ws://' + window.location.host + '/ws');
+  websocket = new WebSocket(ws_url());
 
 export { websocket, state };

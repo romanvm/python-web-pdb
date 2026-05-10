@@ -20,49 +20,33 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import $ from 'jquery';
+import { Modal } from 'bootstrap';
 
 import { save_command_in_history, send_command } from './utils';
 
 function bind_button_events() {
-  $('#next_btn').click(() => {
-    send_command('n');
-  });
+  const helpModal = new Modal(document.getElementById('help_window')),
+        stdin = document.getElementById('stdin');
 
-  $('#step_btn').click(() => {
-    send_command('s');
-  });
+  function wire(id, cmd) {
+    document.getElementById(id).addEventListener('click', () => send_command(cmd));
+  }
 
-  $('#return_btn').click(() => {
-    send_command('r');
-  });
+  wire('next_btn', 'n');
+  wire('step_btn', 's');
+  wire('return_btn', 'r');
+  wire('continue_btn', 'c');
+  wire('up_btn', 'u');
+  wire('down_btn', 'd');
+  wire('where_btn', 'w');
 
-  $('#continue_btn').click(() => {
-    send_command('c');
-  });
+  document.getElementById('help_btn').addEventListener('click', () => helpModal.show());
 
-  $('#up_btn').click(() => {
-    send_command('u');
-  });
-
-  $('#down_btn').click(() => {
-    send_command('d');
-  });
-
-  $('#where_btn').click(() => {
-    send_command('w');
-  });
-
-  $('#help_btn').click(() => {
-    $('#help_window').modal();
-  });
-
-  $('#send_btn').click(() => {
-    const $stdin = $('#stdin');
-    let command = $stdin.val();
+  document.getElementById('send_btn').addEventListener('click', () => {
+    const command = stdin.value;
     if (send_command(command)) {
       save_command_in_history(command);
-      $stdin.val('');
+      stdin.value = '';
     }
   });
 }

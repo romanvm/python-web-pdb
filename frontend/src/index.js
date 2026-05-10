@@ -20,25 +20,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import $ from 'jquery';
-import 'bootstrap/dist/js/bootstrap.min.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Tooltip } from 'bootstrap';
 
 import bind_button_events from './button_events';
 import bind_key_events from './key_events';
 import bind_breakpoint_events from './breakpoints';
-import { resize_console } from './utils';
 import update_ui from './update_ui';
+import { resize_console } from './utils';
 
 import './styles.css';
 
-$(() => {
+document.addEventListener('DOMContentLoaded', () => {
+  const host = window.location.host;
+
+  document.title = `Web-PDB Console on ${host}`;
+  document.getElementById('host').innerHTML = `Web-PDB Console on <em>${host}</em>`;
+
   bind_button_events();
   bind_key_events();
   bind_breakpoint_events();
-  $(window).resize(resize_console);
-  $('title').text(`Web-PDB Console on ${window.location.host}`);
-  $('#host').html(`Web-PDB Console on <em>${window.location.host}</em>`);
   resize_console();
+  window.addEventListener('resize', resize_console);
+
+  document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    .forEach((el) => new Tooltip(el));
+
   update_ui();
 });

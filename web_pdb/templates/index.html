@@ -10,104 +10,106 @@
   <link rel="stylesheet" href="static/styles.min.css">
 </head>
 <body>
-  <nav class="navbar navbar-default navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <div class="navbar-brand"><img src="static/img/debug.svg" width="24" height="24"></div>
-        <p id="host" class="navbar-text"></p>
-      </div>
+  <nav class="navbar navbar-expand fixed-top bg-body-tertiary border-bottom">
+    <div class="container-fluid d-flex align-items-center gap-2">
+      <a class="navbar-brand p-0" href="#">
+        <img src="static/img/debug.svg" width="24" height="24" alt="Web-PDB">
+      </a>
+      <p id="host" class="navbar-text mb-0"></p>
     </div>
   </nav>
-  <div class="container-fluid language-python">
-    <div class="row">
+  <main class="container-fluid language-python">
+    <div class="row gx-2 gy-2">
       <div class="col-sm-6">
         <div class="infobox-label">
+          <pre id="curr_file" class="line-numbers info"><code id="curr_file_code"></code></pre>
           <div class="infobox-label-text">
             <strong>Current file:</strong> <samp><span id="filename"></span>(<span id="curr_line"></span>)</samp>
           </div>
         </div>
-        <pre id="curr_file" class="line-numbers info"><code id="curr_file_code"></code></pre>
       </div>
       <div class="col-sm-3">
         <div class="infobox-label">
+          <pre class="info"><code id="globals"></code></pre>
           <div class="infobox-label-text">
             <strong>Globals</strong>
           </div>
         </div>
-        <pre class="info"><code id="globals"></code></pre>
       </div>
       <div class="col-sm-3">
         <div class="infobox-label">
+          <pre class="info"><code id="locals"></code></pre>
           <div class="infobox-label-text">
             <strong>Locals</strong>
           </div>
         </div>
-        <pre class="info"><code id="locals"></code></pre>
       </div>
       <div class="col-sm-12">
-        <div class="btn-group" role="group">
-          <button id="next_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Next line (F10)">
-            <span class="glyphicon glyphicon-step-forward"></span>
-          </button>
-          <button id="step_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Step into function (F11)">
-            <span class="glyphicon glyphicon-import"></span>
-          </button>
-          <button id="return_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Return from function (Shift + F11)">
-            <span class="glyphicon glyphicon-export"></span>
-          </button>
-          <button id="continue_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Continue execution (F8)">
-            <span class="glyphicon glyphicon-play"></span>
-          </button>
-          <button id="up_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="To upper frame">
-            <span class="glyphicon glyphicon-arrow-up"></span>
-          </button>
-          <button id="down_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="To lower frame">
-            <span class="glyphicon glyphicon-arrow-down"></span>
-          </button>
-          <button id="where_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Print stack trace (where)">
-            <span class="glyphicon glyphicon-map-marker"></span>
-          </button>
-          <button id="help_btn" type="button" class="btn btn-default"
-              data-toggle="tooltip" title="Quick help">
-            <span class="glyphicon glyphicon-question-sign"></span>
-          </button>
+        <div class="btn-toolbar mb-1" role="toolbar">
+          <div class="btn-group" role="group">
+            <button id="next_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Next line (F10)">
+              <i class="bi bi-arrow-bar-right"></i>
+            </button>
+            <button id="step_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Step into function (F11)">
+              <i class="bi bi-box-arrow-in-down-right"></i>
+            </button>
+            <button id="return_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Return from function (Shift + F11)">
+              <i class="bi bi-box-arrow-up-right"></i>
+            </button>
+            <button id="continue_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Continue execution (F8)">
+              <i class="bi bi-play-fill"></i>
+            </button>
+            <button id="up_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="To upper frame">
+              <i class="bi bi-arrow-up"></i>
+            </button>
+            <button id="down_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="To lower frame">
+              <i class="bi bi-arrow-down"></i>
+            </button>
+            <button id="where_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Print stack trace (where)">
+              <i class="bi bi-geo-alt-fill"></i>
+            </button>
+            <button id="help_btn" type="button" class="btn btn-outline-secondary"
+                data-bs-toggle="tooltip" title="Quick help">
+              <i class="bi bi-question-circle"></i>
+            </button>
+          </div>
         </div>
       </div>
       <div class="col-sm-12">
         <div class="infobox-label">
+          <pre id="console"><code id="stdout"></code></pre>
           <div class="infobox-label-text">
             <strong>PDB Console</strong>
           </div>
         </div>
-        <pre id="console"><code id="stdout"></code></pre>
       </div>
       <div class="col-sm-12">
         <div class="input-group">
-          <div class="input-group-addon">(Pdb)</div>
+          <span class="input-group-text">(Pdb)</span>
           <input class="form-control" id="stdin" type="text">
-          <span class="input-group-btn">
-            <a id="send_btn" class="btn btn-default">Send</a>
-          </span>
+          <button id="send_btn" class="btn btn-primary" type="button">Send</button>
         </div>
       </div>
     </div>
-  </div>
-  <div id="help_window" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+  </main>
+  <div id="help_window" class="modal fade" tabindex="-1" aria-labelledby="help_window_label" aria-hidden="true">
+    <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"><span class="glyphicon glyphicon-question-sign"></span> Web-PDB Quick Help</h4>
+          <h5 class="modal-title" id="help_window_label">
+            <i class="bi bi-question-circle"></i> Web-PDB Quick Help
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <h5>Web-PDB Shortcuts:</h5>
+          <h6>Web-PDB Shortcuts:</h6>
           <ul>
             <li><kbd>F10</kbd>: proceed to the next line, staying on the current level.</li>
             <li><kbd>F11</kbd>: proceed to the next line and step into a function, if any.</li>
@@ -119,7 +121,7 @@
             <li>Click on a line number in <strong>Current file</strong> box:
               set or remove a breakpoint.</li>
           </ul>
-          <h5>Essential PDB Commands:</h5>
+          <h6>Essential PDB Commands:</h6>
           <ul>
             <li><code>p (var)</code>: print the value of a variable or a Python expression.</li>
             <li><code>pp (var)</code>: print the value of a variable or a Python expression with
@@ -131,20 +133,20 @@
             <li><code>q</code>: terminate the current program and quit.</li>
           </ul>
           <p>You can find more detailed info on PDB commands and usage in the
-            <a href="https://docs.python.org/3.5/library/pdb.html" target="_blank">
+            <a href="https://docs.python.org/3/library/pdb.html" target="_blank" rel="noopener noreferrer">
               official Python documentation</a>.
           </p>
           <hr>
           <p>This program is distributed under the terms of
-            <a href="https://opensource.org/licenses/MIT" target="_blank">MIT License</a>.</p>
+            <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT License</a>.</p>
           <p>&copy; 2016 <a href="mailto:roman1972@gmail.com">Roman Miroshnychenko</a>.</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
+      </div>
+    </div>
+  </div>
   <script src="static/bundle.min.js"></script>
 </body>
 </html>

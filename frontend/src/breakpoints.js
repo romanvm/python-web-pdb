@@ -45,17 +45,15 @@ function apply_breakpoint_classes(env) {
 
 function handle_line_click(event) {
   const span = event.target.closest('.line-numbers-rows > span');
-  if (!span) {
-    return;
-  }
-  // eslint-disable-next-line one-var
-  const lineIndex = Reflect.apply(Array.prototype.indexOf, span.parentNode.children, [span]),
-        lineNumber = lineIndex + 1,
-        target = state.dirname + state.filename + ':' + lineNumber;
-  if (span.classList.contains('breakpoint')) {
-    send_command('cl ' + target);
-  } else {
-    send_command('b ' + target);
+  if (span) {
+    const lineIndex = Array.from(span.parentNode.children).indexOf(span),
+          lineNumber = lineIndex + 1,
+          target = state.dirname + state.filename + ':' + lineNumber;
+    if (span.classList.contains('breakpoint')) {
+      send_command('cl ' + target);
+    } else {
+      send_command('b ' + target);
+    }
   }
 }
 

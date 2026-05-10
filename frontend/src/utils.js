@@ -20,8 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import $ from 'jquery';
-
 import { websocket, state } from './globals';
 
 function save_command_in_history(command) {
@@ -43,11 +41,14 @@ function send_command(command) {
 }
 
 function resize_console() {
-  let con_height = $(window).height() - 490;
+  const consoleEl = document.getElementById('console'),
+        mainEl = document.querySelector('main');
+  consoleEl.style.height = '0px';
+  let con_height = window.innerHeight - mainEl.getBoundingClientRect().bottom;
   if (con_height <= 240) {
     con_height = 240;
   }
-  $('#console').height(con_height);
+  consoleEl.style.height = `${con_height}px`;
 }
 
 export { save_command_in_history, send_command, resize_console };

@@ -20,7 +20,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-import $ from 'jquery';
 import Prism from 'prismjs';
 import 'prismjs/components/prism-python.js';
 import 'prismjs/plugins/line-highlight/prism-line-highlight.js';
@@ -33,41 +32,45 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 import { websocket, state } from './globals';
 import { get_line_span } from './breakpoints';
 
-let wait_buffer = [];
+const wait_buffer = [];
 
 function update_ui() {
-  $.getJSON('/frame-data')
-  .then((frame_data) => {
-    state.breakpoints = frame_data.breakpoints;
-    state.dirname = frame_data.dirname;
-    $('#filename').text(frame_data.filename);
-    $('#curr_line').text(frame_data.current_line);
-    const $console = $('#console'),
-        $curr_file = $('#curr_file'),
-        $curr_file_code = $('#curr_file_code'),
-        $globals = $('#globals'),
-        $locals = $('#locals'),
-        $stdout = $('#stdout');
-    $globals.text(frame_data.globals);
-    $locals.text(frame_data.locals);
-    $stdout.text(frame_data.console_history);
-    $console.scrollTop($console.prop('scrollHeight'));
-    $curr_file_code.text(frame_data.file_listing);
-    $curr_file.attr('data-line', frame_data.current_line);
-    Prism.highlightAll();
-    if (frame_data.current_line !== -1 &&
-        (frame_data.filename !== state.filename ||
-          frame_data.current_line !== state.current_line)) {
-      state.filename = frame_data.filename;
-      state.current_line = frame_data.current_line;
-      // Modified from here: https://stackoverflow.com/questions/2905867/how-to-scroll-to-specific-item-using-jquery
-      const lineSpan = get_line_span($curr_file[0], state.current_line);
-      if (lineSpan) {
-        $curr_file.scrollTop($(lineSpan).offset().top -
-            $curr_file.offset().top + $curr_file.scrollTop() - $curr_file.height() / 2);
+  fetch('/frame-data')
+    .then((response) => response.json())
+    .then((frame_data) => {
+      const consoleEl = document.getElementById('console'),
+            currFile = document.getElementById('curr_file');
+
+      state.breakpoints = frame_data.breakpoints;
+      state.dirname = frame_data.dirname;
+
+      document.getElementById('filename').textContent = frame_data.filename;
+      document.getElementById('curr_line').textContent = frame_data.current_line;
+      document.getElementById('globals').textContent = frame_data.globals;
+      document.getElementById('locals').textContent = frame_data.locals;
+      document.getElementById('stdout').textContent = frame_data.console_history;
+      document.getElementById('curr_file_code').textContent = frame_data.file_listing;
+
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+      currFile.setAttribute('data-line', frame_data.current_line);
+
+      Prism.highlightAll();
+
+      if (frame_data.current_line !== -1 &&
+          (frame_data.filename !== state.filename ||
+            frame_data.current_line !== state.current_line)) {
+        state.filename = frame_data.filename;
+        state.current_line = frame_data.current_line;
+
+        const lineSpan = get_line_span(currFile, state.current_line);
+        if (lineSpan) {
+          const fileRect = currFile.getBoundingClientRect(),
+                lineRect = lineSpan.getBoundingClientRect();
+
+          currFile.scrollTop += lineRect.top - fileRect.top - currFile.clientHeight / 2;
+        }
       }
-    }
-  });
+    });
 }
 
 websocket.onmessage = () => {
