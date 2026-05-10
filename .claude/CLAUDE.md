@@ -39,6 +39,8 @@ Static assets (JavaScript, CSS, HTML) are bundled via webpack and served from `w
 - `frontend/webpack.config.js`: Webpack configuration.
 - Bundled output: `web_pdb/static/` (pre-bundled for distribution).
 
+`node` and `npm` are available via NVM at the path `~/.nvm/versions/node/v24.15.0/bin`
+
 ## Commands
 
 ### Testing
