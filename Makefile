@@ -1,7 +1,7 @@
 .PHONY: test lint lint-fix build clean
 
 test:
-	python tests/tests.py
+	uv run tests/tests.py
 
 lint:
 	ruff check web_pdb/*.py

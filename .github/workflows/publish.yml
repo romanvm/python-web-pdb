@@ -90,8 +90,9 @@ jobs:
 
     - name: Build artifacts
       run: |
-        pip install wheel, uv
-        uv run setup.py sdist bdist_wheel
+        pip install uv
+        uv pip install wheel, build
+        python -m build
 
     - name: Publish a Python distribution to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1

@@ -45,10 +45,9 @@ Static assets (JavaScript, CSS, HTML) are bundled via webpack and served from `w
 
 ```bash
 # Run all tests using Python's unittest discovery
+make test
+# or directly:
 python tests/tests.py
-
-# Run tests across multiple Python versions
-tox
 
 # Run a single test (tests are numbered and order-dependent)
 python -m unittest tests.tests.SeleniumTestCase.test_1_set_trace
@@ -62,10 +61,13 @@ control execution order, since later tests depend on state from earlier ones.
 
 ```bash
 # Lint Python code
-pylint web_pdb/
+make lint
+
+# Fix linting issues automatically
+make lint-fix
 
 # Install development dependencies
-pip install -r requirements.txt
+uv pip install -r requirements.txt
 ```
 
 ### Frontend Build
@@ -77,6 +79,16 @@ npm run build-dev    # Development bundle
 npm run build        # Production (minified) bundle
 npm run watch        # Watch for changes and rebuild
 npm run lint         # Run ESLint
+```
+
+### Build & Package
+
+```bash
+# Build distribution packages
+make build
+
+# Clean build artifacts
+make clean
 ```
 
 ### Installation
@@ -119,7 +131,8 @@ time. The WebConsole spawns a daemon thread to run the web server. Thread safety
 
 - **Python**: 3.6+
 - **Core dependencies**: `bottle>=0.12.25`, `asyncore-wsgi>=0.0.11`
-- **Test dependencies**: `selenium==4.10.0`, `Pylint==2.15.0`
+- **Development dependencies**: `ruff==0.15.12`, `selenium==4.10.0`
+- **Package manager**: `uv`
 
 ## Important Notes
 
