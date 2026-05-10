@@ -35,7 +35,7 @@ jobs:
           cd frontend
           npm run build
 
-  pylint:
+  ruff:
     runs-on: ubuntu-latest
 
     steps:
@@ -48,12 +48,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        python -m pip install -q --upgrade pip
-        pip install -q -r requirements.txt
+        python -m pip install -q --upgrade pip uv
+        uv pip install -q -r requirements.txt
 
-    - name: Check with Pylint
+    - name: Check with ruff
       run: |
-        pylint web_pdb
+        ruff check web_pdb/*.py
 
   test:
     runs-on: ubuntu-latest
@@ -75,7 +75,7 @@ jobs:
         uv pip install -q tox tox-gh-actions
 
     - name: Test with tox
-      run: tox
+      run: uv run tox
 
     - name: 'Upload Screenshots'
       uses: actions/upload-artifact@v4
