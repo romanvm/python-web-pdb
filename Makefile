@@ -4,7 +4,7 @@ test:
 	python tests/tests.py
 
 lint:
-	pylint web_pdb/
+	ruff check web_pdb/*.py
 
 build:
 	python -m build

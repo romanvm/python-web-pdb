@@ -29,9 +29,9 @@ import queue
 import time
 import weakref
 from socket import gethostname
-from threading import Thread, Event
+from threading import Event, Thread
 
-from asyncore_wsgi import make_server, AsyncWebSocketHandler
+from asyncore_wsgi import AsyncWebSocketHandler, make_server
 
 from .buffer import ThreadSafeBuffer
 from .wsgi_app import app
