@@ -2582,3 +2582,7 @@ div.infobox-label > div.infobox-label-text {
   background-color: #444;
 }
 
+:where(html[data-bs-theme="dark"]) .navbar-brand img {
+  filter: invert(1) opacity(0.65);
+}
+
