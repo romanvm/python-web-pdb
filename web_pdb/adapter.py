@@ -32,7 +32,7 @@ from threading import Event
 try:
     import xbmc
     import xbmcaddon
-    from xbmcgui import Dialog, DialogProgress, NOTIFICATION_ERROR
+    from xbmcgui import NOTIFICATION_ERROR, Dialog, DialogProgress
 
     is_kodi = True if not getattr(xbmc, '__kodistubs__', False) else False
 except ImportError:
@@ -67,7 +67,6 @@ class _BaseAdapter(ABC):
 
 
 class _ServerAdapter(_BaseAdapter):
-
     def is_abort_requested(self):
         return self._abort.is_set()
 
@@ -78,7 +77,6 @@ class _ServerAdapter(_BaseAdapter):
 SystemAdapter = _ServerAdapter
 
 if is_kodi:
-
 
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):
@@ -94,9 +92,7 @@ if is_kodi:
             xbmc.log('Web-PDB: web-server started.', level=xbmc.LOGINFO)
             self._dialog_progress.create(
                 self._addon.getLocalizedString(32001),
-                self._addon.getLocalizedString(32002).format(
-                    server_name, port
-                )
+                self._addon.getLocalizedString(32002).format(server_name, port),
             )
             self._dialog_progress.update(100)
 
@@ -105,14 +101,10 @@ if is_kodi:
 
         def on_exception(self):
             stack_trace = traceback.format_exc()
-            xbmc.log(f'Web-PDB: unhandled exception detected:\n{stack_trace}',
-                     xbmc.LOGERROR)
+            xbmc.log(f'Web-PDB: unhandled exception detected:\n{stack_trace}', xbmc.LOGERROR)
             xbmc.log('Web-PDB: starting post-mortem debugging...', xbmc.LOGERROR)
             Dialog().notification(
-                'Web-PDB',
-                self._addon.getLocalizedString(32003),
-                icon=NOTIFICATION_ERROR
+                'Web-PDB', self._addon.getLocalizedString(32003), icon=NOTIFICATION_ERROR
             )
-
 
     SystemAdapter = _KodiAdapter
