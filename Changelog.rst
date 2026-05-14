@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v.2.0.0
+=======
+
+* Fully reworked UI.
+* Internal changes.
+
 v.1.6.3
 =======
 * Fixed incompatibility with latest Bottle versions
