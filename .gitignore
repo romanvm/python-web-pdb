@@ -103,3 +103,4 @@ node_modules/
 .vscode/
 .venv*/
 tests/*.png
+.tokensave

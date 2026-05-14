@@ -33,6 +33,7 @@ from contextlib import contextmanager
 from pdb import Pdb
 from pprint import pformat
 
+from .adapter import SystemAdapter
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
@@ -212,7 +213,7 @@ class WebPdb(Pdb):
         :return: a listing of ``var = value`` pairs sorted alphabetically
         :rtype: unicode
         """
-        return self._format_variables(self.curframe_locals)
+        return self._format_variables(self.curframe.f_locals)
 
     def remove_trace(self, frame=None):
         """
@@ -336,4 +337,5 @@ def catch_post_mortem(host='', port=5555, patch_stdstreams=False):
     try:
         yield
     except Exception:  # pylint: disable=broad-except
+        SystemAdapter().on_exception()
         post_mortem(None, host, port, patch_stdstreams)

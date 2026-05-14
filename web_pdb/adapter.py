@@ -1,0 +1,118 @@
+# Author: Roman Miroshnychenko aka Roman V.M.
+# E-mail: roman1972@gmail.com
+#
+# Copyright (c) 2026 Roman Miroshnychenko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+"""
+Abstraction layer for using Web-PDB either in a regular PC/Server or in a Kodi addon.
+"""
+
+import logging
+import traceback
+from abc import ABC, abstractmethod
+from threading import Event
+
+try:
+    import xbmc
+    import xbmcaddon
+    from xbmcgui import Dialog, DialogProgress, NOTIFICATION_ERROR
+
+    is_kodi = True if not getattr(xbmc, '__kodistubs__', False) else False
+except ImportError:
+    is_kodi = False
+
+__all__ = ['SystemAdapter']
+
+
+class _BaseAdapter(ABC):
+    def __init__(self):
+        self._abort = Event()
+
+    @abstractmethod
+    def is_abort_requested(self):
+        raise NotImplementedError
+
+    def abort(self):
+        self._abort.set()
+
+    def is_aborted(self):
+        return self._abort.is_set()
+
+    @abstractmethod
+    def on_server_started(self, server_name, port):
+        raise NotImplementedError
+
+    def on_server_stopped(self):
+        pass
+
+    def on_exception(self):
+        pass
+
+
+class _ServerAdapter(_BaseAdapter):
+
+    def is_abort_requested(self):
+        return self._abort.is_set()
+
+    def on_server_started(self, server_name, port):
+        logging.critical('Web-PDB: starting web-server on http://%s:%s', server_name, port)
+
+
+SystemAdapter = _ServerAdapter
+
+if is_kodi:
+
+
+    class _KodiAdapter(_BaseAdapter):
+        def __init__(self):
+            super().__init__()
+            self._monitor = xbmc.Monitor()
+            self._addon = xbmcaddon.Addon()
+            self._dialog_progress = DialogProgress()
+
+        def is_abort_requested(self):
+            return self._abort.is_set() or self._monitor.abortRequested()
+
+        def on_server_started(self, server_name, port):
+            xbmc.log('Web-PDB: web-server started.', level=xbmc.LOGINFO)
+            self._dialog_progress.create(
+                self._addon.getLocalizedString(32001),
+                self._addon.getLocalizedString(32002).format(
+                    server_name, port
+                )
+            )
+            self._dialog_progress.update(100)
+
+        def on_server_stopped(self):
+            self._dialog_progress.close()
+
+        def on_exception(self):
+            stack_trace = traceback.format_exc()
+            xbmc.log(f'Web-PDB: unhandled exception detected:\n{stack_trace}',
+                     xbmc.LOGERROR)
+            xbmc.log('Web-PDB: starting post-mortem debugging...', xbmc.LOGERROR)
+            Dialog().notification(
+                'Web-PDB',
+                self._addon.getLocalizedString(32003),
+                icon=NOTIFICATION_ERROR
+            )
+
+
+    SystemAdapter = _KodiAdapter

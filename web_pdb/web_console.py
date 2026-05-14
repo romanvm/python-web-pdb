@@ -28,11 +28,11 @@ import logging
 import queue
 import time
 import weakref
-from socket import gethostname
-from threading import Event, Thread
+from threading import Thread
 
 from asyncore_wsgi import AsyncWebSocketHandler, make_server
 
+from .adapter import SystemAdapter
 from .buffer import ThreadSafeBuffer
 from .wsgi_app import app
 
@@ -70,13 +70,12 @@ class WebConsole:
     """
 
     def __init__(self, host, port, debugger):
+        self._adapter = SystemAdapter()
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
         self._frame_data = None
-        self._stop_all = Event()
         self._server_thread = Thread(target=self._run_server, args=(host, port))
         self._server_thread.daemon = True
-        logging.critical('Web-PDB: starting web-server on http://%s:%s', gethostname(), port)
         self._server_thread.start()
 
     @property
@@ -93,20 +92,25 @@ class WebConsole:
 
     @property
     def closed(self):
-        return self._stop_all.is_set()
+        return self._adapter.is_aborted()
 
     def _run_server(self, host, port):
         self._frame_data = app.frame_data
         httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
-        while not self._stop_all.is_set():
+        is_started = False
+        while not self._adapter.is_abort_requested():
+            if not is_started:
+                self._adapter.on_server_started(httpd.server_name, httpd.server_port)
+                is_started = True
             try:
                 httpd.handle_request()
             except (KeyboardInterrupt, SystemExit):
                 break
         httpd.handle_close()
+        self._adapter.on_server_stopped()
 
     def readline(self):
-        while not self._stop_all.is_set():
+        while not self._adapter.is_abort_requested():
             try:
                 data = WebConsoleSocket.input_queue.get(timeout=0.1)
                 break
@@ -151,6 +155,6 @@ class WebConsole:
 
     def close(self):
         logging.critical('Web-PDB: stopping web-server...')
-        self._stop_all.set()
+        self._adapter.abort()
         self._server_thread.join()
         logging.critical('Web-PDB: web-server stopped.')
