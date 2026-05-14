@@ -1,10 +1,13 @@
 {
   "name": "web-pdb",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Front-end for Web-PDB Python debugger",
   "scripts": {
+    "prebuild": "npm pkg set version=$(cat ../VERSION)",
     "build": "webpack --mode=production",
+    "prebuild-dev": "npm pkg set version=$(cat ../VERSION)",
     "build-dev": "webpack --mode=development",
+    "prewatch": "npm pkg set version=$(cat ../VERSION)",
     "watch": "webpack watch",
     "lint": "eslint --ext .js src/"
   },
