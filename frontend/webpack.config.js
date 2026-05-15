@@ -1,8 +1,12 @@
+const fs = require('fs');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const SRC = path.resolve(__dirname, 'src');
-const BUILD = path.resolve(path.dirname(__dirname), 'web_pdb', 'static');
+const PROJECT_ROOT = path.dirname(__dirname);
+const KODI_STATIC = path.resolve(PROJECT_ROOT, 'script.module.web-pdb', 'libs', 'web_pdb', 'static');
+const DEFAULT_STATIC = path.resolve(PROJECT_ROOT, 'web_pdb', 'static');
+const BUILD = fs.existsSync(path.dirname(KODI_STATIC)) ? KODI_STATIC : DEFAULT_STATIC;
 
 const config = {
   entry: SRC + '/index.js',
