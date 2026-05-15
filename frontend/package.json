@@ -3,11 +3,11 @@
   "version": "2.0.0",
   "description": "Front-end for Web-PDB Python debugger",
   "scripts": {
-    "prebuild": "npm pkg set version=$(cat ../VERSION)",
+    "prebuild": "npm pkg set version=$(cat ../VERSION 2>/dev/null || tr -d '\\n' < ../script.module.web-pdb/addon.xml | grep -oP '<addon[^>]*version=\"\\K[^\"]+')",
     "build": "webpack --mode=production",
-    "prebuild-dev": "npm pkg set version=$(cat ../VERSION)",
+    "prebuild-dev": "npm pkg set version=$(cat ../VERSION 2>/dev/null || tr -d '\\n' < ../script.module.web-pdb/addon.xml | grep -oP '<addon[^>]*version=\"\\K[^\"]+'))",
     "build-dev": "webpack --mode=development",
-    "prewatch": "npm pkg set version=$(cat ../VERSION)",
+    "prewatch": "npm pkg set version=$(cat ../VERSION 2>/dev/null || tr -d '\\n' < ../script.module.web-pdb/addon.xml | grep -oP '<addon[^>]*version=\"\\K[^\"]+'))",
     "watch": "webpack watch",
     "lint": "eslint --ext .js src/"
   },
