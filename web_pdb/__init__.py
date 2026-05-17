@@ -33,7 +33,7 @@ from contextlib import contextmanager
 from pdb import Pdb
 from pprint import pformat
 
-from .adapter import SystemAdapter
+from .system_adapter import SystemAdapter
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']

@@ -30,38 +30,12 @@ import time
 import weakref
 from threading import Thread
 
-from asyncore_wsgi import AsyncWebSocketHandler, make_server
-
-from .adapter import SystemAdapter
 from .buffer import ThreadSafeBuffer
+from .server_adapter import ServerAdapter
+from .system_adapter import SystemAdapter
 from .wsgi_app import app
 
 __all__ = ['WebConsole']
-
-
-class WebConsoleSocket(AsyncWebSocketHandler):
-    """
-    WebConsoleSocket receives PDB commands from the front-end and
-    sends pings to client(s) about console updates
-    """
-
-    clients = []
-    input_queue = queue.Queue()
-
-    @classmethod
-    def broadcast(cls, msg):
-        for cl in cls.clients:
-            if cl.handshaked:
-                cl.sendMessage(msg)  # sendMessage uses deque so it is thread-safe
-
-    def handleConnected(self):
-        self.clients.append(self)
-
-    def handleMessage(self):
-        self.input_queue.put(self.data)
-
-    def handleClose(self):
-        self.clients.remove(self)
 
 
 class WebConsole:
@@ -70,11 +44,12 @@ class WebConsole:
     """
 
     def __init__(self, host, port, debugger):
-        self._adapter = SystemAdapter()
+        self._system_adapter = SystemAdapter()
+        self._server_adapter = ServerAdapter(host, port)
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
-        self._frame_data = None
-        self._server_thread = Thread(target=self._run_server, args=(host, port))
+        self._frame_data = app.frame_data
+        self._server_thread = Thread(target=self._server_adapter.serve_forever)
         self._server_thread.daemon = True
         self._server_thread.start()
 
@@ -92,27 +67,12 @@ class WebConsole:
 
     @property
     def closed(self):
-        return self._adapter.is_aborted()
-
-    def _run_server(self, host, port):
-        self._frame_data = app.frame_data
-        httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
-        is_started = False
-        while not self._adapter.is_abort_requested():
-            if not is_started:
-                self._adapter.on_server_started(httpd.server_name, httpd.server_port)
-                is_started = True
-            try:
-                httpd.handle_request()
-            except (KeyboardInterrupt, SystemExit):
-                break
-        httpd.handle_close()
-        self._adapter.on_server_stopped()
+        return self._system_adapter.is_aborted()
 
     def readline(self):
-        while not self._adapter.is_abort_requested():
+        while not self._system_adapter.is_abort_requested():
             try:
-                data = WebConsoleSocket.input_queue.get(timeout=0.1)
+                data = self._server_adapter.web_socket_input_queue.get(timeout=0.1)
                 break
             except queue.Empty:
                 continue
@@ -139,7 +99,7 @@ class WebConsole:
             }
         frame_data['console_history'] = self._console_history.contents
         self._frame_data.contents = frame_data
-        WebConsoleSocket.broadcast('ping')  # Ping all clients about data update
+        self._server_adapter.web_socket_broadcast('ping')  # Ping all clients about data update
 
     write = writeline
 
@@ -155,6 +115,6 @@ class WebConsole:
 
     def close(self):
         logging.critical('Web-PDB: stopping web-server...')
-        self._adapter.abort()
+        self._server_adapter.close()
         self._server_thread.join()
         logging.critical('Web-PDB: web-server stopped.')
