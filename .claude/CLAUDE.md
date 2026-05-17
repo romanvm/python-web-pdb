@@ -25,7 +25,18 @@ The debugger backend is a two-threaded system:
   (`set_trace()`, `post_mortem()`, `catch_post_mortem()`). Handles command dispatch, variable
   formatting, and the custom `inspect`/`i` command.
 - `web_pdb/web_console.py`: File-like class that serves as stdin/stdout for the debugger thread.
-  Manages the WebSocket server, handles bidirectional communication between debugger and web UI.
+  Delegates server management and WebSocket broadcasting to `ServerAdapter`. Maintains
+  `console_history` buffer and frame data, pinging clients on each write.
+- `web_pdb/server_adapter.py`: Manages the HTTP/WebSocket server lifecycle. `WebConsoleSocket`
+  (extends `AsyncWebSocketHandler`) handles WebSocket connections: receives PDB commands from the
+  frontend via a class-level `input_queue` and broadcasts pings to all connected clients.
+  `ServerAdapter` wraps `make_server()`, drives the event loop in `serve_forever()`, and delegates
+  lifecycle events to `SystemAdapter`.
+- `web_pdb/system_adapter.py`: Abstraction layer for running in a standard Python environment vs.
+  a Kodi addon. Exposes `SystemAdapter` (alias to `_ServerAdapter` or `_KodiAdapter` depending on
+  whether the Kodi runtime is detected). Both implement `is_abort_requested()`,
+  `on_server_started()`, `on_server_stopped()`, and `on_exception()`. The Kodi variant uses
+  `xbmc.Monitor` for abort detection and shows progress dialogs/notifications.
 - `web_pdb/wsgi_app.py`: Bottle application serving the web UI and API endpoints for debugger
   control and frame data retrieval.
 - `web_pdb/buffer.py`: Thread-safe buffer (`ThreadSafeBuffer`) used for passing data between
@@ -106,11 +117,13 @@ pip install .
 ## Threading Model
 
 The debugger maintains one active instance (`WebPdb.active_instance`) that traces one thread at a
-time. The WebConsole spawns a daemon thread to run the web server. Thread safety is achieved via:
+time. `WebConsole` spawns a daemon thread that runs `ServerAdapter.serve_forever()`. Thread safety
+is achieved via:
 
 - `ThreadSafeBuffer` with RLock for console history and frame data.
-- `queue.Queue` for PDB commands from the web UI (thread-safe by design).
+- `queue.Queue` (class-level on `WebConsoleSocket`) for PDB commands from the web UI.
 - WebSocket deque for sending messages to clients (thread-safe for appending).
+- `threading.Event` in `SystemAdapter` for coordinating server shutdown.
 
 ## Testing Notes
 

@@ -1,7 +1,5 @@
 uv
 wheel
 build>=1.0.0
-bottle>=0.12.25
-asyncore-wsgi>=0.0.11
 selenium==4.10.0
 ruff==0.15.12

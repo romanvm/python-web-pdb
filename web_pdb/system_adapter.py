@@ -24,6 +24,7 @@
 Abstraction layer for using Web-PDB either in a regular PC/Server or in a Kodi addon.
 """
 
+import sys
 import logging
 import traceback
 from abc import ABC, abstractmethod
@@ -66,7 +67,7 @@ class _BaseAdapter(ABC):
         pass
 
 
-class _ServerAdapter(_BaseAdapter):
+class _GeneralAdapter(_BaseAdapter):
     def is_abort_requested(self):
         return self.abort_event.is_set()
 
@@ -74,9 +75,11 @@ class _ServerAdapter(_BaseAdapter):
         logging.critical('Web-PDB: starting web-server on http://%s:%s', server_name, port)
 
 
-SystemAdapter = _ServerAdapter
+SystemAdapter = _GeneralAdapter
 
 if is_kodi:
+    sys.modules['_asyncio'] = None  # See: https://kodi.wiki/view/Python_Problems#asyncio
+
 
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):

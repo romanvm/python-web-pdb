@@ -33,7 +33,6 @@ from threading import Thread
 from .buffer import ThreadSafeBuffer
 from .server_adapter import ServerAdapter
 from .system_adapter import SystemAdapter
-from .wsgi_app import app
 
 __all__ = ['WebConsole']
 
@@ -48,7 +47,7 @@ class WebConsole:
         self._server_adapter = ServerAdapter(host, port)
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
-        self._frame_data = app.frame_data
+        self._frame_data = self._server_adapter.frame_data
         self._server_thread = Thread(target=self._server_adapter.serve_forever)
         self._server_thread.daemon = True
         self._server_thread.start()

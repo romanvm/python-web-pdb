@@ -1,61 +1,52 @@
+"""
+Facade that owns the asyncio HTTP/WebSocket server and exposes the interface
+that WebConsole depends on.
+"""
+
+from __future__ import annotations
+
+import asyncio
 import queue
 
-from asyncore_wsgi import AsyncWebSocketHandler, make_server
-
+from .asyncio_server import AsyncioServer
+from .buffer import ThreadSafeBuffer
 from .system_adapter import SystemAdapter
-from .wsgi_app import app
 
-
-class WebConsoleSocket(AsyncWebSocketHandler):
-    """
-    WebConsoleSocket receives PDB commands from the front-end and
-    sends pings to client(s) about console updates
-    """
-
-    clients = []
-    input_queue = queue.Queue()
-
-    @classmethod
-    def broadcast(cls, msg):
-        for cl in cls.clients:
-            if cl.handshaked:
-                cl.sendMessage(msg)  # sendMessage uses deque so it is thread-safe
-
-    def handleConnected(self):
-        self.clients.append(self)
-
-    def handleMessage(self):
-        self.input_queue.put(self.data)
-
-    def handleClose(self):
-        self.clients.remove(self)
+__all__ = ['ServerAdapter']
 
 
 class ServerAdapter:
-    def __init__(self, host, port):
+    def __init__(self, host: str, port: int):
         self._system_adapter = SystemAdapter()
-        self._httpd = make_server(host, port, app, ws_handler_class=WebConsoleSocket)
+        self._input_queue: queue.Queue = queue.Queue()
+        self.frame_data: ThreadSafeBuffer = ThreadSafeBuffer()
+        self._server = AsyncioServer(host, port, self.frame_data, self._input_queue)
+        self._loop: asyncio.AbstractEventLoop | None = None
 
     @property
-    def web_socket_input_queue(self):
-        return WebConsoleSocket.input_queue
+    def web_socket_input_queue(self) -> queue.Queue:
+        return self._input_queue
 
-    @staticmethod
-    def web_socket_broadcast(message):
-        WebConsoleSocket.broadcast(message)
+    def web_socket_broadcast(self, message: str) -> None:
+        self._server.broadcast(message)
 
     def serve_forever(self) -> None:
-        is_started = False
-        while not self._system_adapter.is_abort_requested():
-            if not is_started:
-                self._system_adapter.on_server_started(self._httpd.server_name, self._httpd.server_port)
-                is_started = True
-            try:
-                self._httpd.handle_request()
-            except (KeyboardInterrupt, SystemExit):
-                break
-        self._httpd.handle_close()
-        self._system_adapter.on_server_stopped()
+        self._loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self._loop)
+        try:
+            self._loop.run_until_complete(
+                self._server._main(
+                    self._system_adapter.is_abort_requested,
+                    self._system_adapter.on_server_started,
+                    self._system_adapter.on_server_stopped,
+                )
+            )
+        except (KeyboardInterrupt, SystemExit):
+            pass
+        finally:
+            self._loop.close()
+            self._loop = None
 
-    def close(self):
+    def close(self) -> None:
         self._system_adapter.abort()
+        self._server.stop()
