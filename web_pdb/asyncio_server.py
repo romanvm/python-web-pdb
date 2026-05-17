@@ -208,7 +208,7 @@ class AsyncioServer:
         self.server_port: int = 0
 
     def _broadcast(self, message: str) -> None:
-        for conn in list(self._connections):
+        for conn in tuple(self._connections):
             conn.send(message)
 
     def broadcast(self, message: str) -> None:
