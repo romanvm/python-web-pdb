@@ -24,7 +24,6 @@
 Abstraction layer for using Web-PDB either in a regular PC/Server or in a Kodi addon.
 """
 
-import sys
 import logging
 import traceback
 from abc import ABC, abstractmethod
@@ -78,7 +77,6 @@ class _GeneralAdapter(_BaseAdapter):
 SystemAdapter = _GeneralAdapter
 
 if is_kodi:
-    sys.modules['_asyncio'] = None  # See: https://kodi.wiki/view/Python_Problems#asyncio
 
 
     class _KodiAdapter(_BaseAdapter):

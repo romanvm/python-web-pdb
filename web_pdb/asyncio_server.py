@@ -4,6 +4,14 @@ Asyncio-based HTTP server with WebSocket support for Web-PDB
 
 from __future__ import annotations
 
+try:  # Kodi compatibility fix
+    import xbmc
+    if not getattr(xbmc, '__kodistubs__', False):
+        import sys
+        sys.modules['_asyncio'] = None  # See: https://kodi.wiki/view/Python_Problems#asyncio
+except ImportError:
+    pass
+
 import asyncio
 import base64
 import gzip
