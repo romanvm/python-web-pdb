@@ -16,8 +16,8 @@ The debugger backend is a two-threaded system:
 
 - **Debugger thread**: Runs the WebPdb class (extends Python's `Pdb`), which executes user code and
   handles debug commands.
-- **Web server thread**: Runs a Bottle-based WSGI application that serves the web UI and communicates
-  with the debugger thread via WebSockets.
+- **Web server thread**: Runs a pure-stdlib asyncio HTTP+WebSocket server that serves the web UI
+  and communicates with the debugger thread via a shared queue.
 
 **Key modules:**
 
@@ -27,18 +27,20 @@ The debugger backend is a two-threaded system:
 - `web_pdb/web_console.py`: File-like class that serves as stdin/stdout for the debugger thread.
   Delegates server management and WebSocket broadcasting to `ServerAdapter`. Maintains
   `console_history` buffer and frame data, pinging clients on each write.
-- `web_pdb/server_adapter.py`: Manages the HTTP/WebSocket server lifecycle. `WebConsoleSocket`
-  (extends `AsyncWebSocketHandler`) handles WebSocket connections: receives PDB commands from the
-  frontend via a class-level `input_queue` and broadcasts pings to all connected clients.
-  `ServerAdapter` wraps `make_server()`, drives the event loop in `serve_forever()`, and delegates
-  lifecycle events to `SystemAdapter`.
+- `web_pdb/server_adapter.py`: Thin facade over `AsyncioServer`. `ServerAdapter` owns the
+  `input_queue` and `frame_data` buffer, starts the asyncio event loop in a daemon thread via
+  `serve_forever()`, and exposes `web_socket_broadcast()` and `web_socket_input_queue` to
+  `WebConsole`. Shutdown is coordinated via `SystemAdapter.abort()` and `AsyncioServer.stop()`.
+- `web_pdb/asyncio_server.py`: Pure-stdlib asyncio HTTP/WebSocket server. `AsyncioServer` handles
+  all HTTP routing (index, `/frame-data`, `/static/`, `/ws`), WebSocket handshake and framing, and
+  gzip compression. `_WebSocketConnection` manages per-connection send/receive coroutines and feeds
+  incoming PDB commands into the shared `input_queue`. Active connections are tracked in
+  `AsyncioServer._connections` (a `set`).
 - `web_pdb/system_adapter.py`: Abstraction layer for running in a standard Python environment vs.
-  a Kodi addon. Exposes `SystemAdapter` (alias to `_ServerAdapter` or `_KodiAdapter` depending on
+  a Kodi addon. Exposes `SystemAdapter` (alias to `_GeneralAdapter` or `_KodiAdapter` depending on
   whether the Kodi runtime is detected). Both implement `is_abort_requested()`,
   `on_server_started()`, `on_server_stopped()`, and `on_exception()`. The Kodi variant uses
   `xbmc.Monitor` for abort detection and shows progress dialogs/notifications.
-- `web_pdb/wsgi_app.py`: Bottle application serving the web UI and API endpoints for debugger
-  control and frame data retrieval.
 - `web_pdb/buffer.py`: Thread-safe buffer (`ThreadSafeBuffer`) used for passing data between
   threads with dirty-flag semantics.
 
@@ -121,9 +123,9 @@ time. `WebConsole` spawns a daemon thread that runs `ServerAdapter.serve_forever
 is achieved via:
 
 - `ThreadSafeBuffer` with RLock for console history and frame data.
-- `queue.Queue` (class-level on `WebConsoleSocket`) for PDB commands from the web UI.
-- WebSocket deque for sending messages to clients (thread-safe for appending).
-- `threading.Event` in `SystemAdapter` for coordinating server shutdown.
+- `queue.Queue` (instance-level on `ServerAdapter`) for PDB commands from the web UI.
+- `asyncio.Queue` per `_WebSocketConnection` for outbound WebSocket messages (asyncio-internal).
+- `threading.Event` in `_BaseAdapter` (`SystemAdapter`) for coordinating server shutdown.
 
 ## Testing Notes
 
@@ -145,7 +147,7 @@ is achieved via:
 ## Requirements
 
 - **Python**: 3.6+
-- **Core dependencies**: `bottle>=0.12.25`, `asyncore-wsgi>=0.0.11`
+- **Core dependencies**: pure Python stdlib (no third-party runtime dependencies)
 - **Development dependencies**: `ruff==0.15.12`, `selenium==4.10.0`
 - **Package manager**: `uv`
 

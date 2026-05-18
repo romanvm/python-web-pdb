@@ -4,8 +4,9 @@ Changelog
 v.2.0.0
 =======
 
-* Fully reworked UI.
-* Internal changes.
+* Fully reworked web-UI.
+* Internal changes: a new web-server, removed external runtime dependencies,
+  unified code with ``kodi.web-pdb`` project.
 
 v.1.6.3
 =======
@@ -36,7 +37,7 @@ v.1.5.6
 v.1.5.3
 =======
 
-* Fixed the issue with closed debugger still being stored in ``active_instance``
+* Fixed the issue with a closed debugger still being stored in ``active_instance``
   class property that prevented starting a new debugger session (thanks to **maiamcc**).
 
 v.1.5.2
