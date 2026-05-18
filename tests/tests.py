@@ -65,12 +65,9 @@ class SeleniumTestCase(TestCase):
         cls.browser.quit()
 
     def tearDown(self):
-        if hasattr(self, '_outcome'):
-            result = self._outcome.result
-            if result.failures:
-                failed_tests = [test for test, _ in result.failures]
-                if self in failed_tests:
-                    self.browser.save_screenshot(f'screenshot-{self}.png')
+        if hasattr(self, '_outcome') and any(e is not None for _, e in self._outcome.errors):
+            self.browser.save_screenshot(f'screenshot-{self}.png')
+
 
 class WebPdbTestCase(SeleniumTestCase):
     """
