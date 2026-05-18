@@ -1,5 +1,5 @@
 # Created on: 13.09.2016
-# Author: Roman Miroshnychenko aka Roman V.M. (romanvm@yandex.ua)
+# Author: Roman Miroshnychenko aka Roman V.M.
 #
 # Copyright (c) 2016 Roman Miroshnychenko
 #
