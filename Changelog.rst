@@ -4,8 +4,8 @@ Changelog
 v.2.0.0
 =======
 
-* Fully reworked web-UI.
-* Internal changes: a new web-server, removed external runtime dependencies,
+* Fully reworked web-UI: light and dark modes, drop outdated dependencies.
+* Internal changes: a new async web-server, removed external runtime dependencies,
   unified code with ``kodi.web-pdb`` project.
 
 v.1.6.3
