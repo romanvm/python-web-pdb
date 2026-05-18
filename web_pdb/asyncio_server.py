@@ -6,8 +6,10 @@ from __future__ import annotations
 
 try:  # Kodi compatibility fix
     import xbmc
+
     if not getattr(xbmc, '__kodistubs__', False):
         import sys
+
         sys.modules['_asyncio'] = None  # See: https://kodi.wiki/view/Python_Problems#asyncio
 except ImportError:
     pass
@@ -311,7 +313,7 @@ class AsyncioServer:
         elif path == '/frame-data':
             await self._serve_frame_data(writer, accept_encoding)
         elif path.startswith('/static/'):
-            await self._serve_static(writer, path[len('/static/'):], accept_encoding)
+            await self._serve_static(writer, path[len('/static/') :], accept_encoding)
         elif path == '/ws':
             await self._serve_websocket(reader, writer, headers)
         else:

@@ -78,11 +78,11 @@ SystemAdapter = _GeneralAdapter
 
 if is_kodi:
 
-
     class _KodiLogHandler(logging.Handler):
         """
         Logging handler that writes to the Kodi log with correct levels
         """
+
         LOG_FORMAT = '[kodi.web-pdb] {message}'
         LEVEL_MAP = {
             logging.NOTSET: xbmc.LOGNONE,
@@ -107,13 +107,8 @@ if is_kodi:
             After initialization, you can use Python logging facilities as usual.
             """
             logging.basicConfig(
-                format=cls.LOG_FORMAT,
-                style='{',
-                level=logging.DEBUG,
-                handlers=[cls()],
-                force=True
+                format=cls.LOG_FORMAT, style='{', level=logging.DEBUG, handlers=[cls()], force=True
             )
-
 
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):
