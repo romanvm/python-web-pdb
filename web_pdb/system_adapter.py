@@ -78,12 +78,50 @@ SystemAdapter = _GeneralAdapter
 
 if is_kodi:
 
+
+    class _KodiLogHandler(logging.Handler):
+        """
+        Logging handler that writes to the Kodi log with correct levels
+        """
+        LOG_FORMAT = '[kodi.web-pdb] {message}'
+        LEVEL_MAP = {
+            logging.NOTSET: xbmc.LOGNONE,
+            logging.DEBUG: xbmc.LOGDEBUG,
+            logging.INFO: xbmc.LOGINFO,
+            logging.WARN: xbmc.LOGWARNING,
+            logging.WARNING: xbmc.LOGWARNING,
+            logging.ERROR: xbmc.LOGERROR,
+            logging.CRITICAL: xbmc.LOGFATAL,
+        }
+
+        def emit(self, record):
+            message = self.format(record)
+            kodi_log_level = self.LEVEL_MAP.get(record.levelno, xbmc.LOGDEBUG)
+            xbmc.log(message, level=kodi_log_level)
+
+        @classmethod
+        def initialize_logging(cls):
+            """
+            Initialize the root logger that writes to the Kodi log
+
+            After initialization, you can use Python logging facilities as usual.
+            """
+            logging.basicConfig(
+                format=cls.LOG_FORMAT,
+                style='{',
+                level=logging.DEBUG,
+                handlers=[cls()],
+                force=True
+            )
+
+
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):
             super().__init__()
             self._monitor = xbmc.Monitor()
             self._addon = xbmcaddon.Addon()
             self._dialog_progress = DialogProgress()
+            _KodiLogHandler.initialize_logging()
 
         def is_abort_requested(self):
             return self._abort_event.is_set() or self._monitor.abortRequested()
