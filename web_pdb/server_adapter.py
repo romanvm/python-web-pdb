@@ -6,18 +6,20 @@ that WebConsole depends on.
 from __future__ import annotations
 
 import asyncio
+import logging
 import queue
 
 from .asyncio_server import AsyncioServer
 from .buffer import ThreadSafeBuffer
-from .system_adapter import SystemAdapter
 
 __all__ = ['ServerAdapter']
 
+logger = logging.getLogger(__name__)
+
 
 class ServerAdapter:
-    def __init__(self, host: str, port: int):
-        self._system_adapter = SystemAdapter()
+    def __init__(self, host: str, port: int, system_adapter):
+        self._system_adapter = system_adapter
         self._input_queue: queue.Queue = queue.Queue()
         self.frame_data: ThreadSafeBuffer = ThreadSafeBuffer()
         self._server = AsyncioServer(host, port, self.frame_data, self._input_queue)
@@ -35,7 +37,7 @@ class ServerAdapter:
         asyncio.set_event_loop(self._loop)
         try:
             self._loop.run_until_complete(
-                self._server._main(
+                self._server.run(
                     self._system_adapter.is_abort_requested,
                     self._system_adapter.on_server_started,
                     self._system_adapter.on_server_stopped,
@@ -43,6 +45,8 @@ class ServerAdapter:
             )
         except (KeyboardInterrupt, SystemExit):
             pass
+        except Exception:
+            logger.exception('Web-PDB: unexpected error in server thread')
         finally:
             self._loop.close()
             self._loop = None

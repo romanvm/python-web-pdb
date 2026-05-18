@@ -44,7 +44,7 @@ class WebConsole:
 
     def __init__(self, host, port, debugger):
         self._system_adapter = SystemAdapter()
-        self._server_adapter = ServerAdapter(host, port)
+        self._server_adapter = ServerAdapter(host, port, self._system_adapter)
         self._debugger = weakref.proxy(debugger)
         self._console_history = ThreadSafeBuffer('')
         self._frame_data = self._server_adapter.frame_data

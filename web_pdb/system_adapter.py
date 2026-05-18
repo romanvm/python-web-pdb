@@ -43,17 +43,17 @@ __all__ = ['SystemAdapter']
 
 class _BaseAdapter(ABC):
     def __init__(self):
-        self.abort_event = Event()
+        self._abort_event = Event()
 
     @abstractmethod
     def is_abort_requested(self):
         raise NotImplementedError
 
     def abort(self):
-        self.abort_event.set()
+        self._abort_event.set()
 
     def is_aborted(self):
-        return self.abort_event.is_set()
+        return self._abort_event.is_set()
 
     @abstractmethod
     def on_server_started(self, server_name, port):
@@ -68,7 +68,7 @@ class _BaseAdapter(ABC):
 
 class _GeneralAdapter(_BaseAdapter):
     def is_abort_requested(self):
-        return self.abort_event.is_set()
+        return self._abort_event.is_set()
 
     def on_server_started(self, server_name, port):
         logging.critical('Web-PDB: starting web-server on http://%s:%s', server_name, port)
@@ -78,7 +78,6 @@ SystemAdapter = _GeneralAdapter
 
 if is_kodi:
 
-
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):
             super().__init__()
@@ -87,7 +86,7 @@ if is_kodi:
             self._dialog_progress = DialogProgress()
 
         def is_abort_requested(self):
-            return self.abort_event.is_set() or self._monitor.abortRequested()
+            return self._abort_event.is_set() or self._monitor.abortRequested()
 
         def on_server_started(self, server_name, port):
             xbmc.log('Web-PDB: web-server started.', level=xbmc.LOGINFO)

@@ -37,6 +37,7 @@ _WS_OUTBOUND_QUEUE_SIZE = 32
 
 _this_dir = Path(__file__).parent
 _static_dir = _this_dir / 'static'
+_static_dir_resolved = _static_dir.resolve()
 _index_file = _this_dir / 'templates' / 'index.html'
 
 # Opcode constants
@@ -65,7 +66,7 @@ def _ws_encode_frame(payload: bytes, opcode: int = _OP_TEXT) -> bytes:
 
 
 async def _ws_read_frame(reader: asyncio.StreamReader):
-    """Read one WebSocket frame; return (opcode, payload_bytes) or raise."""
+    """Read one WebSocket frame; return (fin, opcode, payload_bytes) or raise."""
     header = await reader.readexactly(2)
     fin = (header[0] & 0x80) != 0
     opcode = header[0] & 0x0F
@@ -84,12 +85,7 @@ async def _ws_read_frame(reader: asyncio.StreamReader):
         for i in range(length):
             payload[i] ^= mask_key[i % 4]
 
-    if not fin:
-        # We don't send large messages from the client, so just discard
-        # continuation frames — they won't appear in practice.
-        pass
-
-    return opcode, bytes(payload)
+    return fin, opcode, bytes(payload)
 
 
 def _maybe_gzip(body: bytes, content_type: str, accept_encoding: str) -> tuple:
@@ -156,24 +152,27 @@ class _WebSocketConnection:
             try:
                 await writer_task
             except (asyncio.CancelledError, Exception):
+                # CancelledError is not a subclass of Exception in 3.8+; both are expected here
                 pass
             try:
                 self._writer.write(_ws_encode_frame(b'', _OP_CLOSE))
                 await self._writer.drain()
             except Exception:
-                pass
+                logger.debug('WebSocket close frame could not be sent', exc_info=True)
             try:
                 self._writer.close()
             except Exception:
-                pass
+                logger.debug('WebSocket writer close failed', exc_info=True)
 
     async def _reader_loop(self) -> None:
         while True:
             try:
-                opcode, payload = await _ws_read_frame(self._reader)
+                fin, opcode, payload = await _ws_read_frame(self._reader)
             except (asyncio.IncompleteReadError, ConnectionError, EOFError):
                 break
             if opcode in (_OP_TEXT, _OP_BINARY, _OP_CONTINUATION):
+                if not fin or opcode == _OP_CONTINUATION:
+                    continue  # We don't reassemble fragmented messages
                 text = payload.decode('utf-8', errors='replace')
                 self._input_queue.put(text)
             elif opcode == _OP_PING:
@@ -225,7 +224,7 @@ class AsyncioServer:
             except RuntimeError:
                 pass
 
-    async def _main(self, is_abort_requested, on_started, on_stopped) -> None:
+    async def run(self, is_abort_requested, on_started, on_stopped) -> None:
         self._loop = asyncio.get_running_loop()
         self._stop_event = asyncio.Event()
 
@@ -234,7 +233,7 @@ class AsyncioServer:
             sock = server.sockets[0]
             addr = sock.getsockname()
             self.server_port = addr[1]
-            self.server_name = socket.getfqdn(self._host) if self._host else socket.getfqdn()
+            self.server_name = socket.getfqdn(self._host or '')
             on_started(self.server_name, self.server_port)
 
             async def _abort_watcher():
@@ -343,7 +342,7 @@ class AsyncioServer:
             await writer.drain()
             return
 
-        if not str(requested).startswith(str(_static_dir.resolve())):
+        if _static_dir_resolved not in requested.parents:
             writer.write(b'HTTP/1.1 403 Forbidden\r\nConnection: close\r\n\r\n')
             await writer.drain()
             return
