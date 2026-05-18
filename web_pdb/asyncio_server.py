@@ -88,7 +88,7 @@ async def _ws_read_frame(reader: asyncio.StreamReader):
     return fin, opcode, bytes(payload)
 
 
-def _maybe_gzip(body: bytes, content_type: str, accept_encoding: str) -> tuple:
+def _gzip_if_accepted(body: bytes, content_type: str, accept_encoding: str) -> tuple:
     """Return (body, extra_headers) with gzip applied when appropriate."""
     if (
         'gzip' in accept_encoding
@@ -320,14 +320,14 @@ class AsyncioServer:
 
     async def _serve_index(self, writer, accept_encoding: str) -> None:
         body = _index_file.read_bytes()
-        body, gz_headers = _maybe_gzip(body, 'text/html; charset=utf-8', accept_encoding)
+        body, gz_headers = _gzip_if_accepted(body, 'text/html; charset=utf-8', accept_encoding)
         response = _build_response('200 OK', body, 'text/html; charset=utf-8', gz_headers)
         writer.write(response)
         await writer.drain()
 
     async def _serve_frame_data(self, writer, accept_encoding: str) -> None:
         body = json.dumps(self._frame_data.contents).encode('utf-8')
-        body, gz_headers = _maybe_gzip(body, 'application/json', accept_encoding)
+        body, gz_headers = _gzip_if_accepted(body, 'application/json', accept_encoding)
         extra = {'Cache-Control': 'no-store'}
         extra.update(gz_headers)
         response = _build_response('200 OK', body, 'application/json', extra)
@@ -354,7 +354,7 @@ class AsyncioServer:
 
         body = requested.read_bytes()
         content_type = mimetypes.guess_type(str(requested))[0] or 'application/octet-stream'
-        body, gz_headers = _maybe_gzip(body, content_type, accept_encoding)
+        body, gz_headers = _gzip_if_accepted(body, content_type, accept_encoding)
         response = _build_response('200 OK', body, content_type, gz_headers)
         writer.write(response)
         await writer.drain()
