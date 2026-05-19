@@ -64,9 +64,13 @@ class SeleniumTestCase(TestCase):
         cls.db_proc.kill()
         cls.browser.quit()
 
-    def tearDown(self):
-        if hasattr(self, '_outcome') and any(e is not None for _, e in self._outcome.errors):
-            self.browser.save_screenshot(f'screenshot-{self}.png')
+    def run(self, result=None):
+        outcome = super().run(result)
+        if result is not None:
+            failed = [t for t, _ in result.failures + result.errors]
+            if self in failed:
+                self.browser.save_screenshot(str(CWD.parent / f'screenshot-{self}.png'))
+        return outcome
 
 
 class WebPdbTestCase(SeleniumTestCase):
