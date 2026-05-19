@@ -23,24 +23,31 @@ with bug fixes will be prioritized. Other issues or pull requests may or may not
 Features
 ========
 
-- Responsive design based on `Bootstrap`_.
-- Python syntax highlighting with `Prism`_ ("Okaida" theme).
+- Responsive design based on `Bootstrap`_ with light and dark modes.
+- Python syntax highlighting with `Prism`_ (the default and "Okaida" themes).
 - Supports all PDB features.
 - Standard input and output can be redirected to the web-console
   to interact with Python scripts remotely.
-- **Current file** box tracks current position in a file being executed.
+- **Current file** box tracks current position in the file being executed.
   Red line numbers indicate breakpoints, if any.
 - **Globals** and **Locals** boxes show local and global variables in the current scope.
   Special variables that start and end with double underscores ``__`` are excluded
   (you can always view them using PDB commands).
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
-.. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/screenshot.png
+.. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/web-pdb-light-mode.png
   :alt: Web-PDB screenshot
-  :width: 640px
-  :height: 490px
+  :width: 800px
+  :height: 450px
 
-  *Web-PDB console in Chrome browser*
+  *Web-PDB UI light mode*
+
+.. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/web-pdb-dark-mode.png
+  :alt: Web-PDB screenshot
+  :width: 800px
+  :height: 450px
+
+  *Web-PDB UI dark mode*
 
 Usage
 =====
@@ -99,6 +106,7 @@ Special members with names enclosed in double underscores (``__``) are ignored.
 
 Considerations for Multithreading and Multiprocessing Programs
 ==============================================================
+
 Multithreading
 --------------
 
@@ -115,8 +123,14 @@ To simplify this you can use ``set_trace(port=-1)`` to select a random port betw
 Compatibility
 =============
 
-- **Python**: 3.6+
-- **Browsers**: Firefox, Chrome (all modern browsers should work)
+- **Python**: 3.8+
+- **Browsers**: All modern browsers should work
+
+Implementation Details
+======================
+
+Web-PDB uses a custom asynchronous HTTP server based on ``asyncio`` library that runs in a separate thread.
+Take this into account when using Web-PDB in your environment.
 
 License
 =======
@@ -125,7 +139,7 @@ MIT, see ``LICENSE.txt``.
 
 The debugger icon made by `Freepik`_ from `www.flaticon.com`_ is licensed by `CC 3.0 BY`_.
 
-.. _PDB: https://docs.python.org/3.6/library/pdb.html
+.. _PDB: https://docs.python.org/3.8/library/pdb.html
 .. _Bootstrap: http://getbootstrap.com
 .. _Prism: http://prismjs.com/
 .. _Freepik: http://www.freepik.com
