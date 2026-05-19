@@ -26,10 +26,69 @@ html {
 
 body {
   padding-top: 56px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
 }
 
-.container-fluid {
+main.container-fluid {
   padding: 5px;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+main.container-fluid > .row {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (min-width: 576px) {
+  /* Use CSS Grid so the console row can flex to fill remaining viewport height
+     while the other rows keep their natural height. */
+  main.container-fluid > .row {
+    --bs-gutter-x: 0;
+    --bs-gutter-y: 0;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  main.container-fluid > .row > [class*="col-"] {
+    padding: 0;
+    width: auto;
+    max-width: none;
+    flex: initial;
+  }
+
+  main.container-fluid > .row > .col-sm-6 { grid-column: span 6; }
+  main.container-fluid > .row > .col-sm-3 { grid-column: span 3; }
+  main.container-fluid > .row > .col-sm-12 { grid-column: 1 / -1; }
+
+  /* The console column (grid row 3) fills remaining space. */
+  main.container-fluid > .row > .col-sm-12:has(#console) {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main.container-fluid > .row > .col-sm-12:has(#console) > .infobox-label {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  #console {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-bottom: 0;
+    overflow: auto;
+  }
 }
 
 .info {
