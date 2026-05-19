@@ -21,12 +21,13 @@ SOFTWARE.
 */
 
 html {
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body {
   padding-top: 56px;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -124,6 +125,7 @@ main.container-fluid > .row {
 
 .info {
   height: 300px;
+  overflow: auto;
   font-size: 0.875rem;
 }
 
