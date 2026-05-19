@@ -132,6 +132,8 @@ Implementation Details
 Web-PDB uses a custom asynchronous HTTP server based on ``asyncio`` library that runs in a separate thread.
 Take this into account when using Web-PDB in your environment.
 
+Starting from v2.0, Web-PDB Python backend has no external dependencies, except for Python Standard Library.
+
 License
 =======
 
