@@ -1,5 +1,5 @@
 # Created on: 13.09.2016
-# Author: Roman Miroshnychenko aka Roman V.M. (romanvm@yandex.ua)
+# Author: Roman Miroshnychenko aka Roman V.M.
 #
 # Copyright (c) 2016 Roman Miroshnychenko
 #
@@ -64,13 +64,14 @@ class SeleniumTestCase(TestCase):
         cls.db_proc.kill()
         cls.browser.quit()
 
-    def tearDown(self):
-        if hasattr(self, '_outcome'):
-            result = self._outcome.result
-            if result.failures:
-                failed_tests = [test for test, _ in result.failures]
-                if self in failed_tests:
-                    self.browser.save_screenshot(f'screenshot-{self}.png')
+    def run(self, result=None):
+        outcome = super().run(result)
+        if result is not None:
+            failed = [t for t, _ in result.failures + result.errors]
+            if self in failed:
+                self.browser.save_screenshot(str(CWD.parent / f'screenshot-{self}.png'))
+        return outcome
+
 
 class WebPdbTestCase(SeleniumTestCase):
     """

@@ -43,17 +43,17 @@ __all__ = ['SystemAdapter']
 
 class _BaseAdapter(ABC):
     def __init__(self):
-        self._abort = Event()
+        self._abort_event = Event()
 
     @abstractmethod
     def is_abort_requested(self):
         raise NotImplementedError
 
     def abort(self):
-        self._abort.set()
+        self._abort_event.set()
 
     def is_aborted(self):
-        return self._abort.is_set()
+        return self._abort_event.is_set()
 
     @abstractmethod
     def on_server_started(self, server_name, port):
@@ -66,17 +66,49 @@ class _BaseAdapter(ABC):
         pass
 
 
-class _ServerAdapter(_BaseAdapter):
+class _GeneralAdapter(_BaseAdapter):
     def is_abort_requested(self):
-        return self._abort.is_set()
+        return self._abort_event.is_set()
 
     def on_server_started(self, server_name, port):
         logging.critical('Web-PDB: starting web-server on http://%s:%s', server_name, port)
 
 
-SystemAdapter = _ServerAdapter
+SystemAdapter = _GeneralAdapter
 
 if is_kodi:
+
+    class _KodiLogHandler(logging.Handler):
+        """
+        Logging handler that writes to the Kodi log with correct levels
+        """
+
+        LOG_FORMAT = '[kodi.web-pdb] {message}'
+        LEVEL_MAP = {
+            logging.NOTSET: xbmc.LOGNONE,
+            logging.DEBUG: xbmc.LOGDEBUG,
+            logging.INFO: xbmc.LOGINFO,
+            logging.WARN: xbmc.LOGWARNING,
+            logging.WARNING: xbmc.LOGWARNING,
+            logging.ERROR: xbmc.LOGERROR,
+            logging.CRITICAL: xbmc.LOGFATAL,
+        }
+
+        def emit(self, record):
+            message = self.format(record)
+            kodi_log_level = self.LEVEL_MAP.get(record.levelno, xbmc.LOGDEBUG)
+            xbmc.log(message, level=kodi_log_level)
+
+        @classmethod
+        def initialize_logging(cls):
+            """
+            Initialize the root logger that writes to the Kodi log
+
+            After initialization, you can use Python logging facilities as usual.
+            """
+            logging.basicConfig(
+                format=cls.LOG_FORMAT, style='{', level=logging.DEBUG, handlers=[cls()], force=True
+            )
 
     class _KodiAdapter(_BaseAdapter):
         def __init__(self):
@@ -84,9 +116,10 @@ if is_kodi:
             self._monitor = xbmc.Monitor()
             self._addon = xbmcaddon.Addon()
             self._dialog_progress = DialogProgress()
+            _KodiLogHandler.initialize_logging()
 
         def is_abort_requested(self):
-            return self._abort.is_set() or self._monitor.abortRequested()
+            return self._abort_event.is_set() or self._monitor.abortRequested()
 
         def on_server_started(self, server_name, port):
             xbmc.log('Web-PDB: web-server started.', level=xbmc.LOGINFO)
