@@ -114,7 +114,7 @@ if is_kodi:
         def __init__(self):
             super().__init__()
             self._monitor = xbmc.Monitor()
-            self._addon = xbmcaddon.Addon()
+            self._addon = xbmcaddon.Addon('script.module.web-pdb')
             self._dialog_progress = None
             _KodiLogHandler.initialize_logging()
 
