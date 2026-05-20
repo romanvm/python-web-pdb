@@ -32,7 +32,7 @@ from threading import Event
 try:
     import xbmc
     import xbmcaddon
-    from xbmcgui import NOTIFICATION_ERROR, Dialog, DialogProgress
+    from xbmcgui import NOTIFICATION_ERROR, Dialog, DialogProgressBG
 
     is_kodi = True if not getattr(xbmc, '__kodistubs__', False) else False
 except ImportError:
@@ -115,7 +115,7 @@ if is_kodi:
             super().__init__()
             self._monitor = xbmc.Monitor()
             self._addon = xbmcaddon.Addon()
-            self._dialog_progress = DialogProgress()
+            self._dialog_progress = None
             _KodiLogHandler.initialize_logging()
 
         def is_abort_requested(self):
@@ -123,6 +123,7 @@ if is_kodi:
 
         def on_server_started(self, server_name, port):
             xbmc.log('Web-PDB: web-server started.', level=xbmc.LOGINFO)
+            self._dialog_progress = DialogProgressBG()
             self._dialog_progress.create(
                 self._addon.getLocalizedString(32001),
                 self._addon.getLocalizedString(32002).format(server_name, port),
@@ -131,6 +132,7 @@ if is_kodi:
 
         def on_server_stopped(self):
             self._dialog_progress.close()
+            self._dialog_progress = None
 
         def on_exception(self):
             stack_trace = traceback.format_exc()
