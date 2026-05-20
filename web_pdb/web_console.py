@@ -113,7 +113,7 @@ class WebConsole:
             time.sleep(0.1)
 
     def close(self):
-        logging.critical('Web-PDB: stopping web-server...')
+        logging.debug('Web-PDB: stopping web-server...')
         self._server_adapter.close()
         self._server_thread.join()
-        logging.critical('Web-PDB: web-server stopped.')
+        logging.debug('Web-PDB: web-server stopped.')

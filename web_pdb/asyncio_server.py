@@ -231,7 +231,7 @@ class AsyncioServer:
         self._stop_event = asyncio.Event()
 
         server = await asyncio.start_server(self._handle_connection, self._host, self._port)
-        async with server:
+        try:
             sock = server.sockets[0]
             addr = sock.getsockname()
             self.server_port = addr[1]
@@ -244,16 +244,29 @@ class AsyncioServer:
                 self._stop_event.set()
 
             watcher = asyncio.create_task(_abort_watcher())
-            await self._stop_event.wait()
-            watcher.cancel()
+            try:
+                await self._stop_event.wait()
+            finally:
+                watcher.cancel()
 
-        pending = {t for t in asyncio.all_tasks() if t is not asyncio.current_task()}
-        for task in pending:
-            task.cancel()
-        if pending:
-            await asyncio.gather(*pending, return_exceptions=True)
+            # Stop accepting new connections.
+            server.close()
 
-        on_stopped()
+            # Cancel in-flight connection handlers before wait_closed(), which on
+            # Python 3.12+ blocks until every active client connection finishes.
+            current = asyncio.current_task()
+            pending = {
+                t for t in asyncio.all_tasks(self._loop)
+                if t is not current and not t.done()
+            }
+            for task in pending:
+                task.cancel()
+            if pending:
+                await asyncio.gather(*pending, return_exceptions=True)
+
+            await server.wait_closed()
+        finally:
+            on_stopped()
 
     async def _handle_connection(
         self, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
