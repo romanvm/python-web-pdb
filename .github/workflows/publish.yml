@@ -91,7 +91,7 @@ jobs:
     - name: Build artifacts
       run: |
         pip install uv
-        uv pip install --system wheel, build
+        uv pip install --system wheel build
         python -m build
 
     - name: Publish a Python distribution to PyPI
