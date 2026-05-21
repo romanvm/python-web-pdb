@@ -63,7 +63,7 @@ class WebPdb(Pdb):
         """
         if port == -1:
             random.seed()
-            port = random.randint(32768, 65536)
+            port = random.randint(32768, 65535)
         self.console = WebConsole(host, port, self)
         super().__init__(stdin=self.console, stdout=self.console)
         # Borrowed from here: https://github.com/ionelmc/python-remote-pdb
@@ -101,8 +101,8 @@ class WebPdb(Pdb):
         i(nspect) object
         Inspect an object
         """
-        if arg in self.curframe_locals:
-            obj = self.curframe_locals[arg]
+        if arg in self.curframe.f_locals:
+            obj = self.curframe.f_locals[arg]
         elif arg in self.curframe.f_globals:
             obj = self.curframe.f_globals[arg]
         else:

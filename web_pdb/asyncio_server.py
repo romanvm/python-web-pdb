@@ -36,6 +36,7 @@ _GZIP_TYPES = ('text/', 'application/json', 'application/javascript', 'image/svg
 _GZIP_MIN_SIZE = 1024
 _MAX_HEADER_SIZE = 8192
 _WS_OUTBOUND_QUEUE_SIZE = 32
+_WS_MAX_FRAME_SIZE = 10 * 1024 * 1024
 
 _this_dir = Path(__file__).parent
 _static_dir = _this_dir / 'static'
@@ -79,6 +80,8 @@ async def _ws_read_frame(reader: asyncio.StreamReader):
         length = struct.unpack('>H', await reader.readexactly(2))[0]
     elif length == 127:
         length = struct.unpack('>Q', await reader.readexactly(8))[0]
+    elif length > _WS_MAX_FRAME_SIZE:
+        raise ValueError(f'WebSocket frame too large: {length} bytes')
 
     mask_key = await reader.readexactly(4) if masked else b''
     payload = bytearray(await reader.readexactly(length))
