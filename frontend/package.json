@@ -1,6 +1,6 @@
 {
   "name": "web-pdb",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Front-end for Web-PDB Python debugger",
   "scripts": {
     "prebuild": "npm pkg set version=$(cat ../VERSION 2>/dev/null || tr -d '\\n' < ../script.module.web-pdb/addon.xml | grep -oP '<addon[^>]*version=\"\\K[^\"]+')",
