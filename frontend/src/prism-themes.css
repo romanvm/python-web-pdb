@@ -5,7 +5,8 @@
  */
 
 :where(html[data-bs-theme="light"]) code[class*="language-"],
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	color: black;
 	background: none;
 	text-shadow: 0 1px white;
@@ -39,7 +40,8 @@
 :where(html[data-bs-theme="light"]) pre[class*="language-"]::selection,
 :where(html[data-bs-theme="light"]) pre[class*="language-"] ::selection,
 :where(html[data-bs-theme="light"]) code[class*="language-"]::selection,
-:where(html[data-bs-theme="light"]) code[class*="language-"] ::selection {
+:where(html[data-bs-theme="light"]) code[class*="language-"] ::selection,
+:where(html[data-bs-theme="light"]) .var-tree ::selection {
 	text-shadow: none;
 	background: #b3d4fc;
 }
@@ -51,14 +53,16 @@
 	}
 }
 
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	padding: 1em;
 	margin: .5em 0;
 	overflow: auto;
 }
 
 :where(html[data-bs-theme="light"]) :not(pre) > code[class*="language-"],
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	background: #f5f2f0;
 }
 
@@ -148,7 +152,8 @@
  */
 
 :where(html[data-bs-theme="dark"]) code[class*="language-"],
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	color: #f8f8f2;
 	background: none;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
@@ -171,7 +176,8 @@
 	hyphens: none;
 }
 
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	padding: 1em;
 	margin: .5em 0;
 	overflow: auto;
@@ -179,7 +185,8 @@
 }
 
 :where(html[data-bs-theme="dark"]) :not(pre) > code[class*="language-"],
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	background: #272822;
 }
 

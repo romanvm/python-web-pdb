@@ -34,6 +34,7 @@ const state = {
   breakpoints: [],
   current_line: -1,
   dirname: '',
+  expanded_vars: new Set(),
   filename: ''
 },
   websocket = new WebSocket(ws_url());

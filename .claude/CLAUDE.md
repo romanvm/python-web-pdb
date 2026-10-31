@@ -41,6 +41,11 @@ The debugger backend is a two-threaded system:
   whether the Kodi runtime is detected). Both implement `is_abort_requested()`,
   `on_server_started()`, `on_server_stopped()`, and `on_exception()`. The Kodi variant uses
   `xbmc.Monitor` for abort detection and shows progress dialogs/notifications.
+- `web_pdb/variables.py`: Builds Globals/Locals variable tree nodes and resolves child nodes by
+  path (`[kind, value]` key tokens). The frontend lazily requests children via
+  `GET /variables?scope=...&path=...`; `AsyncioServer` puts a `VariablesRequest` into the shared
+  `input_queue`, and `WebConsole.readline()` resolves it in the debugger thread (so property
+  getters run in the debugged thread) and returns the result via a `concurrent.futures.Future`.
 - `web_pdb/buffer.py`: Thread-safe buffer (`ThreadSafeBuffer`) used for passing data between
   threads with dirty-flag semantics.
 

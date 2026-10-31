@@ -34,6 +34,7 @@ from pdb import Pdb
 from pprint import pformat
 
 from .system_adapter import SystemAdapter
+from .variables import get_children, get_namespace_nodes, is_dunder, resolve_path
 from .web_console import WebConsole
 
 __all__ = ['WebPdb', 'set_trace', 'post_mortem', 'catch_post_mortem']
@@ -110,7 +111,7 @@ class WebPdb(Pdb):
         if obj is not WebPdb.null:
             self.console.writeline(f'{arg} = {type(obj)}:\n')
             for name, value in inspect.getmembers(obj):
-                if not (name.startswith('__') and (name.endswith('__'))):
+                if not is_dunder(name):
                     repr_value = self._get_repr(value, pretty=True, indent=8)
                     self.console.writeline(f'    {name}: {repr_value}\n')
         else:
@@ -176,20 +177,6 @@ class WebPdb(Pdb):
             'locals': self.get_locals(),
         }
 
-    def _format_variables(self, raw_vars):
-        """
-        :param raw_vars: a `dict` of `var_name: var_object` pairs
-        :type raw_vars: dict
-        :return: sorted list of variables as a unicode string
-        :rtype: unicode
-        """
-        f_vars = []
-        for var, value in raw_vars.items():
-            if not (var.startswith('__') and var.endswith('__')):
-                repr_value = self._get_repr(value)
-                f_vars.append(f'{var} = {repr_value}')
-        return '\n'.join(sorted(f_vars))
-
     def get_globals(self):
         """
         Get the listing of global variables in the current scope
@@ -197,10 +184,10 @@ class WebPdb(Pdb):
         .. note:: special variables that start and end with
             double underscores ``__`` are not included.
 
-        :return: a listing of ``var = value`` pairs sorted alphabetically
-        :rtype: unicode
+        :return: a list of variable tree nodes sorted alphabetically
+        :rtype: list
         """
-        return self._format_variables(self.curframe.f_globals)
+        return get_namespace_nodes(self.curframe.f_globals)
 
     def get_locals(self):
         """
@@ -210,10 +197,41 @@ class WebPdb(Pdb):
             double underscores ``__`` are not included.
             For module scope globals and locals listings are the same.
 
-        :return: a listing of ``var = value`` pairs sorted alphabetically
-        :rtype: unicode
+        :return: a list of variable tree nodes sorted alphabetically
+        :rtype: list
         """
-        return self._format_variables(self.curframe.f_locals)
+        return get_namespace_nodes(self._get_curframe_locals())
+
+    def _get_curframe_locals(self):
+        # Before Python 3.13 Pdb caches frame locals in curframe_locals because
+        # accessing frame.f_locals may discard changes made via "!var = value".
+        # Since 3.13 (PEP 667) f_locals is safe and curframe_locals is deprecated.
+        if sys.version_info < (3, 13):
+            return self.curframe_locals
+        return self.curframe.f_locals
+
+    def get_variable_children(self, scope, path):
+        """
+        Get child nodes of a variable in the current execution frame
+
+        :param scope: ``'globals'`` or ``'locals'``
+        :type scope: str
+        :param path: a list of ``[kind, value]`` key tokens from the scope root
+        :type path: list
+        :return: a dict with ``children`` nodes and ``more`` count of omitted children
+        :rtype: dict
+        :raises LookupError: if the variable cannot be found
+        """
+        if getattr(self, 'curframe', None) is None:
+            raise LookupError('No execution frame')
+        if scope == 'globals':
+            namespace = self.curframe.f_globals
+        elif scope == 'locals':
+            namespace = self._get_curframe_locals()
+        else:
+            raise LookupError(f'Invalid scope: {scope!r}')
+        children, more = get_children(resolve_path(namespace, path))
+        return {'children': children, 'more': more}
 
     def remove_trace(self, frame=None):
         """

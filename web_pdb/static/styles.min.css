@@ -2117,7 +2117,8 @@ url(./fonts/bootstrap-icons.woff) format("woff");
  */
 
 :where(html[data-bs-theme="light"]) code[class*="language-"],
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	color: black;
 	background: none;
 	text-shadow: 0 1px white;
@@ -2151,7 +2152,8 @@ url(./fonts/bootstrap-icons.woff) format("woff");
 :where(html[data-bs-theme="light"]) pre[class*="language-"]::selection,
 :where(html[data-bs-theme="light"]) pre[class*="language-"] ::selection,
 :where(html[data-bs-theme="light"]) code[class*="language-"]::selection,
-:where(html[data-bs-theme="light"]) code[class*="language-"] ::selection {
+:where(html[data-bs-theme="light"]) code[class*="language-"] ::selection,
+:where(html[data-bs-theme="light"]) .var-tree ::selection {
 	text-shadow: none;
 	background: #b3d4fc;
 }
@@ -2163,14 +2165,16 @@ url(./fonts/bootstrap-icons.woff) format("woff");
 	}
 }
 
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	padding: 1em;
 	margin: .5em 0;
 	overflow: auto;
 }
 
 :where(html[data-bs-theme="light"]) :not(pre) > code[class*="language-"],
-:where(html[data-bs-theme="light"]) pre[class*="language-"] {
+:where(html[data-bs-theme="light"]) pre[class*="language-"],
+:where(html[data-bs-theme="light"]) .var-tree {
 	background: #f5f2f0;
 }
 
@@ -2260,7 +2264,8 @@ url(./fonts/bootstrap-icons.woff) format("woff");
  */
 
 :where(html[data-bs-theme="dark"]) code[class*="language-"],
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	color: #f8f8f2;
 	background: none;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
@@ -2283,7 +2288,8 @@ url(./fonts/bootstrap-icons.woff) format("woff");
 	hyphens: none;
 }
 
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	padding: 1em;
 	margin: .5em 0;
 	overflow: auto;
@@ -2291,7 +2297,8 @@ url(./fonts/bootstrap-icons.woff) format("woff");
 }
 
 :where(html[data-bs-theme="dark"]) :not(pre) > code[class*="language-"],
-:where(html[data-bs-theme="dark"]) pre[class*="language-"] {
+:where(html[data-bs-theme="dark"]) pre[class*="language-"],
+:where(html[data-bs-theme="dark"]) .var-tree {
 	background: #272822;
 }
 
@@ -2617,6 +2624,54 @@ main.container-fluid > .row {
   height: 300px;
   overflow: auto;
   font-size: 0.875rem;
+}
+
+.var-tree .var-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.var-tree .var-group .var-group {
+  padding-left: 1.25em;
+}
+
+.var-tree .var-row,
+.var-tree .var-placeholder {
+  /* Keep the content width so that row hover covers the whole scrolled line. */
+  min-width: max-content;
+  border-radius: 0.2em;
+}
+
+.var-tree .var-node[aria-expanded] > .var-row {
+  cursor: pointer;
+}
+
+.var-tree .var-row:hover {
+  background-color: rgba(127, 127, 127, 0.15);
+}
+
+.var-tree .var-toggle {
+  display: inline-block;
+  width: 1.25em;
+  font-size: 0.75em;
+  vertical-align: 0.05em;
+}
+
+.var-tree .var-placeholder {
+  /* Align with node names: the width of .var-toggle in the parent font size. */
+  padding-left: 0.9375em;
+  font-style: italic;
+}
+
+:where(html[data-bs-theme="light"]) .var-tree .var-toggle,
+:where(html[data-bs-theme="light"]) .var-tree .var-placeholder {
+  color: slategray;
+}
+
+:where(html[data-bs-theme="dark"]) .var-tree .var-toggle,
+:where(html[data-bs-theme="dark"]) .var-tree .var-placeholder {
+  color: #8292a2;
 }
 
 .line-numbers-rows > span:before {

@@ -129,6 +129,54 @@ main.container-fluid > .row {
   font-size: 0.875rem;
 }
 
+.var-tree .var-group {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.var-tree .var-group .var-group {
+  padding-left: 1.25em;
+}
+
+.var-tree .var-row,
+.var-tree .var-placeholder {
+  /* Keep the content width so that row hover covers the whole scrolled line. */
+  min-width: max-content;
+  border-radius: 0.2em;
+}
+
+.var-tree .var-node[aria-expanded] > .var-row {
+  cursor: pointer;
+}
+
+.var-tree .var-row:hover {
+  background-color: rgba(127, 127, 127, 0.15);
+}
+
+.var-tree .var-toggle {
+  display: inline-block;
+  width: 1.25em;
+  font-size: 0.75em;
+  vertical-align: 0.05em;
+}
+
+.var-tree .var-placeholder {
+  /* Align with node names: the width of .var-toggle in the parent font size. */
+  padding-left: 0.9375em;
+  font-style: italic;
+}
+
+:where(html[data-bs-theme="light"]) .var-tree .var-toggle,
+:where(html[data-bs-theme="light"]) .var-tree .var-placeholder {
+  color: slategray;
+}
+
+:where(html[data-bs-theme="dark"]) .var-tree .var-toggle,
+:where(html[data-bs-theme="dark"]) .var-tree .var-placeholder {
+  color: #8292a2;
+}
+
 .line-numbers-rows > span:before {
   pointer-events: all;
   cursor: default;

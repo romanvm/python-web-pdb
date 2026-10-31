@@ -31,8 +31,9 @@ Features
 - **Current file** box tracks current position in the file being executed.
   Red line numbers indicate breakpoints, if any.
 - **Globals** and **Locals** boxes show local and global variables in the current scope.
-  Special variables that start and end with double underscores ``__`` are excluded
-  (you can always view them using PDB commands).
+  Complex objects can be expanded to view their attributes, properties
+  and collection items. Special variables that start and end with double underscores ``__``
+  and methods are excluded (you can always view them using PDB commands).
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/web-pdb-light-mode.png

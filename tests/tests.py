@@ -31,6 +31,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
+try:
+    from test_variables import VariablesTestCase  # noqa: F401
+except ImportError:  # Running as "python -m unittest tests.tests"
+    from tests.test_variables import VariablesTestCase  # noqa: F401
+
 CWD = Path(__file__).resolve().parent
 DB_PY = CWD / 'db.py'
 
@@ -268,6 +273,51 @@ class InspectCommandTestCase(SeleniumTestCase):
         time.sleep(1)
         self.assertIn('NameError: name "spam" is not defined',
                       self.stdout_tag.text)
+
+
+class VariablesTreeTestCase(SeleniumTestCase):
+    """
+    Test for expandable variable trees
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.db_proc = Popen(['python', str(CWD / 'db_vars.py')], shell=False)
+        super(VariablesTreeTestCase, cls).setUpClass()
+
+    def get_row(self, *names):
+        xpath = '//div[@id="globals"]'
+        for name in names:
+            xpath += f'//li[div/span[@class="var-name" and text()="{name}"]]'
+        return self.browser.find_element(By.XPATH, xpath + '/div')
+
+    def test_expanding_variables(self):
+        """
+        Test expanding and collapsing variable tree nodes
+        """
+        time.sleep(1)
+        globals_tag = self.browser.find_element(By.ID, 'globals')
+        self.assertIn('data = {\'key\': \'value\'}', globals_tag.text)
+        self.assertNotIn('spam = \'eggs\'', globals_tag.text)
+        self.get_row('foo').click()
+        self.assertIn('spam = \'eggs\'', self.get_row('foo', 'spam').text)
+        self.get_row('foo', 'items').click()
+        self.assertIn('[0] = \'ham\'', self.get_row('foo', 'items', '[0]').text)
+        self.get_row('data').click()
+        self.assertIn('\'key\' = \'value\'', self.get_row('data', '\'key\'').text)
+        # Expanded nodes must stay expanded after the next step
+        self.stdin.send_keys('n')
+        self.send_btn.click()
+        time.sleep(1)
+        if IS_PY_313:
+            self.stdin.send_keys('n')
+            self.send_btn.click()
+            time.sleep(1)
+        globals_tag = self.browser.find_element(By.ID, 'globals')
+        self.assertIn('bar = \'bar\'', globals_tag.text)
+        self.assertIn('spam = \'eggs\'', globals_tag.text)
+        self.assertIn('[0] = \'ham\'', globals_tag.text)
+        self.get_row('foo').click()
+        self.assertNotIn('spam = \'eggs\'', globals_tag.text)
 
 
 if __name__ == '__main__':
