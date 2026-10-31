@@ -95,7 +95,7 @@ class WebPdbTestCase(SeleniumTestCase):
         filename_tag = self.browser.find_element(By.ID, 'filename')
         self.assertEqual('db.py', filename_tag.text)
         curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
-        expected = '13' if IS_PY_313 else '14'
+        expected = '33' if IS_PY_313 else '34'
         self.assertEqual(expected, curr_line_tag.text)
         curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('foo = \'foo\'', curr_file_tag.text)
@@ -119,7 +119,7 @@ class WebPdbTestCase(SeleniumTestCase):
         self.send_btn.click()
         time.sleep(1)
         curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
-        self.assertEqual(curr_line_tag.text, '15')
+        self.assertEqual(curr_line_tag.text, '35')
         globals_tag = self.browser.find_element(By.ID, 'globals')
         self.assertIn('bar = \'bar\'', globals_tag.text)
         self.assertIn('-> ham = \'spam\'', self.stdout_tag.text)
@@ -143,12 +143,12 @@ class WebPdbTestCase(SeleniumTestCase):
         Test for highlighting breakpoints
         """
         self.stdin.clear()
-        self.stdin.send_keys('b 20')
+        self.stdin.send_keys('b 40')
         self.send_btn.click()
         time.sleep(1)
         line_numbers_rows = self.browser.find_element(By.CSS_SELECTOR, 'span.line-numbers-rows')
         line_spans = line_numbers_rows.find_elements(By.TAG_NAME, 'span')
-        self.assertEqual('breakpoint', line_spans[19].get_attribute('class'))
+        self.assertEqual('breakpoint', line_spans[39].get_attribute('class'))
 
     def test_5_unicode_literal(self):
         """
@@ -231,7 +231,7 @@ class CatchPostMortemTestCase(SeleniumTestCase):
         """
         time.sleep(1)
         curr_line_tag = self.browser.find_element(By.ID, 'curr_line')
-        expected = '13' if IS_PY_310 else '14'
+        expected = '33' if IS_PY_310 else '34'
         self.assertEqual(expected, curr_line_tag.text)
         curr_file_tag = self.browser.find_element(By.ID, 'curr_file_code')
         self.assertIn('assert False, \'Oops!\'', curr_file_tag.text)
