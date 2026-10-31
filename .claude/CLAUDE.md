@@ -151,15 +151,15 @@ is achieved via:
 
 ## Requirements
 
-- **Python**: 3.6+
+- **Python**: 3.10+
 - **Core dependencies**: pure Python stdlib (no third-party runtime dependencies)
-- **Development dependencies**: `ruff==0.15.12`, `selenium==4.10.0`
+- **Development dependencies**: `ruff==0.15.12`, `selenium==4.52.0`
 - **Package manager**: `uv`
 
 ## Important Notes
 
 - This is in minimum maintenance mode; prioritize bug fixes and compatibility over new features.
-- The project aims to support all modern Python versions (3.6+).
+- The project aims to support all modern Python versions (3.10+).
 - The `inspect`/`i` command is a custom extension; it lists object members, excluding `__` names.
 - Post-mortem debugging is supported via `post_mortem()` and the `catch_post_mortem()` context
   manager.

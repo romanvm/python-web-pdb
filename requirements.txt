@@ -1,5 +1,5 @@
 uv
 wheel
 build>=1.0.0
-selenium==4.10.0
+selenium==4.52.0
 ruff==0.15.12

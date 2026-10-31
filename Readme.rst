@@ -124,7 +124,7 @@ To simplify this you can use ``set_trace(port=-1)`` to select a random port betw
 Compatibility
 =============
 
-- **Python**: 3.8+
+- **Python**: 3.10+
 - **Browsers**: All modern browsers should work
 
 Implementation Details
@@ -142,7 +142,7 @@ MIT, see ``LICENSE.txt``.
 
 The debugger icon made by `Freepik`_ from `www.flaticon.com`_ is licensed by `CC 3.0 BY`_.
 
-.. _PDB: https://docs.python.org/3.8/library/pdb.html
+.. _PDB: https://docs.python.org/3/library/pdb.html
 .. _Bootstrap: http://getbootstrap.com
 .. _Prism: http://prismjs.com/
 .. _Freepik: http://www.freepik.com
