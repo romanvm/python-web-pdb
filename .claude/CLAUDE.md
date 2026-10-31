@@ -153,7 +153,7 @@ is achieved via:
 
 - **Python**: 3.10+
 - **Core dependencies**: pure Python stdlib (no third-party runtime dependencies)
-- **Development dependencies**: `ruff==0.15.12`, `selenium==4.52.0`
+- **Development dependencies**: `ruff==0.17.3`, `selenium==4.52.0`
 - **Package manager**: `uv`
 
 ## Important Notes
