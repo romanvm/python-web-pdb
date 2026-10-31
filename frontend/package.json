@@ -9,7 +9,7 @@
     "build-dev": "webpack --mode=development",
     "prewatch": "npm pkg set version=$(cat ../VERSION 2>/dev/null || tr -d '\\n' < ../script.module.web-pdb/addon.xml | grep -oP '<addon[^>]*version=\"\\K[^\"]+'))",
     "watch": "webpack watch",
-    "lint": "eslint --ext .js src/"
+    "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
@@ -27,17 +27,23 @@
   },
   "homepage": "https://github.com/romanvm/python-web-pdb#readme",
   "dependencies": {
-    "@babel/core": "^7.29.7",
-    "@babel/preset-env": "^7.29.7",
+    "@babel/core": "^8.0.10",
+    "@babel/preset-env": "^8.0.7",
+    "@eslint/js": "^10.0.1",
     "@popperjs/core": "^2.11.8",
-    "babel-loader": "^9.2.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "babel-loader": "^10.1.1",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.2",
-    "css-loader": "^6.11.0",
-    "eslint": "^8.57.1",
+    "css-loader": "^7.1.5",
+    "eslint": "^10.14.0",
+    "globals": "^17.13.0",
     "mini-css-extract-plugin": "^2.10.2",
     "prismjs": "^1.30.0",
     "webpack": "^5.112.2",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^7.3.1"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
   }
 }
