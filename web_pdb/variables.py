@@ -2,6 +2,7 @@
 Helpers for presenting Python objects as expandable variable trees
 """
 
+import builtins
 import inspect
 from collections.abc import Mapping, Sequence, Set
 from concurrent.futures import Future
@@ -28,6 +29,8 @@ SET_MEMBER = 's'  # Position of a member in set iteration order
 
 _LEAF_TYPES = (type(None), bool, int, float, complex, str, bytes, bytearray, range)
 _ITEMS_ONLY_TYPES = (dict, list, tuple, set, frozenset)
+if hasattr(builtins, 'frozendict'):  # Python 3.15+
+    _ITEMS_ONLY_TYPES += (builtins.frozendict,)
 
 
 class VariablesRequest:

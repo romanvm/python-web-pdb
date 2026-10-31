@@ -1,7 +1,8 @@
+import builtins
 import os
 import sys
 from collections import OrderedDict, namedtuple
-from unittest import TestCase, main
+from unittest import TestCase, main, skipUnless
 
 basedir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, basedir)
@@ -93,6 +94,19 @@ class VariablesTestCase(TestCase):
         children, _ = get_children(self.namespace['point'])
         self.assertIn('x', _names(children))
         self.assertIn('[0]', _names(children))
+
+    @skipUnless(hasattr(builtins, 'frozendict'), 'frozendict requires Python 3.15+')
+    def test_frozendict(self):
+        frozendict = builtins.frozendict
+        namespace = {'fd': frozendict(a=1, b=[2]), 'empty': frozendict()}
+        nodes = {node['name']: node for node in get_namespace_nodes(namespace)}
+        self.assertTrue(nodes['fd']['expandable'])
+        self.assertFalse(nodes['empty']['expandable'])
+        children, more = get_children(namespace['fd'])
+        self.assertEqual(0, more)
+        self.assertEqual(["'a'", "'b'"], _names(children))
+        self.assertEqual(['k', 1], children[1]['key'])
+        self.assertEqual([2], resolve_path(namespace, [['n', 'fd'], ['k', 1]]))
 
     def test_truncation(self):
         children, more = get_children(self.namespace['big'])
