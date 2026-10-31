@@ -31,6 +31,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.css';
 
 import { websocket, state } from './globals';
 import { get_line_span } from './breakpoints';
+import { render_var_tree } from './var_tree';
 
 const wait_buffer = [];
 
@@ -46,8 +47,8 @@ function update_ui() {
 
       document.getElementById('filename').textContent = frame_data.filename;
       document.getElementById('curr_line').textContent = frame_data.current_line;
-      document.getElementById('globals').textContent = frame_data.globals;
-      document.getElementById('locals').textContent = frame_data.locals;
+      render_var_tree('globals', frame_data.globals);
+      render_var_tree('locals', frame_data.locals);
       document.getElementById('stdout').textContent = frame_data.console_history;
       document.getElementById('curr_file_code').textContent = frame_data.file_listing;
 

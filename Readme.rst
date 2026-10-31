@@ -31,8 +31,9 @@ Features
 - **Current file** box tracks current position in the file being executed.
   Red line numbers indicate breakpoints, if any.
 - **Globals** and **Locals** boxes show local and global variables in the current scope.
-  Special variables that start and end with double underscores ``__`` are excluded
-  (you can always view them using PDB commands).
+  Complex objects can be expanded to view their attributes, properties
+  and collection items. Special variables that start and end with double underscores ``__``
+  and methods are excluded (you can always view them using PDB commands).
 - Command history that stores up to 10 last unique PDB commands (accessed by arrow UP/DOWN keys).
 
 .. figure:: https://raw.githubusercontent.com/romanvm/python-web-pdb/master/web-pdb-light-mode.png
@@ -123,7 +124,7 @@ To simplify this you can use ``set_trace(port=-1)`` to select a random port betw
 Compatibility
 =============
 
-- **Python**: 3.8+
+- **Python**: 3.10+
 - **Browsers**: All modern browsers should work
 
 Implementation Details
@@ -141,7 +142,7 @@ MIT, see ``LICENSE.txt``.
 
 The debugger icon made by `Freepik`_ from `www.flaticon.com`_ is licensed by `CC 3.0 BY`_.
 
-.. _PDB: https://docs.python.org/3.8/library/pdb.html
+.. _PDB: https://docs.python.org/3/library/pdb.html
 .. _Bootstrap: http://getbootstrap.com
 .. _Prism: http://prismjs.com/
 .. _Freepik: http://www.freepik.com

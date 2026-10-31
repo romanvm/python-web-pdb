@@ -33,6 +33,7 @@ from threading import Thread
 from .buffer import ThreadSafeBuffer
 from .server_adapter import ServerAdapter
 from .system_adapter import SystemAdapter
+from .variables import VariablesRequest
 
 __all__ = ['WebConsole']
 
@@ -72,15 +73,30 @@ class WebConsole:
         while not self._system_adapter.is_abort_requested():
             try:
                 data = self._server_adapter.web_socket_input_queue.get(timeout=0.1)
-                break
             except queue.Empty:
                 continue
+            if isinstance(data, VariablesRequest):
+                # Resolve variables in the debugger thread because object properties
+                # may depend on the thread where the code is executed.
+                self._process_variables_request(data)
+                continue
+            break
         else:
             data = '\n'  # Empty string causes BdbQuit exception.
         self.writeline(data)
         return data
 
     read = readline
+
+    def _process_variables_request(self, request):
+        if not request.future.set_running_or_notify_cancel():
+            return  # The request has timed out
+        try:
+            result = self._debugger.get_variable_children(request.scope, request.path)
+        except Exception as exc:  # pylint: disable=broad-except
+            request.future.set_exception(exc)
+        else:
+            request.future.set_result(result)
 
     def writeline(self, data):
         self._console_history.contents += data
@@ -93,8 +109,8 @@ class WebConsole:
                 'file_listing': 'No data available',
                 'current_line': -1,
                 'breakpoints': [],
-                'globals': 'No data available',
-                'locals': 'No data available',
+                'globals': None,
+                'locals': None,
             }
         frame_data['console_history'] = self._console_history.contents
         self._frame_data.contents = frame_data

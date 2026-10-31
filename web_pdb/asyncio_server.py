@@ -1,3 +1,22 @@
+# Copyright (c) 2026 Roman Miroshnychenko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 """
 Asyncio-based HTTP server with WebSocket support for Web-PDB
 """
@@ -25,7 +44,9 @@ import queue
 import socket
 import struct
 from pathlib import Path
-from urllib.parse import unquote
+from urllib.parse import parse_qs, unquote
+
+from .variables import VariablesRequest
 
 __all__ = ['AsyncioServer']
 
@@ -37,6 +58,7 @@ _GZIP_MIN_SIZE = 1024
 _MAX_HEADER_SIZE = 8192
 _WS_OUTBOUND_QUEUE_SIZE = 32
 _WS_MAX_FRAME_SIZE = 10 * 1024 * 1024
+_VARIABLES_TIMEOUT = 5.0
 
 _this_dir = Path(__file__).parent
 _static_dir = _this_dir / 'static'
@@ -316,7 +338,8 @@ class AsyncioServer:
                 k, _, v = line.partition(b':')
                 headers[k.strip().lower().decode('latin-1')] = v.strip().decode('latin-1')
 
-        path = unquote(raw_path.split('?')[0])
+        raw_path, _, query_string = raw_path.partition('?')
+        path = unquote(raw_path)
         accept_encoding = headers.get('accept-encoding', '')
 
         if method != 'GET':
@@ -328,6 +351,8 @@ class AsyncioServer:
             await self._serve_index(writer, accept_encoding)
         elif path == '/frame-data':
             await self._serve_frame_data(writer, accept_encoding)
+        elif path == '/variables':
+            await self._serve_variables(writer, query_string, accept_encoding)
         elif path.startswith('/static/'):
             await self._serve_static(writer, path[len('/static/') :], accept_encoding)
         elif path == '/ws':
@@ -349,6 +374,37 @@ class AsyncioServer:
         extra = {'Cache-Control': 'no-store'}
         extra.update(gz_headers)
         response = _build_response('200 OK', body, 'application/json', extra)
+        writer.write(response)
+        await writer.drain()
+
+    async def _serve_variables(self, writer, query_string: str, accept_encoding: str) -> None:
+        query = parse_qs(query_string)
+        try:
+            scope = query['scope'][0]
+            path = json.loads(query['path'][0])
+        except (KeyError, IndexError, ValueError):
+            status, result = '400 Bad Request', {'error': 'Invalid request'}
+        else:
+            request = VariablesRequest(scope, path)
+            # The request is resolved in the debugger thread when it waits for a command.
+            self._input_queue.put(request)
+            try:
+                result = await asyncio.wait_for(
+                    asyncio.wrap_future(request.future), _VARIABLES_TIMEOUT
+                )
+                status = '200 OK'
+            except asyncio.TimeoutError:
+                status, result = '503 Service Unavailable', {'error': 'Debugger is busy'}
+            except LookupError as exc:
+                status, result = '404 Not Found', {'error': str(exc)}
+            except Exception as exc:
+                logger.debug('Unable to get variables', exc_info=True)
+                status, result = '500 Internal Server Error', {'error': str(exc)}
+        body = json.dumps(result).encode('utf-8')
+        body, gz_headers = _gzip_if_accepted(body, 'application/json', accept_encoding)
+        extra = {'Cache-Control': 'no-store'}
+        extra.update(gz_headers)
+        response = _build_response(status, body, 'application/json', extra)
         writer.write(response)
         await writer.drain()
 

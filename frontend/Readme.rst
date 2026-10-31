@@ -4,8 +4,8 @@ Frontend Code
 Web-PDB is distributed with pre-bundled and minified JavaScript and CSS files,
 and all the necessary static assets. However, if you want to make some changes
 to the frontend code and/or to bundle the resulting code yourself, you need
-to install the necessary development dependencies. First, install Node.js and NPM
-for your platform. Then go to the ``./frontend/`` directory and run
+to install the necessary development dependencies. First, install Node.js (v22.18+ or v24.11+)
+and NPM for your platform. Then go to the ``./frontend/`` directory and run
 ``npm install`` there.
 
 Available Commands

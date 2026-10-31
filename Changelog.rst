@@ -1,6 +1,12 @@
 Changelog
 #########
 
+v.2.1.0
+=======
+
+* **Globals** and **Locals** boxes show variables as expandable trees with object attributes,
+  properties and collection items.
+
 v.2.0.1
 =======
 

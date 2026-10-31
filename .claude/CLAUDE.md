@@ -41,6 +41,11 @@ The debugger backend is a two-threaded system:
   whether the Kodi runtime is detected). Both implement `is_abort_requested()`,
   `on_server_started()`, `on_server_stopped()`, and `on_exception()`. The Kodi variant uses
   `xbmc.Monitor` for abort detection and shows progress dialogs/notifications.
+- `web_pdb/variables.py`: Builds Globals/Locals variable tree nodes and resolves child nodes by
+  path (`[kind, value]` key tokens). The frontend lazily requests children via
+  `GET /variables?scope=...&path=...`; `AsyncioServer` puts a `VariablesRequest` into the shared
+  `input_queue`, and `WebConsole.readline()` resolves it in the debugger thread (so property
+  getters run in the debugged thread) and returns the result via a `concurrent.futures.Future`.
 - `web_pdb/buffer.py`: Thread-safe buffer (`ThreadSafeBuffer`) used for passing data between
   threads with dirty-flag semantics.
 
@@ -146,15 +151,15 @@ is achieved via:
 
 ## Requirements
 
-- **Python**: 3.6+
+- **Python**: 3.10+
 - **Core dependencies**: pure Python stdlib (no third-party runtime dependencies)
-- **Development dependencies**: `ruff==0.15.12`, `selenium==4.10.0`
+- **Development dependencies**: `ruff==0.17.3`, `selenium==4.52.0`
 - **Package manager**: `uv`
 
 ## Important Notes
 
 - This is in minimum maintenance mode; prioritize bug fixes and compatibility over new features.
-- The project aims to support all modern Python versions (3.6+).
+- The project aims to support all modern Python versions (3.10+).
 - The `inspect`/`i` command is a custom extension; it lists object members, excluding `__` names.
 - Post-mortem debugging is supported via `post_mortem()` and the `catch_post_mortem()` context
   manager.

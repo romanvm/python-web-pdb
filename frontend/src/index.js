@@ -30,6 +30,7 @@ import bind_breakpoint_events from './breakpoints';
 import update_ui from './update_ui';
 import { resize_console } from './utils';
 import { apply_theme, bind_theme_toggle, get_initial_theme } from './theme';
+import { bind_var_tree_events } from './var_tree';
 
 import './styles.css';
 
@@ -43,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
   bind_key_events();
   bind_breakpoint_events();
   bind_theme_toggle();
+  bind_var_tree_events();
   resize_console();
   window.addEventListener('resize', resize_console);
 
